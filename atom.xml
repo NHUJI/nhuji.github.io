@@ -1,0 +1,2849 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://nhuji.github.io</id>
+    <title>Huhu&apos;s blog</title>
+    <updated>2023-02-21T06:19:13.569Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://nhuji.github.io"/>
+    <link rel="self" href="https://nhuji.github.io/atom.xml"/>
+    <subtitle>It&apos;s me, huhu</subtitle>
+    <logo>https://nhuji.github.io/images/avatar.png</logo>
+    <icon>https://nhuji.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2023, Huhu&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Cakebrew 一个Homebrew GUI管理工具,找不到brew的解决办法]]></title>
+        <id>https://nhuji.github.io/post/Ldoph3hk9/</id>
+        <link href="https://nhuji.github.io/post/Ldoph3hk9/">
+        </link>
+        <updated>2023-02-19T04:52:20.000Z</updated>
+        <summary type="html"><![CDATA[<p>Cakebrew安装后遇到Zsh: command not found: brew的解决方案</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Cakebrew安装后遇到Zsh: command not found: brew的解决方案</p>
+<!-- more -->
+<h1 id="介绍">介绍</h1>
+<p>Homebrew是一种在Mac上安装和管理软件包的流行方式，但它需要使用命令行界面。对于不熟悉命令行界面的用户，Cakebrew提供了一个更直观的界面，使得安装和管理软件包更加容易, 另外Cakebrew还支持简体中文在内的多种语言.</p>
+<h1 id="安装">安装</h1>
+<p>除了在<a href="https://www.cakebrew.com/">官网</a>直接下载外,还可以直接用命令用Homebrew安装<br>
+<code>brew install --cask cakebrew</code></p>
+<h1 id="问题">问题</h1>
+<p>除了我自己外发现不少人也遇到了安装后cakebrew发现它并没有找到brew的问题(Zsh: command not found: brew)<br>
+<img src="https://nhuji.github.io/post-images/1676783554215.png" alt="" loading="lazy"><br>
+搜了搜似乎没人有提到怎么解决这个问题,下面是我的解决办法:<br>
+当使用ZSH时，Shell的启动文件是<code>~/.zprofile</code> <code>~/.zlogin</code> 因此使用ZSH Shell的用户无法在Cakebrew中找到Homebrew的话，需要把路径加入到<code>~/.zlogin（或~/.zprofile）</code>中</p>
+<ol>
+<li>首先查找ZSH的位置<br>
+<code>$SHELL -l -c &quot;which brew&quot;</code><br>
+留着这个地址在下一步使用</li>
+<li>修改路径<br>
+然后运行<code>nano ~/.zlogin </code><br>
+将你ZSH的位置存入 <code>export PATH=/opt/homebrew/bin:$PATH</code> (/opt/homebrew/bin替换为你自己的brew所在地址)<br>
+然后<code>Ctrl + X</code>结束修改,并按Y确认后按Enter保存<br>
+再运行<code>source ~/.zlogin</code></li>
+<li>再次查看Cakebrew<br>
+这时再次打开Cakebrew,运行医生就能看到已经能找到你的ZSH了,就可以正常使用Cakebrew了.如果还是不行请在.zprofile等ZSH启动文件里也添加.<br>
+<img src="https://nhuji.github.io/post-images/1676785922400.png" alt="" loading="lazy"></li>
+</ol>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[如何把Notion的文章导出MD并转移到Gridea]]></title>
+        <id>https://nhuji.github.io/post/ru-he-ba-notion-de-wen-zhang-dao-chu-md-bing-zhuan-yi-dao-gridea/</id>
+        <link href="https://nhuji.github.io/post/ru-he-ba-notion-de-wen-zhang-dao-chu-md-bing-zhuan-yi-dao-gridea/">
+        </link>
+        <updated>2023-02-16T14:44:00.000Z</updated>
+        <content type="html"><![CDATA[<p><img src="https://nhuji.github.io/post-images/1676558702218.png" alt="" loading="lazy"><br>
+Notion文章右上角的圆点打开找到Export再选择MD导出<br>
+得到压缩包后打开就能看到一个图片的文件夹和md文件了<br>
+但图片的名字根本不能用拿其中一个来分析<br>
+(%E5%BD%92%E6%A1%A3%209112674b641447ec9bf2b6055bc9d623/CS%2061B%20Data%20Structures%206d7cb67e5848463589f697736a991cd7/2%20%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E9%83%A8%E5%88%86%20c6e025d12a2d480c9ddcd8595b3f79d9/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_15.56.39.png)<br>
+只有最后部分的“%25E6%2588%25AA%25E5%25B1%258F2022-08-07_15.56.39.png”才是图片名,手动把图片都放到.../Gridea/post-images中后去掉多余的部分就能正常显示图片了</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[怎么使用Gridea写博客并部署到GitHub pages]]></title>
+        <id>https://nhuji.github.io/post/e7k4fuee/</id>
+        <link href="https://nhuji.github.io/post/e7k4fuee/">
+        </link>
+        <updated>2023-02-16T14:13:42.000Z</updated>
+        <content type="html"><![CDATA[<p>以前尝试过不同平台、自己用WP搭建博客等,最后无论是更新还是运行本身都比较麻烦,这个Gridea工具就还蛮合适,可以自己掌控md文件并且也方便发布.下面就介绍一下使用方法吧</p>
+<h1 id="创建github-pages">创建Github Pages</h1>
+<h2 id="创建仓库">创建仓库</h2>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1676556990844.png" alt="" loading="lazy"></figure>
+<p>用username.github.io的格式创建仓库,请把username替换为你自己的用户名</p>
+<h2 id="开启github-page功能">开启Github Page功能</h2>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1676557016711.png" alt="" loading="lazy"></figure>
+<p>转到Settings的Pages选择文件并保存</p>
+<p>现在就可以用username.github.io访问你的Github Pages页面了</p>
+<h2 id="令牌申请">令牌申请</h2>
+<p>接下来需要去https://github.com/settings/tokens申请令牌以便等会使用</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/1676557033926.png" alt="" loading="lazy"></figure>
+<p>建议只给repo权限保障安全.</p>
+<h1 id="使用gridea">使用Gridea</h1>
+<h2 id="基本配置">基本配置</h2>
+<p>在<a href="https://open.gridea.dev/">https://open.gridea.dev/</a>下载对应版本的Gridea后打开找到远程</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/1676557049897.png" alt="" loading="lazy"></figure>
+<p>填入相关信息,包括我们刚刚生成的令牌,然后点击左下角“检测远程连接”成功再后继续后面的操作</p>
+<h2 id="评论配置">评论配置</h2>
+<p>再次创建一个仓库用于存储评论</p>
+<p>使用Gitalk存储评论,在<a href="https://github.com/settings/applications/new">https://github.com/settings/applications/new</a>申请<strong>GitHub Application</strong></p>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/1676557064688.png" alt="" loading="lazy"></figure>
+<p>应用名和描述随便写,然后URL部分都写上https://username.github.io/,提交后得到得到<strong>Client ID</strong>,注意<strong>Client secrets</strong>和之前的令牌一样,只会出现一次</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/1676557077841.png" alt="" loading="lazy"></figure>
+<p>接着继续在Gridea里配置评论功能(也可以使用Disqus)</p>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/1676557087042.png" alt="" loading="lazy"></figure>
+<p>都设置完成后点击Gridea的同步,同步成功后就能访问博客了,之后再在Gridea中写文章、修改主题就行了</p>
+<figure data-type="image" tabindex="8"><img src="https://nhuji.github.io/post-images/1676557093687.png" alt="" loading="lazy"></figure>
+<p>修改主题之类的可以在本地目录改好后再同步</p>
+<p>如果要使用vercel或者自己的域名记得修改远程里的网站地址</p>
+<p>##额外的内容主题修改<br>
+config.json添加想要的社交账号后,就可以在自定义配置里添加了</p>
+<pre><code>    {
+      &quot;name&quot;: &quot;bilibili&quot;,
+      &quot;label&quot;: &quot;哔哩哔哩&quot;,
+      &quot;group&quot;: &quot;社交&quot;,
+      &quot;value&quot;: &quot;&quot;,
+      &quot;type&quot;: &quot;input&quot;,
+      &quot;note&quot;: &quot;链接地址&quot;
+    }
+</code></pre>
+<p>如果要添加bilibili需要先在head.ejs把fontawesome修改为6.0版(6以上版本需要申请专属的账号了)再把siidebar.ejs里的<code>&lt;i class=&quot;fab fa-&lt;%= item %&gt;&quot;&gt;&lt;/i&gt;</code>中的fab修改为fa-brands<br>
+另外  <code>&lt;% ['github', 'twitter', 'bilibili', 'zhihu', 'facebook'].forEach((item) =&gt; { %&gt;</code>的数组也需要修改</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[关于ChatGPT的一点想法]]></title>
+        <id>https://nhuji.github.io/post/IAiSEkOcH/</id>
+        <link href="https://nhuji.github.io/post/IAiSEkOcH/">
+        </link>
+        <updated>2022-12-10T14:03:21.000Z</updated>
+        <content type="html"><![CDATA[<p>在4 5号还是更早一两天开始玩ChatGPT开始先是被他自然的语言回复震惊了<br>
+然后发现能写代码能给建议<br>
+真的很让人震惊<br>
+感觉底层程序员要失业了的感觉 (现在觉得还是不太可能,只能写一些基本的代码块还老出错)</p>
+<p>然后我又接着开发了角色扮演、翻译、写rap歌词、代码等功能<br>
+一开始的体验真的很不错,我好好的满足了我的某些喜好<br>
+我连着弄了好几个故事,经常熬夜玩到很晚<br>
+有时候一个故事也会持续好几天<br>
+然后不小心把对话搞没了之后就很伤心哈哈哈 (后来终于加了对话保留功能)<br>
+但这种快速有逻辑的反馈真的很好玩</p>
+<p>总之越使用对它的感觉应该是一个凸型的走势,一开始觉得怎么这么厉害<br>
+无所不能<br>
+但随着内容限制加紧访问变慢,然后发现它的记忆能力只有三千多个字后就比较腻了<br>
+但他作为对话模型<br>
+最重要的还是文字能力<br>
+真的很很厉害,能写出很好的文字</p>
+<p>总之今年的NovelAI和年末的ChatGPT都很让人惊讶AI居然已经如此成熟了,明年感觉可以期待一下AI在视频方便的应用</p>
+<hr>
+<p>23年的补充<br>
+没想到春节之后它又大火了一把,不过用的人太多后体验感觉真的变差不少<br>
+刚出来几天时中文的输出速度要快得多,感觉token的长度也比现在大<br>
+还有就是那会还没有讨厌的1小时限制.....<br>
+另外还有就是它的普及速度也太让人惊讶了,刚用的时候才宣布到达了一百万用户<br>
+现在已经是一亿以上了...<br>
+另外new bing的申请已经过了好久好久了,什么时候才把我从waitlist放出来? (这段文字在2.19日写的,已经过了一周多了,而我是在它公布后两小时不到时申请的,不是很理解为什么要等这么久)<br>
+<img src="https://nhuji.github.io/post-images/1676816602720.jpeg" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Git的各种介绍]]></title>
+        <id>https://nhuji.github.io/post/git-de-jie-shao/</id>
+        <link href="https://nhuji.github.io/post/git-de-jie-shao/">
+        </link>
+        <updated>2022-08-11T14:24:17.000Z</updated>
+        <summary type="html"><![CDATA[<p>Git的一些简介、各种命令、Git本身的实现原理以及一些问题的解决方法</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Git的一些简介、各种命令、Git本身的实现原理以及一些问题的解决方法</p>
+<!-- more -->
+<h1 id="资源">资源:</h1>
+<p><a href="https://cbea.ms/git-commit/">如何写好commit</a></p>
+<p><a href="https://learngitbranching.js.org/?locale=zh_CN">在线模拟Git</a></p>
+<p><a href="https://cs50.harvard.edu/web/2020/weeks/1/">CS50W的Git介绍</a></p>
+<p><a href="https://ohshitgit.com/zh">ohshitgit</a> (git中可能遇到的各种问题补救)</p>
+<p><strong><strong><a href="https://www.youtube.com/watch?v=Uszj_k0DGsg&amp;ab_channel=freeCodeCamp.org">Git for Professionals Tutorial - Tools &amp; Concepts for Mastering Version Control with Git</a></strong></strong></p>
+<p>下面的各种图片均来自于cs61b、cs50w等课程和网络</p>
+<h1 id="git的一些简介">Git的一些简介</h1>
+<h3 id="git的用处">Git的用处</h3>
+<p>因为编程本身是一个循序渐进的过程,会有大量的改变,而在多人乃至个人管理这些改变是可能有hello.java、hello2.java……hello最终版.java、hello最最最终不再修改版.java 的情况出现<br>
+而Git可以让我们更方便地管理这些过程,而不是弄一堆文件</p>
+<p>如果对git存储的文件感兴趣可以cmd+shift+.查看隐藏文件</p>
+<h3 id="git是怎么运作的">Git是怎么运作的</h3>
+<p>实现方法由简单到复杂<br>
+<img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_15.51.33.png" alt="假设我们有v1 v2 v3 三个版本" loading="lazy"></p>
+<p>假设我们有v1 v2 v3 三个版本</p>
+<ol>
+<li>
+<p>单纯地给V1 V2 V3存储在不同的文件夹</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_15.53.21.png" alt="截屏2022-08-07 15.53.21.png" loading="lazy"></figure>
+</li>
+</ol>
+<p>优点是修改很方便,只需要操作1个文件夹就行了,但会有大量的冗余也就是相同文件重复存储</p>
+<ol>
+<li>
+<p>只存储修改了文件</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_15.55.38.png" alt="不存储相同的文件" loading="lazy"></figure>
+<p>不存储相同的文件</p>
+</li>
+</ol>
+<p>这样做的好处是相同的文件我们只需要处理一份,<br>
+但修改需要跨文件夹,而且有哪份作为最新的文件需要花时间判定</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_15.56.39.png" alt="截屏2022-08-07 15.56.39.png" loading="lazy"></figure>
+<ol>
+<li>
+<p>就像实现LLD时存储了size大小,我们引入一个数据结构告诉我们最新的文件是什么</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_15.58.17.png" alt="截屏2022-08-07 15.58.17.png" loading="lazy"></figure>
+</li>
+</ol>
+<p>但是如果多人协作时我们怎么确定谁是最新的版本呢</p>
+<p>可以通过命令行<code>git hash-object 文件名</code>获得一个文件的git-SHA1 hash值</p>
+<ol>
+<li>
+<p>引入时间作为版本依据替代以前的V1 V2 etc.</p>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_15.59.59.png" alt="截屏2022-08-07 15.59.59.png" loading="lazy"></figure>
+</li>
+</ol>
+<p>但如果有人再同一时间提交的话又怎么区分呢</p>
+<ol>
+<li>
+<p>引入git-SHA1 hash值</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_16.02.20.png" alt="截屏2022-08-07 16.02.20.png" loading="lazy"></figure>
+</li>
+</ol>
+<p>拥有各种好处,比如可以判断文件是否被修改过</p>
+<p>总结:</p>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_16.04.00.png" alt="对于“???”我们有无限的文件,但hash值只有160位,所以可能遇到不同文件hash值相同的情况,不过出现这样的情况的几率无限低" loading="lazy"></figure>
+<p>对于“???”我们有无限的文件,但hash值只有160位,所以可能遇到不同文件hash值相同的情况,不过出现这样的情况的几率无限低</p>
+<h3 id="git-commits"><strong><strong>Git Commits</strong></strong></h3>
+<p>存储的内容:</p>
+<figure data-type="image" tabindex="8"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_16.07.33.png" alt="截屏2022-08-07 16.07.33.png" loading="lazy"></figure>
+<p>还包括使用git-SHA1 hash值作为ID、使用<strong><strong>Serializable</strong></strong>储存Commit</p>
+<h3 id="分支-branching">分支 <strong><strong>Branching</strong></strong></h3>
+<p>暂时不解释,大概就是可以有人负责不同的工作,最后还可以合并这些东西,后面会有更详细的介绍</p>
+<figure data-type="image" tabindex="9"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_16.10.12.png" alt="截屏2022-08-07 16.10.12.png" loading="lazy"></figure>
+<hr>
+<h1 id="git入门-by-itai的讲解">Git入门-by Itai的讲解</h1>
+<h2 id="git-init"><code>git init</code></h2>
+<p>使用它就表示你要对当前的文件夹进行版本控制,同时这里就变成了存储库(repository)</p>
+<figure data-type="image" tabindex="10"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-08_17.16.09.png" alt="截屏2022-08-08 17.16.09.png" loading="lazy"></figure>
+<h2 id="git-status"><code>git status</code></h2>
+<p>告诉我们这个存储库的状态</p>
+<p>可以看到现在还没有commits(相当于快照)</p>
+<figure data-type="image" tabindex="11"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-08_17.20.10.png" alt="告诉我们pbj.txt没有被跟踪" loading="lazy"></figure>
+<p>告诉我们pbj.txt没有被跟踪</p>
+<hr>
+<h2 id="创建一个commits">创建一个commits</h2>
+<h3 id="git-add-文件名"><code>**git add 文件名**</code></h3>
+<p>成功后就记录了改变,但还没提交如果使用<code>**git add *</code>(git add .)**就表示记录当前目录所有文件</p>
+<h3 id="git-commit-m-快照的内容"><code>**git commit -m “快照的内容”**</code></h3>
+<p>就完成了commit,提交了改变</p>
+<p>不添加<code>-m</code>的话就会打开vim以让你输入更多内容 :q 退出</p>
+<h3 id="git-commit-am-快照的内容"><code>**git commit -am “快照的内容”**</code></h3>
+<p>结合git add和commit ,这样就commit了所以改变</p>
+<h3 id="git-commit-amend"><code>**git commit -amend**</code></h3>
+<p>可以修改上次commit的描述</p>
+<h3 id="git-commit-amend-no-edit"><code>**git commit -amend -no-edit**</code></h3>
+<p>将新的改变一起覆盖到上次的commit,不改变描述, 如果您已经将commit推送到远程存储库，则需要使用强制推送将更改推送到远程存储库。使用以下命令：<code>git push --force</code></p>
+<hr>
+<h2 id="git-log"><code>git log</code></h2>
+<p>告诉我们所有的commit</p>
+<blockquote>
+<p><code>cat 文件名</code>可以看到文件内容<br>
+<code>cp 文件名 ./另一个文件名</code>复制命令在当前文件夹复制了一份文件<br>
+<code>nano 文件名</code> 终端内置的一个类似vim的编辑器<br>
+<code>subl 文件名</code>用sublime打开</p>
+</blockquote>
+<figure data-type="image" tabindex="12"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-08_17.25.20.png" alt="截屏2022-08-08 17.25.20.png" loading="lazy"></figure>
+<h2 id="git-show"><code>git show</code></h2>
+<p>和log差不多只是可以显示某次commit的更多内容,不常用</p>
+<h2 id="git-checkout"><code>git checkout</code></h2>
+<p>ps现在有G<a href="https://git-scm.com/docs/git-switch">it switch</a>可以作为替代品</p>
+<p><code>git checkout &quot;commit id&quot;</code><br>
+粘贴commit id然后粘贴到后面就能恢复那个commit时的文件</p>
+<p><code>git checkout master/main</code>就可以回到最新的commit</p>
+<figure data-type="image" tabindex="13"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-08_17.41.53.png" alt="截屏2022-08-08 17.41.53.png" loading="lazy"></figure>
+<p>本质上就是掌控HEAD指针在什么位置,如果有没有commit的内容就不能进行这个操作</p>
+<p>如果在<code>git cheakout &quot;commit id&quot; “文件地址”</code>可以返回具体文件,如果要保存这个状态记得再次<code>**git commit -m “快照的内容”**</code></p>
+<h2 id="gitk"><code>gitk</code></h2>
+<p>Git 存储库浏览器 (Monterey似乎不能使用)</p>
+<h2 id="git-reset"><code>git reset</code></h2>
+<p>恢复到之前某个快照</p>
+<p>比如强制恢复到一个commit/分支<br>
+<code>git reset --hard &lt;commit&gt;</code></p>
+<p><code>git reset --hard origin/mater</code></p>
+<h2 id="git-reset-head-file"><code>git reset HEAD [file]</code></h2>
+<p>取消暂存(add)的文件<br>
+比如在不小心跟踪了不想要的文件时使用</p>
+<h1 id="git-分支"><strong>Git 分支</strong></h1>
+<p>分支允许您同时跟踪工作的多个不同版本。将分支视为替代维度的一种方式。也许一个分支是选择使用链表的结果，而另一个分支是选择使用数组的结果。</p>
+<p>默认分支通常称为<code>master/mian</code>分支</p>
+<figure data-type="image" tabindex="14"><img src="https://sp19.datastructur.es/materials/guides/img/graph2.svg" alt="https://sp19.datastructur.es/materials/guides/img/graph2.svg" loading="lazy"></figure>
+<p>创建一个分支可以让你跟踪代码的多个不同版本，一旦你完成了一个部分并希望它加入你的代码的其余部分，你就可以轻松地在版本之间切换并将分支合并在一起。</p>
+<p>在有重大更改、不确定是否并入(尝试)、分开工作等时很有用</p>
+<ul>
+<li>
+<p>例子</p>
+<p>例如，假设到目前为止您已经完成了一半的项目。还有一个困难的部分要做，你不知道该怎么做。也许你对如何做有三种不同的想法，但你不确定哪个会奏效。此时，创建一个分支<code>master</code> 并尝试您的第一个想法可能是一个好主意。</p>
+<ul>
+<li>如果您的代码有效，您可以将分支合并回您的主代码（在 <code>master</code>分支上）并提交您的项目。</li>
+<li>如果您的代码不起作用，请不要担心还原您的代码并不得不操作 Git 历史记录。您可以简单地切换回<code>master</code>不会有任何更改的 ，创建另一个分支，然后尝试您的第二个想法。</li>
+</ul>
+<p>这可以一直持续到您找到编写代码的最佳方式，并且您只需将最终工作的分支合并到<code>master</code>最后。</p>
+</li>
+</ul>
+<p>比如我想尝试修改一些css代码看看效果就可以创建一个branch来修改,到时候出问题了可以丢掉这些修改,如果修改还不错就可以merge回主线</p>
+<hr>
+<p>比如开发某个新功能时搞一个分支,这样就可以放心地尝试,然后原本的代码发现了个bug就在原有的代码上修改</p>
+<figure data-type="image" tabindex="15"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_13.45.44.png" alt="HEAD指针指向的就是你当前的分支" loading="lazy"></figure>
+<p>HEAD指针指向的就是你当前的分支</p>
+<p>等新功能写完了就可以合并新功能和修改了bug的代码</p>
+<figure data-type="image" tabindex="16"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_13.46.33.png" alt="截屏2022-12-08 13.46.33.png" loading="lazy"></figure>
+<h2 id="git-branch"><code>git branch</code></h2>
+<p>会告诉你你目前所在的分支和其他分支</p>
+<h2 id="git-branch-new-branch-name"><code>git branch [new-branch-name]</code></h2>
+<p>从当前分支创建一个分支</p>
+<h2 id="git-checkout-destination-branch"><code>git checkout [destination-branch]</code></h2>
+<p>更改<code>HEAD</code>指针引用的分支从一个分支切换到另一个分支。</p>
+<h2 id="git-checkout-b-new-branch-name"><code>git checkout -b [new-branch-name]</code></h2>
+<p>将前两个命令组合起来创建一个新分支，然后使用这个命令检查它<br>
+也就是<strong>创建一个新的分支同时切换到新创建的分支</strong></p>
+<h2 id="git-branch-d-branch-to-delete"><code>git branch -d [branch-to-delete]</code></h2>
+<p>删除分支</p>
+<h2 id="git-branch-v"><code>git branch -v</code></h2>
+<p>确定所在的分支 (-v还将列出每个分支上的最后一次提交)</p>
+<h2 id="合并分支">合并分支</h2>
+<h2 id="git-merge-branch-name"><code>git merge [branch-name]</code></h2>
+<p>将这个分支合并到我当前的分支,</p>
+<h2 id="合并示例">合并示例</h2>
+<figure data-type="image" tabindex="17"><img src="https://sp19.datastructur.es/materials/guides/img/graph3.svg" alt="https://sp19.datastructur.es/materials/guides/img/graph3.svg" loading="lazy"></figure>
+<p>将<code>fixing-ai-heuristics</code>合并到<code>master</code></p>
+<pre><code>git checkout master
+git merge fixing-ai-heuristics
+</code></pre>
+<p>在这之后新的分支就拥有了两个父级</p>
+<figure data-type="image" tabindex="18"><img src="https://sp19.datastructur.es/materials/guides/img/graph4.svg" alt="https://sp19.datastructur.es/materials/guides/img/graph4.svg" loading="lazy"></figure>
+<h2 id="合并冲突">合并冲突</h2>
+<h3 id="解除合并冲突">解除合并冲突</h3>
+<pre><code class="language-java">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+for (int i = 0; i &lt; results.length; i++) {
+    println(results[i]);
+    println(&quot;FIX ME!&quot;);
+}
+=======
+int[] final = int[results.length];
+for (int i = 0; i &lt; results.length - 1; i++) {
+    final[i] = results[i] + 1;
+    println(final[i]);
+}
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; fixing-ai-heuristics
+</code></pre>
+<p>比如有以上冲突,删除不想要的就可以提交了</p>
+<h2 id="git-rebase"><code>git rebase</code></h2>
+<p>第二种合并分支的方法是 <code>git rebase</code>。Rebase 实际上就是取出一系列的提交记录，“复制”它们，然后在另外一个地方逐个的放下去。Rebase 的优势就是可以创造更线性的提交历史，这听上去有些难以理解。如果只允许使用 Rebase 的话，代码库的提交历史将会变得异常清晰。</p>
+<p>使用<code>git rebase main</code> 将C3的bugFix*移动到了main上</p>
+<p>提交记录 C3 依然存在（树上那个半透明的节点），而 C3' 是我们 Rebase 到 main 分支上的 C3 的副本</p>
+<figure data-type="image" tabindex="19"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_14.54.46.png" alt="截屏2022-12-08 14.54.46.png" loading="lazy"></figure>
+<p>现在我们切换到了 <code>main</code> 上。把它 rebase 到 <code>bugFix</code> 分支上……</p>
+<p>用<code>git rebase bugFix</code> 后如图</p>
+<p>由于 <code>bugFix</code>继承自 <code>main</code>，所以 Git 只是简单的把 <code>main</code>分支的引用向前移动了一下而已。</p>
+<figure data-type="image" tabindex="20"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_14.57.23.png" alt="截屏2022-12-08 14.57.23.png" loading="lazy"></figure>
+<p>rebase还可以用于合并commit,比如<code>git rebase -i HEAD~2</code></p>
+<h3 id="git三种合并方式的区别">git三种合并方式的区别</h3>
+<p>(来自ChatGPT)</p>
+<p>Git 的 <strong><code>merge</code></strong> 和 <strong><code>rebase</code></strong> 命令都可以用来合并多个分支，但是它们与 <strong><code>cherry-pick</code></strong> 命令有着很大的不同。</p>
+<p>首先，<strong><code>merge</code></strong> 命令是将两个分支合并为一个分支。例如，假设你在分支 <strong><code>new-branch</code></strong> 上做出了一些改变，然后想要将这些改变合并到 <strong><code>master</code></strong> 分支上，可以使用如下命令：</p>
+<pre><code>$ git checkout master
+$ git merge new-branch
+</code></pre>
+<p>在这段代码中，首先使用 <strong><code>git checkout</code></strong> 命令切换到了 <strong><code>master</code></strong> 分支上，然后使用 <strong><code>git merge</code></strong> 命令将 <strong><code>new-branch</code></strong> 分支合并到了 <strong><code>master</code></strong> 分支上。</p>
+<p>注意，在使用 <strong><code>merge</code></strong> 命令合并分支时，Git 会自动创建一个新的提交，用来记录合并的信息。这个提交称为合并提交，其中会包含所有合并前两个分支的提交。</p>
+<p>相比之下，<strong><code>cherry-pick</code></strong> 命令是将单个提交从一个分支弄到另一个分支上。</p>
+<p>Git 的 <strong><code>rebase</code></strong> 命令是将一个分支的提交“剪切”并粘贴到另一个分支上。例如，假设你在分支 <strong><code>new-branch</code></strong> 上做出了一些改变，然后想要将这些改变“剪切”并粘贴到 <strong><code>master</code></strong> 分支上，可以使用如下命令：</p>
+<pre><code>$ git checkout new-branch
+$ git rebase master
+</code></pre>
+<p>在这段代码中，首先使用 <strong><code>git checkout</code></strong> 命令切换到了 <strong><code>new-branch</code></strong> 分支上，然后使用 <strong><code>git rebase</code></strong> 命令将 <strong><code>new-branch</code></strong> 分支的提交“剪切”并粘贴到了 <strong><code>master</code></strong> 分支上。</p>
+<p>注意，在使用 <strong><code>rebase</code></strong> 命令时，Git 会将每个提交的内容拆开，然后逐个提交。这意味着，你每次都需要手动提交。这也意味着，在使用 <strong><code>rebase</code></strong> 命令时，你可以选择只提交你想要的提交。</p>
+<p>总的来说，<strong><code>merge</code></strong> 命令是将两个分支合并为一个分支，并创建一个合并提交；<strong><code>rebase</code></strong> 命令是将一个分支的提交“剪切”并粘贴到另一个分支上，并逐个提交。而 <strong><code>cherry-pick</code></strong> 命令是将单个提交从一个分支弄到另一个分支上。</p>
+<h2 id="其他炫酷的git功能仅了解">其他炫酷的Git功能(仅了解)</h2>
+<p>There are tons of other cool Git commands. Unfortunately, we need to continue on to discuss remote repositories. Thus, this segment will just list some other interesting features that you are encouraged to explore in your own time:</p>
+<ul>
+<li>
+<p><a href="http://git-scm.com/book/en/Git-Tools-Stashing">Stashing</a></p>
+<p>Stashing allows you to save your changes onto a stack without making a more permanent commit. It is equivalent to picking up your work-in-progress and placing it in a box to get back to later. In the meantime, your desk is now clean.</p>
+<p>Why might you want to use this?</p>
+<ul>
+<li>Your files may be in a disorganized state, and you don’t want to commit yet, but you also don’t want to get rid of your changes.</li>
+<li>You modified multiple files, but you dislike your changes and you would just like to get things back to how they were after your most recent commit. Then you can <code>stash</code> your code and then drop that stash rather than having to manually revert multiple files. (Be careful with this usage!)</li>
+<li>You modified files but accidentally modified them on the wrong branch. Then you can <code>stash</code> your changes, switch branches, and unstash your changes so that they are all in the new branch.</li>
+</ul>
+</li>
+<li>
+<p><a href="http://git-scm.com/book/en/Git-Tools-Rewriting-History">Rewriting History</a></p>
+<p>Let’s say you want to do more than change your last commit or drop changes to your files before your most recent commit. What if you want to do something crazy like rewrite history? You can change multiple commit messages, splits one commits into two, and reorder commits.</p>
+</li>
+<li>
+<p><a href="http://git-scm.com/book/en/Git-Branching-Rebasing">Rebasing</a></p>
+<p>Rebasing changes the parent commit of a specific commit. In doing this, it changes the commits so that it is no longer the same.</p>
+<p><code>Rebase</code> can be used as an alternative to <code>merge</code> for integrating changes from one branch to another. It is quite different from <code>merge</code> in that <code>merge</code> creates a new commit that has both parent branch commits as parents. Rebasing takes one set of commits from a branch and places them all at the end of the other branch.</p>
+<p>There are different reasons why you would want to use <code>merge</code> versus <code>rebase</code>. One of these reasons is that <code>rebase</code> leads to a cleaner history when working with many different branches and team members.</p>
+</li>
+<li>
+<p><a href="http://git-scm.com/docs/git-reset.html">Reset</a></p>
+<p>Perhaps you decide that you want things to be how they were a certain number of commits ago. You can use <code>reset</code> if you are absolutely sure that you don’t want the last few commits. <code>Reset</code> is quite a nuanced command, so read carefully before attempting use.</p>
+<ul>
+<li><a href="http://stackoverflow.com/questions/2530060/can-you-explain-what-git-reset-does-in-plain-english">Stack Overflow on git reset</a></li>
+<li><a href="http://git-scm.com/blog/2011/07/11/reset.html">Reset Demystified</a></li>
+</ul>
+</li>
+<li>
+<p><a href="http://git-scm.com/docs/git-revert.html">Revert</a></p>
+<p><code>Revert</code> allows you to reverse the changes introduced by certain commits by recording new commits to undo the changes. This is a safer option that simply throwing away past commits. But again, use this with caution.</p>
+</li>
+<li>
+<p><a href="http://git-scm.com/docs/git-cherry-pick.html">Cherry Pick</a></p>
+<p><code>Cherry pick</code> allows you to apply the changes introduced by some existing commits. For example, if you have two different branches, and your current branch lacks one or two commits that would be helpful but are only in the other branch, then you can <code>cherry pick</code> to grab those commits without merging or rebasing to get all the commits.</p>
+</li>
+</ul>
+<p>There are far more features and commands not mentioned here. Feel free to explore more and search for answers. There most likely exists a Git command for nearly everything you would want to do.</p>
+<h2 id="git-head-在提交树上前后移动的方法">Git Head 在提交树上前后移动的方法</h2>
+<p><code>cat .git/HEAD</code>可以看到HEAD的指向,如果是指向的引用还可以用<code>git symbolic-ref HEAD</code>查看它的指向</p>
+<h3 id="分离的-head也就是分离头指针detached-head">分离的 HEAD(也就是分离头指针/detached HEAD)</h3>
+<p>分离的 HEAD 就是让其指向了某个具体的提交记录而不是分支名</p>
+<p>现在是这样的</p>
+<p>HEAD -&gt; main -&gt; C1</p>
+<p>HEAD 指向 main， main 指向 C1</p>
+<figure data-type="image" tabindex="21"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_15.27.51.png" alt="截屏2022-12-08 15.27.51.png" loading="lazy"></figure>
+<p>然后执行git checkout C1,变成了</p>
+<p>HEAD -&gt; C1</p>
+<figure data-type="image" tabindex="22"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_15.30.30.png" alt="截屏2022-12-08 15.30.30.png" loading="lazy"></figure>
+<blockquote>
+<p>通过指定提交记录哈希值的方式在 Git 中移动不太方便。在实际应用时，并没有像本程序中这么漂亮的可视化提交树供你参考，所以你就不得不用 <code>git log</code> 来查查看提交记录的哈希值。</p>
+<p>并且哈希值在真实的 Git 世界中也会更长（译者注：基于 SHA-1，共 40 位）。例如前一关的介绍中的提交记录的哈希值可能是 <code>fed2da64c0efc5293610bdd892f82a58e8cbc5d8</code>。舌头都快打结了吧...</p>
+<p>比较令人欣慰的是，Git 对哈希的处理很智能。你只需要提供能够唯一标识提交记录的前几个字符即可。因此我可以仅输入<code>fed2</code> 而不是上面的一长串字符</p>
+</blockquote>
+<h3 id="相对引用">相对引用</h3>
+<p><strong>移动HEAD</strong></p>
+<p>这样就可以返回到前第x个的commit而不用记他们的哈希值了所以 <code>main^</code> 相当于“<code>main</code> 的父节点”。<code>main^^</code> 是 <code>main</code> 的第二个父节点.也可以可以一直使用 <code>HEAD^</code> 向上移动,(<code>git checkout HEAD^</code>)</p>
+<p>当然一直这样也很烦可以用<code>HEAD~数字</code>的方式指定向上几次(<code>git checkout HEAD~4</code>)</p>
+<figure data-type="image" tabindex="23"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_15.35.40.png" alt="截屏2022-12-08 15.35.40.png" loading="lazy"></figure>
+<p><strong>移动分支</strong></p>
+<p>可以直接使用 <code>-f</code>选项让分支指向另一个提交</p>
+<p><code>git branch -f main HEAD~3</code></p>
+<p>上面的命令会将 main 分支强制指向 HEAD 的第 3 级父提交。</p>
+<p>相对引用为我们提供了一种简洁的引用提交记录 <code>C1</code>的方式， 而 <code>-f</code>则容许我们将分支强制移动到那个位置。</p>
+<figure data-type="image" tabindex="24"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_15.40.32.png" alt="截屏2022-12-08 15.40.32.png" loading="lazy"></figure>
+<p>或者使用<code>git branch -f 要移动的分支 指定的位置</code>可以把一个分支指向的位置随意移动(移动HEAD的话就直接<code>git checkout 制定的位置</code> 就行了)</p>
+<blockquote>
+<p>正如我前面所说，通过哈希值指定提交记录很不方便，所以 Git 引入了相对引用。这个就很厉害了!</p>
+<p>使用相对引用的话，你就可以从一个易于记忆的地方（比如 <code>bugFix</code> 分支或 <code>HEAD</code>）开始计算。</p>
+<p>相对引用非常给力，这里我介绍两个简单的用法：</p>
+<ul>
+<li>使用 <code>^</code> 向上移动 1 个提交记录</li>
+<li>使用 <code>~&lt;num&gt;</code> 向上移动多个提交记录，如 <code>~3</code></li>
+</ul>
+</blockquote>
+<p>另外**<code>origin/master**, **origin/HEAD**</code>指针是GitHub远程的状态</p>
+<h1 id="撤销变更">撤销变更</h1>
+<h2 id="git-reset-2"><code>git reset</code></h2>
+<p>通过把分支记录回退几个提交记录来实现撤销改动。你可以将这想象成“改写历史”。<code>git reset</code><br>
+ 向上移动分支，原来指向的提交记录就跟从来没有提交过一样。</p>
+<p>使用<code>git reset HEAD~1</code> Git 把 main 分支移回到 <code>C1</code>；现在我们的本地代码库根本就不知道有 <code>C2</code> 这个提交了。</p>
+<p>（注：在reset后， <code>C2</code> 所做的变更还在，但是处于未加入暂存区状态。）</p>
+<figure data-type="image" tabindex="25"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_15.55.25.png" alt="截屏2022-12-08 15.55.25.png" loading="lazy"></figure>
+<h2 id="git-revert"><code>git revert</code></h2>
+<p>虽然在你的本地分支中使用 <code>git reset</code> 很方便，但是这种“改写历史”的方法对大家一起使用的远程分支是无效的哦！</p>
+<p>为了撤销更改并<strong>分享</strong>给别人，我们需要使用 <code>git revert</code>。</p>
+<p>使用了<code>git revert HEAD</code></p>
+<p>在我们要撤销的提交记录后面多了一个新提交！这是因为新提交录 <code>C2'</code> 引入了<strong>更改</strong> —— 这些更改刚好是用来撤销 <code>C2</code> 这个提交的。也就是说 <code>C2'</code> 的状态与 <code>C1</code> 是相同的。</p>
+<p>revert 之后就可以把你的更改推送到远程仓库与别人分享啦。</p>
+<figure data-type="image" tabindex="26"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_15.57.16.png" alt="C1 = C2’" loading="lazy"></figure>
+<p>C1 = C2’</p>
+<h1 id="github-远程仓库">Github 远程仓库</h1>
+<blockquote>
+<p>术语:储存库/仓库:Repositories,也会简称为repo</p>
+</blockquote>
+<ul>
+<li>
+<p><code>git remote</code></p>
+<p>显示现有的远程仓库</p>
+<p>如果想查看你已经配置的远程仓库服务器，可以运行 <code>git remote</code><br>
+命令。 它会列出你指定的每一个远程服务器的简写<br>
+所有其他命令都使用其关联的简写</p>
+</li>
+<li>
+<p><code>git remote -v</code></p>
+<p>显示现有的远程仓库详细信息</p>
+</li>
+<li>
+<p><code>git remote add [short-name] [remote-url]</code></p>
+<p>添加远程仓库with简写和远程地址,这只是相当于一个指针没有添加文件,需要有个仓库来使用它,而git clone则是把远程上所有的东西下载到本地</p>
+</li>
+<li>
+<p><code>git remote rename [old-name] [new-name]</code></p>
+<p>重命名简写</p>
+</li>
+<li>
+<p><code>git remote rm [remote-name]</code></p>
+<p>删除远程仓库</p>
+</li>
+<li>
+<p><code>git clone [remote-url]</code></p>
+<p><code>git clone [remote-url] [directory-name]</code>//允许为仓库设定不同的名称<br>
+拷贝一个 Git 仓库到本地，让自己能够查看该项目，或者进行修改。<br>
+(相当于把远程仓库的东西拿来并<code>git init</code>)<br>
+在您的本地计算机上制作指定存储库的副本。还会创建一个工作目录，其中的文件排列方式与下载存储库中的最新快照完全相同。还记录远程存储库的 URL，以供后续网络数据传输，并为其指定特殊的远程存储库名称“origin”。</p>
+</li>
+<li>
+<p><code>git push [remote-name] [remote-branch]</code></p>
+<p>将本地的修改推送到远程仓库(HEAD指针的commit)</p>
+</li>
+<li>
+<p><code>git push [remote-repo-name] master</code></p>
+<p>将文件的最新副本推送到远程存储库名称</p>
+<p><code>git push -u origin master -f</code> 可以在本地版本低于远程时强制推送</p>
+</li>
+<li>
+<p><code>git fetch [remote-name]</code></p>
+<p>类似下载commit,不会合并</p>
+<p>比如别人创建了一个新分支</p>
+<pre><code class="language-bash">$ git fetch origin
+//拉取
+$ git branch review-ai-fix origin/fixing-ai-heuristics
+//命令创建一个名为review-ai-fix的分支
+//来查看远程仓库origin的fixing-ai-heuristics分支
+$ git checkout review-ai-fix
+</code></pre>
+</li>
+<li>
+<p><code>git pull [remote-name] [remote-branch-name]</code></p>
+<p>相当于fetch+merge操作,会获得最新的更改并且合并到我的HEAD中</p>
+<p>获取文件的最新副本，如 remote-repo-name 中所示</p>
+</li>
+<li>
+<p><code>git rebase</code></p>
+<p>似乎是合并branch的操作,暂时不考虑学习</p>
+</li>
+<li>
+<p>删除Git仓库</p>
+<p>只需要删除文件夹隐藏的.git就行了</p>
+<pre><code class="language-bash">$ git branch #显示本地所有分支 
+* master
+
+$ git init #初始化仓库 
+$ ls -a #查看内部文件 
+$ rm -rf .git #强删.git
+</code></pre>
+</li>
+</ul>
+<p>更多课程操作相关内容可以看<a href="https://www.notion.so/Git-1d986c2b05244f3197bfdfbb32d5bed4">课程Git使用帮助</a></p>
+<h1 id="git的结构">git的结构</h1>
+<figure data-type="image" tabindex="27"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-08_18.05.39.png" alt="add后就在Staging Area,commit后就进入Commits" loading="lazy"></figure>
+<p>add后就在Staging Area,commit后就进入Commits</p>
+<p>首先使用add后就会进入staging area,<br>
+然后我们commit就会创建一个commit,<br>
+同时注意我们有两个指针<br>
+HEAD:当前的文件内容<br>
+master:最近一个commit<br>
+如果两个不一样就会提示进去了HEAD和master分离</p>
+<aside>
+📌 由于part3~6的视频不可用,所以阅读[使用git](https://sp19.datastructur.es/materials/guides/using-git)作为替代,也许在[今年秋天](https://fa22.datastructur.es/)的课程里会再次可用,后面可以关注一下 October 1, 2022 
+果然现在 October 1, 2022 5:27 PM Git介绍视频的4~6视频又可以用了,明天有空还是看完吧~[链接](https://fa22.datastructur.es/materials/lab/lab04/)
+</aside>
+<p><a href="https://www.youtube.com/watch?v=ca1oCEMQGRQ">Git Intro - Part 4</a>、<a href="https://www.youtube.com/watch?v=dZbj9gjjYv8">Git Intro - Part 5</a> 介绍了多人合作情况下,commit的自动合并</p>
+<p>如果自动合并失败手动修改后再次commit就可以了</p>
+<p><a href="https://www.youtube.com/watch?v=r0oHi0vXhLE">Git Intro - Part 6</a>介绍了一个本地仓库多个远程仓库的情况</p>
+<blockquote>
+<p><a href="https://learngitbranching.js.org/?locale=zh_CN">Git学习游戏</a><br>
+<a href="https://wyag.thb.lt/">实现自己的Git</a>(非cs61b版)</p>
+</blockquote>
+<h1 id="一些设置">一些设置</h1>
+<h3 id="中英文切换">中英文切换</h3>
+<p><code>echo &quot;alias git='LANG=en_GB git'&quot; &gt;&gt; ~/.zshrc</code></p>
+<p>如果想要切回中文进入 <a href="https://so.csdn.net/so/search?q=vim&amp;spm=1001.2101.3001.7020">vim</a> .zshrc 文件中的环境变量配置删除即可</p>
+<h1 id="问题">问题</h1>
+<h2 id="头针分离-xcode不能push">头针分离 xCode不能push</h2>
+<figure data-type="image" tabindex="28"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-04_11.40.18.png" alt="截屏2022-12-04 11.40.18.png" loading="lazy"></figure>
+<h1 id="一些小问题">一些小问题</h1>
+<p>使用git pull 远程和本地不一样的commit应该自动使用merge,但我的却是让我制定哪一个</p>
+<p>所以用<code>git config --global --add pull.rebase/merge true</code>修改默认行为</p>
+<p>或者使用等命令</p>
+<p><code>git config pull.merge true</code> 使用merge</p>
+<p><code>git config pull.rebase true</code> 使用rebase</p>
+<p><code>git config pull.ff only</code>  # fast-forward only</p>
+<figure data-type="image" tabindex="29"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_13.37.47.png" alt="merge冲突的代码" loading="lazy"></figure>
+<p>merge冲突的代码</p>
+<figure data-type="image" tabindex="30"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_13.38.25.png" alt="merge冲突的提示
+修改后再次commit并push就能同步两边了" loading="lazy"></figure>
+<p>merge冲突的提示<br>
+修改后再次commit并push就能同步两边了</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[杂七杂八的记录]]></title>
+        <id>https://nhuji.github.io/post/TRY3MXPna/</id>
+        <link href="https://nhuji.github.io/post/TRY3MXPna/">
+        </link>
+        <updated>2022-07-13T13:58:03.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="npm">npm</h1>
+<p>npm设置代理</p>
+<pre><code>npm config set proxy=http://127.0.0.1:对应的端口
+npm set registry=https://registry.npmjs.org/
+</code></pre>
+<p>如果不设置为https的话会有这样的提示</p>
+<blockquote>
+<p>npm notice Beginning October 4, 2021, all connections to the npm registry - including for package installation - must use TLS 1.2 or higher. You are currently using plaintext http to connect. Please visit the GitHub blog for more information: https://github.blog/2021-08-23-npm-registry-deprecating-tls-1-0-tls-1-1/</p>
+</blockquote>
+<p>取消代理</p>
+<pre><code>npm config delete proxy
+npm config delete https-proxy
+</code></pre>
+<hr>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[批量图片缩小软件推荐(使用tinyPNG API) TinyPNG4Mac]]></title>
+        <id>https://nhuji.github.io/post/6LiBwe_GJys/</id>
+        <link href="https://nhuji.github.io/post/6LiBwe_GJys/">
+        </link>
+        <updated>2022-05-10T09:28:57.000Z</updated>
+        <content type="html"><![CDATA[<p>说到图片压缩应该有很多人使用过<a href="https://tinify.cn/">tinyPNG</a> 来压缩图片吧? 不过这样使用网页版的话需要手动上传下载,不方便而且太慢了,还有每天20张图片的限制, 那有没有用可以方便tinyPNG的方法呢, 所以我就找到了一个开源项目<a href="https://github.com/kyleduo/TinyPNG4Mac">TinyPNG4Mac</a>可以直接拖拽进去自动完成图片压缩,甚至还可以直接替换原图<br>
+<img src="https://nhuji.github.io/post-images/1676799330879.png" alt="" loading="lazy"></p>
+<h1 id="安装">安装</h1>
+<p>要安装 TinyPNG4Mac，可以使用 Homebrew 命令，只需要执行以下命令：<br>
+<code>brew install --cask tinypng4mac</code><br>
+或者也可以去<a href="https://github.com/kyleduo/TinyPNG4Mac/releases">Github</a>下载<br>
+不能打开的话去系统设置里的设置 -&gt; 安全性与隐私里面勾选所有来源就行了</p>
+<h1 id="api">API</h1>
+<p>它需要使用tinyPNG的官方API, 在<a href="https://tinify.cn/developers">TinyPNG 开发者页面 </a>输入邮箱就行了,每个月有500张的免费额度, 如果有更大的图片压缩需求的话, 可以付费获得更大的额度也可以通过更换电子邮件地址获得不同的API来再次获得每个月免费的500张额度 (如果图片没有被压缩的话,上传后并不会计算在额度内)</p>
+<h1 id="其他选择">其他选择</h1>
+<h2 id="imageoptim">ImageOptim</h2>
+<p>如果有隐私考虑不想上传图片处理的话还可以使用<a href="https://imageoptim.com/mac">ImageOptim</a>的mac客户端, 之前试过用它压缩图片选择了最大的压缩率的话tinyPNG也不能进一步进行压缩了,所以效果还蛮好的</p>
+<h2 id="智图">智图</h2>
+<p>如果是Windows平台或者还想要其他选择的话,腾讯出品的<a href="https://zhitu.isux.us/">智图</a>也很不错,压缩速度蛮快而且也提供了很多选项啥的 (好像是因为QQ空间图片压缩需求诞生的)</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[CS61b Part 3 算法]]></title>
+        <id>https://nhuji.github.io/post/cs61b-part-3-suan-fa/</id>
+        <link href="https://nhuji.github.io/post/cs61b-part-3-suan-fa/">
+        </link>
+        <updated>2022-02-07T15:23:21.000Z</updated>
+        <summary type="html"><![CDATA[<p>涵盖了各种排序算法，包括选择排序、堆排序、合并排序、插入排序、shellsort、quicksort、分区、快速选择、稳定性、子数排序、计数排序、压缩等。文章还深入探讨了排序的定义和排序关系的属性，以及无前缀编码和哈夫曼编码。此外，它还包括压缩理论和软件工程方面的信息。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>涵盖了各种排序算法，包括选择排序、堆排序、合并排序、插入排序、shellsort、quicksort、分区、快速选择、稳定性、子数排序、计数排序、压缩等。文章还深入探讨了排序的定义和排序关系的属性，以及无前缀编码和哈夫曼编码。此外，它还包括压缩理论和软件工程方面的信息。</p>
+<!-- more -->
+<p>这个博客并不是我最初写这篇笔记地方,所以可能出现各种包括发布时间、文字、样式等错误</p>
+<h1 id="week-12-13">Week 12 &amp; 13</h1>
+<h2 id="排序的定义">排序的定义</h2>
+<p>对于key:a、b和c的排序关系“&lt;”具有以下属性。<br>
+三分法：a &lt; b, a = b, b &lt; a中只有一个是真的。<br>
+跨度法则:如果a&lt;b，并且b&lt;c，那么a&lt;c</p>
+<p>上述属性的排序关系也被称为<strong>全序关系 (Total order)</strong></p>
+<hr>
+<p>另一个定义,inversion(倒转)的元素,排序就是将然倒转了的元素对不断减少最终变为0</p>
+<p>![前面一部分排序了,但后面没有 有种中间状态的感觉 在55种可能配对里有6对错误的配对(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_14.23.24.png)</p>
+<p>前面一部分排序了,但后面没有 有种中间状态的感觉 在55种可能配对里有6对错误的配对(比如8-6,6应该在前面)</p>
+<h2 id="各种基本的排序方式介绍">各种基本的排序方式介绍</h2>
+<h3 id="选择排序-selection-sort找到最小的item放到前面">选择排序 <strong><strong>Selection Sort:找到最小的item放到前面</strong></strong></h3>
+<p>以前就有过介绍[以前介绍过<strong>选择排序</strong></p>
+<p>就是找到最小的元素然后固定在前面的过程,直到全部元素都被固定</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_14.36.51.png" alt="Demo" loading="lazy"></figure>
+<p><a href="https://goo.gl/g14Cit">Demo</a></p>
+<p>效率很低,如果使用数组来进行需要Θ(N^2)</p>
+<p>选择排序可视化:</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/Selection-Sort-Animation.gif" alt="Selection-Sort-Animation.gif" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/Selection_sort_animation.gif" alt="Selection_sort_animation.gif" loading="lazy"></figure>
+<p>(所有排序可视化图片均来自wikipedia)</p>
+<h3 id="堆排序-heapsort-放入一个max-bst再取出"><strong>堆排序 Heapsort: 放入一个Max BST再取出</strong></h3>
+<p>堆大概就是一个二叉树父节点总是大于/小于子节点</p>
+<blockquote>
+<p>Max Heap 是一种特殊的堆数据结构，其中每个父节点的关键字都大于等于它的子节点。因此，堆顶元素始终是当前堆中最大的元素。</p>
+<p>在最大堆中，父节点的关键字是大于等于它的左右子节点。换句话说，最大堆是一种完全二叉树，其中每个父节点的关键字都大于等于它的左右子节点。</p>
+</blockquote>
+<p><strong>简单的堆排序</strong></p>
+<p>使用max heap存储数据再放入新的list就得到了排序</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_14.48.44.png" alt="Demo" loading="lazy"></figure>
+<p><a href="https://goo.gl/EZWwSJ">Demo</a></p>
+<p>这样就不会像选择排序那样每次看了大量内容却只使用最小的浪费时间</p>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_14.50.04.png" alt="max heap的排序的大的在前小的在后,然后按顺序放入output末尾就完成了堆排序" loading="lazy"></figure>
+<p>max heap的排序的大的在前小的在后,然后按顺序放入output末尾就完成了堆排序</p>
+<p>运行时间比选择排序快!</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_14.52.19.png" alt="截屏2022-10-06 14.52.19.png" loading="lazy"></figure>
+<hr>
+<p><strong>不需要额外空间的堆排序(真正被使用的)</strong></p>
+<p>不使用额外的数组,而是在本身进行操作</p>
+<p>分为两个步骤:</p>
+<p>1.Bottom-up heapify input array.</p>
+<p>2.重复多次:Delete largest item from the max heap, swapping root with last item in the heap.</p>
+<hr>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_15.30.52.png" alt="Demo" loading="lazy"></figure>
+<p><a href="https://docs.google.com/presentation/d/1SzcQC48OB9agStD0dFRgccU-tyjD6m3esrSC-GLxmNc/edit?usp=sharing">Demo</a></p>
+<p>首先使用一种叫Bottom-up heapify input array</p>
+<p>从下而上变成一个个小的heap</p>
+<figure data-type="image" tabindex="8"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_15.32.44.png" alt="截屏2022-10-06 15.32.44.png" loading="lazy"></figure>
+<p>比如17、17、19、26、41都相当于一个子heap</p>
+<p>于是再向上一层,又是一个17</p>
+<p>就组成了一个新的子heap</p>
+<figure data-type="image" tabindex="9"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_15.34.08.png" alt="截屏2022-10-06 15.34.08.png" loading="lazy"></figure>
+<p>接下来到达2发现它不适合作为2→26、41的heap的root,所以和41调换</p>
+<p>(这一步也可以叫做sinking,就是把每一个绿节点都和下面的比较看看能不能沉下去,能的话就调换)</p>
+<p>形成了新的子heap 41→26、2</p>
+<figure data-type="image" tabindex="10"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_15.35.50.png" alt="截屏2022-10-06 15.35.50.png" loading="lazy"></figure>
+<p>这样不断向上操作就得到了一个<strong>Max Heap</strong>(但是还有没排序)</p>
+<figure data-type="image" tabindex="11"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_15.37.36.png" alt="由于这个heap在数组0的位置是一个heap的root，那么整个数组就是一个heap 也就是完成了这个Bottom-up 的操作" loading="lazy"></figure>
+<p>由于这个heap在数组0的位置是一个heap的root，那么整个数组就是一个heap 也就是完成了这个Bottom-up 的操作</p>
+<p>和上一个创建一个新数组不一样的是,我们选择就在本身进行操作</p>
+<p>首先把root与最后一个交换</p>
+<figure data-type="image" tabindex="12"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_15.50.11.png" alt="截屏2022-10-06 15.50.11.png" loading="lazy"></figure>
+<p>然后再次进行上一步的sinking操作得到新的heap+已经固定的root</p>
+<p>然后不断重覆将root(第一项)和最后一项替换(heap的最后一项而不是数组的)→sink得到新的heap</p>
+<figure data-type="image" tabindex="13"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_15.50.19.png" alt="截屏2022-10-06 15.50.19.png" loading="lazy"></figure>
+<p>最后就得到了堆排序后的数组</p>
+<figure data-type="image" tabindex="14"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_15.51.51.png" alt="截屏2022-10-06 15.51.51.png" loading="lazy"></figure>
+<p>运行时间:</p>
+<p>Bottom-up Heapification: O(N log N) time.</p>
+<p>Selecting <em>largest</em> item: Θ(1) time.</p>
+<p>Removing <em>largest</em> item: O(log N) for each removal.</p>
+<blockquote>
+<p>若以升序排序说明，把数组转换成最大堆（Max-Heap Heap），这是一种满足最大堆性质（Max-Heap Property）的二叉树：对于除了根之外的每个节点i, A[parent(i)] ≥ A[i]。</p>
+<p>重复从最大堆取出数值最大的结点（把根结点和最后一个结点交换，把交换后的最后一个结点移出堆），并让残余的堆维持最大堆性质。</p>
+</blockquote>
+<figure data-type="image" tabindex="15"><img src="https://nhuji.github.io/post-images/Sorting_heapsort_anim.gif" alt="堆排序演示" loading="lazy"></figure>
+<p>堆排序演示</p>
+<h3 id="归并排序-merge-sort将两个排序合并成一个"><strong>归并排序 Merge sort:将两个排序合并成一个</strong></h3>
+<p>同样也是之前学习过的[<strong><strong>Mergesort 归并排序</strong></strong>]<br>
+由于学习过,所以简单介绍一下过程</p>
+<p>把items分成2个部分,再分别对他们<strong>归并排序</strong>(使用了递归 (Recursion),就一分再分)</p>
+<p>最终将两个部分里的最大值进行比较,小的就放入新的数组 不断重复直到完成</p>
+<figure data-type="image" tabindex="16"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_16.14.26.png" alt="Demo" loading="lazy"></figure>
+<p><a href="https://docs.google.com/presentation/d/1h-gS13kKWSKd_5gt2FPXLYigFY4jf5rBkNFl3qZzRRw/edit?usp=sharing">Demo</a></p>
+<p>可视化:</p>
+<figure data-type="image" tabindex="17"><img src="https://nhuji.github.io/post-images/Merge-sort-example-300px.gif" alt="一分再分,再按照大小组合" loading="lazy"></figure>
+<p>一分再分,再按照大小组合</p>
+<figure data-type="image" tabindex="18"><img src="https://nhuji.github.io/post-images/Merge_sort_animation2.gif" alt="Merge_sort_animation2.gif" loading="lazy"></figure>
+<h3 id="插入排序-insertion-sort找到插入item的位置"><strong>插入排序 Insertion sort:找到插入item的位置</strong></h3>
+<p>很简单且低效的排序方式:</p>
+<p>把input的item按顺序放入新的数组</p>
+<p>如果大就放左边,小就放右边,不大不小就数组在中间找个合适的位置</p>
+<figure data-type="image" tabindex="19"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_16.38.20.png" alt="Demo" loading="lazy"></figure>
+<p><a href="http://goo.gl/bVyVCS">Demo</a></p>
+<p><strong>进阶版 使用交换代替插入(in-place)</strong></p>
+<p>不另外建立数组,在本身进行交换就行了</p>
+<figure data-type="image" tabindex="20"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_16.45.27.png" alt="Demo" loading="lazy"></figure>
+<p><a href="https://docs.google.com/presentation/d/10b9aRqpGJu8pUk8OpfqUIEEm8ou-zmmC7b_BE5wgNg0/edit?usp=sharing">Demo</a></p>
+<figure data-type="image" tabindex="21"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_16.46.08.png" alt="**in-place插入排序例子**" loading="lazy"></figure>
+<p><strong>in-place插入排序例子</strong></p>
+<p>可视化:</p>
+<figure data-type="image" tabindex="22"><img src="https://nhuji.github.io/post-images/Insertion-sort-example-300px.gif" alt="Insertion-sort-example-300px.gif" loading="lazy"></figure>
+<figure data-type="image" tabindex="23"><img src="https://nhuji.github.io/post-images/Insertion_sort_animation.gif" alt="Insertion_sort_animation.gif" loading="lazy"></figure>
+<p>少量反转的数组(也就是几个item位置不对的话)上，使用插入排序非常快</p>
+<h3 id="希尔排序-shellsort-不断分区插入排序"><strong>希尔排序 Shellsort :不断分区插入排序</strong></h3>
+<p>(额外的内容)</p>
+<p>大概就是分区进行插入排序,并且随着排序进行,分区越来越小 最终就是普通的插入排序了,只需要移动很小一部分item的位置</p>
+<figure data-type="image" tabindex="24"><img src="https://nhuji.github.io/post-images/Sorting_shellsort_anim.gif" alt="Sorting_shellsort_anim.gif" loading="lazy"></figure>
+<blockquote>
+<p>例如，假设有这样一组数[ 13 14 94 33 82 25 59 94 65 23 45 27 73 25 39 10 ]，如果我们以步长为5开始进行排序，我们可以通过将这列表放在有5列的表中来更好地描述算法，这样他们就应该看起来是这样：</p>
+<pre><code>13 14 94 33 82
+25 59 94 65 23
+45 27 73 25 39
+10
+
+</code></pre>
+<p>然后我们对每列进行排序：</p>
+<pre><code>10 14 73 25 23
+13 27 94 33 39
+25 59 94 65 82
+45
+
+</code></pre>
+<p>将上述四行数字，依序接在一起时我们得到：[ 10 14 73 25 23 13 27 94 33 39 25 59 94 65 82 45 ].这时10已经移至正确位置了，然后再以3为步长进行排序：</p>
+<pre><code>10 14 73
+25 23 13
+27 94 33
+39 25 59
+94 65 82
+45
+
+</code></pre>
+<p>排序之后变为：</p>
+<pre><code>10 14 13
+25 23 33
+27 25 59
+39 65 73
+45 94 82
+94
+
+</code></pre>
+<p>最后以1步长进行排序（此时就是简单的插入排序了）。</p>
+</blockquote>
+<h2 id="快速排序-quicksort把item们分区进行分割随机性强"><strong>快速排序 Quicksort:把item们分区进行分割(随机性强)</strong></h2>
+<h3 id="分区分解-partitioning">分区(分解) <strong><strong>Partitioning</strong></strong></h3>
+<p>通过将数据分为大于小于某个值来进行分区</p>
+<figure data-type="image" tabindex="25"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_18.43.48.png" alt="截屏2022-10-06 18.43.48.png" loading="lazy"></figure>
+<p>分区有很多种可能的实现方式比如</p>
+<ol>
+<li>扫描数组然后把红色部分(小于x的)放到x前面蓝色部分不移动</li>
+</ol>
+<figure data-type="image" tabindex="26"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_18.44.59.png" alt="截屏2022-10-06 18.44.59.png" loading="lazy"></figure>
+<ol>
+<li>使用BST,把数据放到BST中这样root左边的全都是小的右边全都是大的</li>
+</ol>
+<figure data-type="image" tabindex="27"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_18.46.04.png" alt="截屏2022-10-06 18.46.04.png" loading="lazy"></figure>
+<ol>
+<li>创建一个新的数组然后进行三次扫描<br>
+第一次把全部红色的放入新数组<br>
+第二次放白色的<br>
+第三次放蓝色的</li>
+</ol>
+<p>(这种方式不是原作者采用的,但是是本课程采用的方式)</p>
+<figure data-type="image" tabindex="28"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_18.46.58.png" alt="截屏2022-10-06 18.46.58.png" loading="lazy"></figure>
+<p>总之有很多种实现分区的方式</p>
+<h3 id="3-scan分区方案">3-scan分区方案</h3>
+<p>经过分区后(采用上面第三种方法,扫描三次)</p>
+<p>可以发现5的位置固定了,因为它左边都是小于5的右边都是大于5的 接下来5没必要再移动位置了</p>
+<p>还可以发现左边的区域和右边的区域不需要再相互交流了</p>
+<figure data-type="image" tabindex="29"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_18.52.26.png" alt="‘pivot’也就是绿色点,选区是自由的 但一般选择最左边的点" loading="lazy"></figure>
+<p>‘pivot’也就是绿色点,选区是自由的 但一般选择最左边的点</p>
+<p>接下来的部分我们可以继续进行“分区”</p>
+<p>每次分区都有一个值被“固定位置”</p>
+<p>不断分区后就得到了排序的结果</p>
+<figure data-type="image" tabindex="30"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_18.59.29.png" alt="Demo" loading="lazy"></figure>
+<p><a href="https://docs.google.com/presentation/d/1QjAs-zx1i0_XWlLqsKtexb-iueao9jNLkN-gW9QxAD0/edit?usp=sharing">Demo</a> 可以看到这个分区表就有点类似于BST 所有思想其实和方法2差不多</p>
+<p>可视化:</p>
+<figure data-type="image" tabindex="31"><img src="https://nhuji.github.io/post-images/Sorting_quicksort_anim.gif" alt="在大多数情况下，快速排序都是最快的" loading="lazy"></figure>
+<p>在大多数情况下，快速排序都是最快的</p>
+<figure data-type="image" tabindex="32"><img src="https://nhuji.github.io/post-images/quickSort.gif" alt="quickSort.gif" loading="lazy"></figure>
+<h3 id="快速排序运行时间">快速排序运行时间</h3>
+<p>哪怕最坏情况比较蛮,但在大部分情况下的平均性能都很好!</p>
+<figure data-type="image" tabindex="33"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_19.06.13.png" alt="截屏2022-10-06 19.06.13.png" loading="lazy"></figure>
+<h3 id="快速排序本质和bst排序是一样的">快速排序本质和BST排序是一样的</h3>
+<figure data-type="image" tabindex="34"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_19.07.33.png" alt="截屏2022-10-06 19.07.33.png" loading="lazy"></figure>
+<h3 id="避免快速排序最坏情况产生">避免快速排序最坏情况产生</h3>
+<figure data-type="image" tabindex="35"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_19.11.27.png" alt="截屏2022-10-06 19.11.27.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="36"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_19.11.34.png" alt="截屏2022-10-06 19.11.34.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="37"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_19.11.42.png" alt="截屏2022-10-06 19.11.42.png" loading="lazy"></figure>
+<h3 id="避免quicksort的最坏情况">避免QuickSort的最坏情况</h3>
+<p>如果有重复的item或者list已经/接近被排序了这时候使用QuickSort效率就会很低</p>
+<p>比如有个list是从大到小排列的,这样每次拿最左边的都会导致需要完全遍历剩下的部分</p>
+<p>避免这种情况出现的策略:</p>
+<ol>
+<li>**Randomness:**随机在list里面挑选一个pivot,或者排序前进行打乱</li>
+<li>**Smarter pivot selection:**通过各种算法挑选一个尽量是中位数的pivot(见下面Quick Select)</li>
+<li>**Introspection:**如果递归了很多层就采取其他排序方法(递归多说明效率低可能不适合快速排序)</li>
+<li>**Preprocess the array:**预处理list,比如判断是不是已经/接近被排序的,适不适合使用QuickSort</li>
+</ol>
+<h3 id="in-place分区方案">In-place分区方案</h3>
+<p><strong><strong>Tony Hoare’s In-place Partitioning Scheme</strong></strong>(<a href="https://docs.google.com/presentation/d/1DOnWS59PJOa-LaBfttPRseIpwLGefZkn450TMSSUiQY/pub?start=false&amp;loop=false&amp;delayms=3000">Demo</a>、<a href="https://www.youtube.com/watch?v=NuQYFXmLUrM&amp;ab_channel=BukanCaraCepat">参考视频</a>)</p>
+<p>与之前一种分区方法对比,不需要额外的内存空间并且快很多 还避免了一些坏情况</p>
+<hr>
+<p>基本想法是选择一个pivot(可以随机选择)然后一个左和右指针,左指针喜欢比pivot小的值,右指针喜欢比pivot大的值</p>
+<p>两个指针都向着对方前进,遇到不喜欢的值后停下来,都停下来后就交换不喜欢的值</p>
+<figure data-type="image" tabindex="38"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-08_14.56.53.png" alt="截屏2022-10-08 14.56.53.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="39"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-08_14.57.02.png" alt="截屏2022-10-08 14.57.02.png" loading="lazy"></figure>
+<p>两个指针穿过后就不再前进了,这时候需要选新的pivot</p>
+<p>最终左边都是比较小的值右边都是比较大的值</p>
+<hr>
+<p>可以看到这种双指针的快速排序速度最快</p>
+<figure data-type="image" tabindex="40"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-08_15.29.14.png" alt="均是未优化版本.对于小的数组没有切换到插入式排序" loading="lazy"></figure>
+<p>均是未优化版本.对于小的数组没有切换到插入式排序</p>
+<p>另外最快最流行的分区方案是:two-pivot scheme</p>
+<h3 id="quick-select"><strong><strong>Quick Select</strong></strong></h3>
+<p>寻找精确的中位数需要耗费大量时间,但分区其实可以帮助我们(这也是最常用的寻找中位数算法)</p>
+<p>![使用的三次扫描分区,黑色部分说明不再考虑存在中位数(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-08_16.00.40.png)</p>
+<p>使用的三次扫描分区,黑色部分说明不再考虑存在中位数(因为分区后pivot的位置就是真实排序中它的位置)</p>
+<p>随便选一个pivot分区并且发现左边item小于右边,说明中位数不在左边,就不考虑左边了</p>
+<p>这样一直下去就能找到中位数了</p>
+<p>对于已经排序的list同样也会导致最坏情况</p>
+<p>比如右图不断寻找中位数</p>
+<figure data-type="image" tabindex="41"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-08_16.07.39.png" alt="截屏2022-10-08 16.07.39.png" loading="lazy"></figure>
+<h2 id="其他排序相关">其他排序相关</h2>
+<h3 id="稳定性-stability">稳定性 <strong><strong>Stability</strong></strong></h3>
+<blockquote>
+<p>**排序算法稳定性:**假定在待排序的记录序列中，存在多个具有相同的关键字的记录，若经过排序，这些记录的相对次序保持不变，即在原序列中，r[i]=r[j]，且r[i]在r[j]之前，而在排序后的序列中，r[i]仍在r[j]之前，则称这种排序算法是稳定的；否则称为不稳定的。</p>
+</blockquote>
+<p>例子:先按照名字排序再按照年级排序,有稳定性的就能保持之前的顺序,而没有稳定性的就会互相穿过</p>
+<figure data-type="image" tabindex="42"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-08_16.15.57.png" alt="有稳定性的算法" loading="lazy"></figure>
+<p>有稳定性的算法</p>
+<figure data-type="image" tabindex="43"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-08_16.16.05.png" alt="无稳定性的算法" loading="lazy"></figure>
+<p>无稳定性的算法</p>
+<h3 id="n-log-n-log-n-渐近上">N log N = log N! (渐近上)</h3>
+<p>证明:<a href="https://www.youtube.com/playlist?list=PL8FaHk7qbOD7y8-q2qpfhZ-fzphsk3ETf">video</a></p>
+<figure data-type="image" tabindex="44"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_13.46.15.png" alt="截屏2022-10-10 13.46.15.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="45"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_13.46.24.png" alt="截屏2022-10-10 13.46.24.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="46"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_13.46.37.png" alt="截屏2022-10-10 13.46.37.png" loading="lazy"></figure>
+<p>总结:只要使用了比较的排序方法runtime Ω(N log N)</p>
+<figure data-type="image" tabindex="47"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_15.47.19.png" alt="截屏2022-10-10 15.47.19.png" loading="lazy"></figure>
+<h3 id="最少排序数">最少排序数</h3>
+<p>对 n 个元素进行排序所需的最少比较次数:0、1、3、5、7、10、13、16、19、22、26、30、34、38、42</p>
+<p>(比如3个元素最少比较3次,4个最少五次)</p>
+<figure data-type="image" tabindex="48"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_15.28.09.png" alt="3个元素需要问3次" loading="lazy"></figure>
+<p>3个元素需要问3次</p>
+<h3 id="排序可视化">排序可视化</h3>
+<p><a href="https://www.youtube.com/watch?v=kPRA0W1kECg&amp;ab_channel=TimoBingmann">15 Sorting Algorithms in 6 Minutes</a></p>
+<h2 id="软件工程-part-2">软件工程 Part 2</h2>
+<p><strong>软件工程(1/3):</strong>[软件工程 <strong>Software Engineering I</strong>]<br>
+复杂性是与软件系统的结构有关的任何东西，它使人难以理解和修改系统</p>
+<hr>
+<p>比如这样一段代码,有大量重复内容,有很多low level的细节,如果有错误修改起来很困难/麻烦</p>
+<p>条件也很长并且没有注释帮助理解代码作用<br>
+扩展性不强,如果有新的条件就又需要添加</p>
+<figure data-type="image" tabindex="49"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-07_14.59.52.png" alt="截屏2022-10-07 14.59.52.png" loading="lazy"></figure>
+<p>写出各种helper函数比如<code>occupied(WEST, here)</code>就能去掉很多重复代码和方便修改</p>
+<p>复杂性有两个主要来源<br>
+依赖性:当一段代码不能被独立阅读、理解和修改时(比如上面很长的条件,到处重复的PLAYER)<br>
+隐蔽性:当重要信息不明显时(不能一眼看出在做什么,重复的代码,魔力数字等)</p>
+<p><strong>模块化设计 Modular Design</strong></p>
+<p>我们应该依靠模块化来隐藏复杂度,比如使用helper函数等</p>
+<p>在一个理想的世界里，系统会被分解成模块，每个模块都是完全独立的。<br>
+这里，&quot;模块 &quot;是一个非正式的术语，指的是一个类、一个包或其他代码单元。<br>
+模块不可能完全独立，因为每个模块的代码都要调用其他模块。<br>
+例如，需要知道方法的参数来调用它们。</p>
+<p>在模块化设计中，我们的目标是尽量减少模块之间的依赖关系。</p>
+<hr>
+<p>比如<strong>接口和实现(Interface vs. Implementation)</strong></p>
+<p>就是一个隐藏复杂度的方法</p>
+<figure data-type="image" tabindex="50"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-07_15.43.29.png" alt="截屏2022-10-07 15.43.29.png" loading="lazy"></figure>
+<p>一个简单的接口可以将模块在其他地方造成的复杂性降到最低。如果你只有一个getNext()方法，那就是别人能做的全部。<br>
+如果一个模块的接口很简单，我们就可以改变该模块的实现而不影响接口</p>
+<p>(比如List如果只有个arraysize方法而不是size方法,就限制了我们只能做ArrayList 所有接口要尽可能简单)</p>
+<hr>
+<p>&quot;最好的模块是那些提供强大功能而又有简单界面的模块。我用深度这个词来描述这种模块&quot;。</p>
+<p>例如，RedBlackBSTSet 2b就是一个深度模块。<br>
+简单的接口:添加、包含、删除方法,没有任何用户需要知道的非正式的东西（例如，用户不需要指定或知道哪些节点是红色或黑色的）。<br>
+强大的功能:操作是有效的,使用复杂、微妙的规则维持树的平衡</p>
+<p>用户只需要知道有这个功能而不必在意下面复杂的实现</p>
+<p>就和以前学习计算机体系一样,每次封装、抽象都有利于我们接下来更加方便的建造新的东西,如果在写一个CPU的HDL时还要考虑nand门的话 就太复杂了,二进制机器码→汇编→高级语言 这一过程就是通过封装来减少复杂度 所以我们才能写<code>i++</code>而不是<code>0110101001111…</code>之类的东西</p>
+<hr>
+<p>避免过度依赖 &quot;时间分解(temporal decomposition)&quot;，在这种情况下，代码按照现实发生的顺序进行,这样在进行其他操作时就很容易出问题 (比如应该使用一个统一的类来管理输入,而不是按照现实顺序觉得应该输入了,导致有多个入口)<br>
+使用一些时间上的分解是可以的，但要设法修复任何发生的信息泄漏</p>
+<h2 id="软件工程-part-3">软件工程 Part 3</h2>
+<p><a href="https://www.youtube.com/watch?v=7lLGNXbAVzo&amp;ab_channel=JoshHug">这一部分</a>hug没有讲课程</p>
+<p>而是关于个人生活职业发展还有科技产品夺走我们注意力的一些事</p>
+<p>看完了还感慨蛮多,比如有人认为什么在线课程会让学历价值稀释(我也有这种黑暗想法,哪怕我是受益者2333)</p>
+<p>在伯克利学习的这些东西会成为大型企业需要的(但我现在还不确定能不能找到工作,以后人生该怎么办)</p>
+<p>人们的焦虑,关于回复社交网络讯息之类的</p>
+<p>总之我觉得学习一定不是坏事,希望能做到WLB和终身学习</p>
+<p>有这么多高质量的课程可以学习真的很幸运,哪怕没有伯克利或者其他名校的学历</p>
+<p>但是课程带来的价值依然很巨大(没有同学关系网、学历背书、课程讨论会差很多就是)</p>
+<p>总之我想我应该花更多时间在个人提升上,而不是meanning less的时间消耗产品上</p>
+<p>很少在笔记里写这些可能更属于日记的东西,但就像这节特殊的课程一样 也行我需要更多的思考吧</p>
+<h2 id="基数排序-radix-sort"><strong>基数排序 Radix sort</strong></h2>
+<blockquote>
+<p>基数排序是一种非比较型整数排序算法，其原理是将整数按位数切割成不同的数字，然后按每个位数分别比较。由于整数也可以表达字符串和特定格式的浮点数，所以基数排序也不是只能使用于整数。</p>
+</blockquote>
+<p>正如之前所说的,只要使用“比较”来排序最坏情况都是N log N,如果不比较的话是不是就能有更好的算法了呢</p>
+<h3 id="sleep-sort-for-sorting-integers-not-actually-good"><strong><strong>Sleep Sort (for Sorting Integers) (not actually good)</strong></strong></h3>
+<p>基本思想就是按时间把元素打印出来来排序(实际这种性能还是很大,不现实)</p>
+<figure data-type="image" tabindex="51"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_17.04.39.png" alt="截屏2022-10-10 17.04.39.png" loading="lazy"></figure>
+<h3 id="counting-sort-exploiting-space-instead-of-time"><strong><strong>Counting Sort: Exploiting Space Instead of Time</strong></strong></h3>
+<p>前面的数字类似于index,我们新建一个数组直接放进相应的位置就可以了,不用进行比较</p>
+<figure data-type="image" tabindex="52"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_17.12.02.png" alt="截屏2022-10-10 17.12.02.png" loading="lazy"></figure>
+<p>如果有不是数字或者唯一的index,我们就可以计算重复次数再生成新的数组</p>
+<figure data-type="image" tabindex="53"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_17.26.01.png" alt="Demo" loading="lazy"></figure>
+<p><a href="https://docs.google.com/presentation/d/1vmVKHRSwb5WN1rHvktplbPGecHChxOwWa7ovRuiLzbA/edit?usp=sharing">Demo</a></p>
+<p>如果计算世界人口最多的100个城市Quicksort比Counting Sort好,因为我们可能要创建一个几百万的数组来放这些城市</p>
+<p><strong>Runtime</strong>:</p>
+<figure data-type="image" tabindex="54"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_17.44.51.png" alt="截屏2022-10-10 17.44.51.png" loading="lazy"></figure>
+<h3 id="lsd-radix-sort"><strong><strong>LSD Radix Sort</strong></strong></h3>
+<p>非常早的一种排序方式</p>
+<p>先从最右边一位开始排序直到最左边的,这种顺序也能保障最终的排序是对的</p>
+<figure data-type="image" tabindex="55"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_17.57.27.png" alt="截屏2022-10-10 17.57.27.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="56"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_17.58.55.png" alt="截屏2022-10-10 17.58.55.png" loading="lazy"></figure>
+<p>如果key是位数不同的,可以把空的地方看作一个比其他key都小的空白</p>
+<figure data-type="image" tabindex="57"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_18.00.23.png" alt="截屏2022-10-10 18.00.23.png" loading="lazy"></figure>
+<h3 id="msd-radix-sort"><strong><strong>MSD Radix Sort</strong></strong></h3>
+<p>虽然是LSD翻着来,但是会出现如下问题:再次按位排后会错乱</p>
+<figure data-type="image" tabindex="58"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_18.09.47.png" alt="截屏2022-10-10 18.09.47.png" loading="lazy"></figure>
+<p>所以我们可以当成子集来对待</p>
+<figure data-type="image" tabindex="59"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_18.11.31.png" alt="截屏2022-10-10 18.11.31.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="60"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_18.12.02.png" alt="截屏2022-10-10 18.12.02.png" loading="lazy"></figure>
+<h3 id="比较radix-sort和选择排序的速度">比较<strong><strong>Radix Sort和选择排序的速度</strong></strong></h3>
+<p>这取决于排序的对象,如果他们非常相似那么LSD Radix会更快,如果相似度很低那么merge会更快</p>
+<p>因为LSD从后面开始比对,而Merge比较依靠前面和不相似的字符来加快速度</p>
+<figure data-type="image" tabindex="61"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-15_12.54.35.png" alt="截屏2022-10-15 12.54.35.png" loading="lazy"></figure>
+<ul>
+<li>Treating alphabet size as constant, LSD Sort has runtime Θ(WN).</li>
+<li>Merge Sort has runtime between Θ(N log N) and Θ(WN log N).</li>
+</ul>
+<hr>
+<p>不过实际测试中(长度为100的相等String)merge却快了不少</p>
+<figure data-type="image" tabindex="62"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-15_15.01.09.png" alt="截屏2022-10-15 15.01.09.png" loading="lazy"></figure>
+<p>这是因为有JIT也就是<strong>即时编译</strong>在进行优化(just-in-time compilation)</p>
+<figure data-type="image" tabindex="63"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-15_15.01.54.png" alt="截屏2022-10-15 15.01.54.png" loading="lazy"></figure>
+<p>让重复,不必要的操作都快了不少</p>
+<figure data-type="image" tabindex="64"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-15_15.02.47.png" alt="merge中不断生成新linklist的时间大幅缩短" loading="lazy"></figure>
+<p>merge中不断生成新linklist的时间大幅缩短</p>
+<p>当关闭JIT后就可以发现MSD确实比Merge快<br>
+但也不是理论值那样的字符调用,因为还有各种创建数组,移动,判断等消耗</p>
+<figure data-type="image" tabindex="65"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-15_15.03.45.png" alt="截屏2022-10-15 15.03.45.png" loading="lazy"></figure>
+<h2 id="排序总结">排序总结</h2>
+<figure data-type="image" tabindex="66"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-15_16.02.11.png" alt="截屏2022-10-15 16.02.11.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="67"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-15_16.00.56.png" alt="截屏2022-10-15 16.00.56.png" loading="lazy"></figure>
+<h1 id="压缩-compression">压缩 Compression</h1>
+<p>压缩可以让一段信息减少体积,经过解压后的文件与原文件没有不同</p>
+<figure data-type="image" tabindex="68"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_14.57.08.png" alt="截屏2022-10-16 14.57.08.png" loading="lazy"></figure>
+<h2 id="prefix-free-codes"><strong><strong>Prefix Free Codes</strong></strong></h2>
+<h3 id="普通的无前缀编码">普通的无前缀编码</h3>
+<p>原本表现字母的方式比较占用空间</p>
+<figure data-type="image" tabindex="69"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_14.58.20.png" alt="截屏2022-10-16 14.58.20.png" loading="lazy"></figure>
+<p>我们可以使用其他的方式来替代原本字符的表达方式来压缩</p>
+<p>但是假如使用<strong>摩尔斯电码</strong>来代表的话,由于没有我们现实中使用时的那种停顿,同样的code可能代表不同的字符们</p>
+<p>所以需要有一种方法来避免这种情况</p>
+<figure data-type="image" tabindex="70"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_14.58.58.png" alt="截屏2022-10-16 14.58.58.png" loading="lazy"></figure>
+<p><strong>摩尔斯电码的tree</strong></p>
+<p>向左边是点右边是横</p>
+<p>也就是说z的摩尔斯电码是:<code>- - . .</code></p>
+<figure data-type="image" tabindex="71"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.01.59.png" alt="截屏2022-10-16 15.01.59.png" loading="lazy"></figure>
+<p>于是我们可以设想一个<strong><strong>Prefix Free</strong></strong> 的tree</p>
+<p>也就是没有一个字符码是另一个字符码的前缀</p>
+<figure data-type="image" tabindex="72"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.08.19.png" alt="I ATE为例就能看到是以数0的个数来区分字母的" loading="lazy"></figure>
+<p>I ATE为例就能看到是以数0的个数来区分字母的</p>
+<p>另一种更平衡的树</p>
+<p>可以发现有代表的字符全是leaf,也就是最后的节点,同样避免了前缀问题</p>
+<figure data-type="image" tabindex="73"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.16.17.png" alt="截屏2022-10-16 15.16.17.png" loading="lazy"></figure>
+<p>这第二种无前缀的tree相较于第一种,更加稳定</p>
+<p>可以看到第一种越是后面的字符越长</p>
+<p>而第二种却比较平衡</p>
+<figure data-type="image" tabindex="74"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.18.34.png" alt="截屏2022-10-16 15.18.34.png" loading="lazy"></figure>
+<h3 id="香农-范诺编码-shannon-fano-codes">香农-范诺编码 <strong><strong>Shannon Fano Codes</strong></strong></h3>
+<blockquote>
+<p>香农-范诺编码（Shannon–Fano coding）是一种基于一组符号集及其出现的或然率（估量或测量所得），从而构建前缀码的技术。</p>
+</blockquote>
+<p>也就是按照字符出现的频次来建立一个tree,比如“我”和“爸”的频率加起来有一半,就放在左边</p>
+<figure data-type="image" tabindex="75"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.35.21.png" alt="图里的“我爸是李刚”只是个非常小的字符集" loading="lazy"></figure>
+<p>图里的“我爸是李刚”只是个非常小的字符集</p>
+<p>这样一直按照频率分下去就得到了完整的tree</p>
+<figure data-type="image" tabindex="76"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.39.27.png" alt="截屏2022-10-16 15.39.27.png" loading="lazy"></figure>
+<h3 id="哈夫曼编码-huffman-coding">哈夫曼编码 Huffman Coding</h3>
+<p>与香农的相似,只是从由自上而下变成了自下而上</p>
+<figure data-type="image" tabindex="77"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.50.11.png" alt="截屏2022-10-16 15.50.11.png" loading="lazy"></figure>
+<p>比如李和刚是出现频率最低的两个,就给他创建一个父节点(频率为他们相加)</p>
+<p>这样不断的向上就得到了最终的tree</p>
+<figure data-type="image" tabindex="78"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.48.44.png" alt="截屏2022-10-16 15.48.44.png" loading="lazy"></figure>
+<p>计算后得出平均每个字符只需要2.3个bits</p>
+<figure data-type="image" tabindex="79"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.53.27.png" alt="截屏2022-10-16 15.53.27.png" loading="lazy"></figure>
+<p>中文字符一般使用32位的unicode来表示</p>
+<p>如果一共有1000个汉字组成的文章话(在这里,字符集只有我爸是李刚五个字)</p>
+<p>结果就如图所示,使用huffman的编码可以减少十几倍占用!</p>
+<figure data-type="image" tabindex="80"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.56.18.png" alt="截屏2022-10-16 15.56.18.png" loading="lazy"></figure>
+<h3 id="使用什么数据结构存储哈夫曼编码">使用什么数据结构存储哈夫曼编码</h3>
+<p><strong>压缩时</strong></p>
+<p>由字符→code:</p>
+<figure data-type="image" tabindex="81"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_13.10.33.png" alt="截屏2022-10-17 13.10.33.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="82"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_13.10.24.png" alt="截屏2022-10-17 13.10.24.png" loading="lazy"></figure>
+<p>有两种选择,一直很自然地就想到各种map,给他键值存入map</p>
+<p>但也许数组也不错,我们可以使用字符作为index并存入对应的code</p>
+<p>(注意字符其实也是整数,比如ASCII中“A” = 65,“a”</p>
+<figure data-type="image" tabindex="83"><img src="https://nhuji.github.io/post-images/Untitled.png" alt="ASCII编码表" loading="lazy"></figure>
+<p>ASCII编码表</p>
+<p>数组实际上就是一种由整数→其他对象的Map,他的效率更高一点.不过如果字符集太大的话也会浪费很多空间就是了</p>
+<p><strong>解码时</strong></p>
+<p>也就是code→字符</p>
+<p><strong>Trie也就是所谓的前缀树,字典树就很合适,使用</strong>binary trie**就可以很好的保存这些信息了<br>
+(这样似乎也让我理解了判断字符的问题,只要把编码一个一个到trie里找到字符后就开始找下一个字就行了,trie里存储的字符就相当于那些蓝色节点帮助断句)</p>
+<p>我们拿到比如“1101”的编码后向左→左→右→左就找到了字符“T”</p>
+<p>(从前面的编码也能看出来使用了某一种树来记录)</p>
+<figure data-type="image" tabindex="84"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_13.27.51.png" alt="截屏2022-10-17 13.27.51.png" loading="lazy"></figure>
+<h3 id="压缩时的编码方式选择">压缩时的编码方式选择</h3>
+<p>我们可以有两种方式来选择编码以压缩</p>
+<p>1.对于不同的信息使用不同的编码集,比如英语文本使用英语的压缩)</p>
+<p>这样做的好处就是不需要额外存储编码,但肯定也会影响压缩效率 毕竟不可能一篇英语文章就用掉了所有ASCII字符(也就是次优的编码)</p>
+<p>2.我们可以被压缩的文件创建一个编码(语料库),然后和压缩后的内容存在一起.<br>
+好处是适用范围广,但会额外占用一部分存储</p>
+<figure data-type="image" tabindex="85"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_14.11.56.png" alt="截屏2022-10-17 14.11.56.png" loading="lazy"></figure>
+<p><strong>现实中采用了第二种方法</strong></p>
+<p>因为对于大量的文件一般语料库占用不了多少位置,但适用范围却光得多,不需要专门建立英语,中文等语料库</p>
+<h3 id="哈夫曼编码压缩与解压缩例子">哈夫曼编码压缩与解压缩例子</h3>
+<p>压缩:计算字符出现频率→建立一个压缩数组和解压字典树→将字典树加入压缩文件→讲压缩后的信息也放入压缩文件</p>
+<p><img src="https://docs.google.com/presentation/d/1DWuSkE9MxQPUTjbSJCMe54rCim4eAwM4aFRvhqq5_Hs/edit?usp=sharing" alt="Demo" loading="lazy"><br>
+Codewords的部分就是由我(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_14.54.27.png)</p>
+<p><a href="https://docs.google.com/presentation/d/1DWuSkE9MxQPUTjbSJCMe54rCim4eAwM4aFRvhqq5_Hs/edit?usp=sharing">Demo</a><br>
+Codewords的部分就是由我(0)我(0)刚(111)刚(111)……等组成的,因为没有相同的前缀,所以解压时也不用担心断句问题,比如11在trie上没内容,1111更没有内容 到111就只能停下并找到对应的“刚”了</p>
+<p>解压:<br>
+先读取语料库(trie)→然后在codewords里寻找最长前缀并输出字符<br>
+这样一个过程完成后就成功解压了</p>
+<p>![****<a href="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_15.14.56.png">Demo</a></p>
+<p><strong><strong><a href="https://docs.google.com/presentation/d/1x7WXK5-X0bvxk6Q1IBuYXGibZzyRDgr8IIb30YiR4iU/edit?usp=sharing">Demo</a></strong></strong></p>
+<p>总结:</p>
+<p>![<a href="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_15.22.12.png">Huffman.java</a></p>
+<p><a href="http://algs4.cs.princeton.edu/55compression/Huffman.java">Huffman.java</a></p>
+<h2 id="压缩理论-compression-theory">压缩理论 <strong><strong>Compression Theory</strong></strong></h2>
+<p>除了哈夫曼这种方法以外还有根据压缩连续字符(这也是我以前看到压缩最先能想出的办法),重复部分省略等方法来进行压缩</p>
+<figure data-type="image" tabindex="86"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_15.25.25.png" alt="截屏2022-10-17 15.25.25.png" loading="lazy"></figure>
+<hr>
+<p><strong>有没有可能有一种能压缩50%以上体积的算法(通用的情况下)</strong></p>
+<p>当然不可能,因为可以做到的话就能一直压缩直到用1bit表达巨量的信息(一般情况下的压缩效率好像在70%左右)</p>
+<figure data-type="image" tabindex="87"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_15.30.20.png" alt="截屏2022-10-17 15.30.20.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="88"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_15.34.06.png" alt="截屏2022-10-17 15.34.06.png" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[CS61b Part 2 数据结构]]></title>
+        <id>https://nhuji.github.io/post/cs61b-part-2-shu-ju-jie-gou/</id>
+        <link href="https://nhuji.github.io/post/cs61b-part-2-shu-ju-jie-gou/">
+        </link>
+        <updated>2022-01-02T15:12:50.000Z</updated>
+        <summary type="html"><![CDATA[<p>主要介绍了数据结构相关的内容，包括命令行参数、渐进符号、并查集、抽象数据类型、二叉搜索树、B树、红黑树、散列表、优先队列、图、最短路径和字典树等。同时还涉及了软件工程中的复杂度定义和拓扑排序等内容</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>主要介绍了数据结构相关的内容，包括命令行参数、渐进符号、并查集、抽象数据类型、二叉搜索树、B树、红黑树、散列表、优先队列、图、最短路径和字典树等。同时还涉及了软件工程中的复杂度定义和拓扑排序等内容</p>
+<!-- more -->
+<p>这个博客并不是我最初写这篇笔记地方,所以可能出现各种包括发布时间、文字、样式等错误</p>
+<h1 id="week-5">Week 5</h1>
+<h2 id="命令行参数">命令行参数</h2>
+<p><code>public static void main(String[] args)</code></p>
+<p>我们知道public公共的、static静态不被实例化、void返回为空、main就是main<br>
+那么<code>(String[] args)</code>是什么呢 其实就是接受的参数</p>
+<p>比如</p>
+<pre><code class="language-java">public class ArgsDemo {
+	/** Prints out the 0th command line argument. */
+	public static void main(String[] args) {
+    	System.out.println(args[0]);
+	}
+}
+</code></pre>
+<p>再在终端使用它</p>
+<pre><code class="language-bash">nhuji@huhudeMacbook Desktop % java hello big bug
+big //得到的结果
+</code></pre>
+<p>就会把我们打进去的big bug的第一个big打印出来,如果替换成<code>System.out.println(args[1]);</code>就会打印bug</p>
+<blockquote>
+<p>一个使用参数的例子,会返回相加的值</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_14.21.45.png" alt="截屏2022-08-07 14.21.45.png" loading="lazy"></figure>
+</blockquote>
+<hr>
+<h2 id="如何更有运行效率">如何更有运行效率</h2>
+<p>之前的课程我们并不关心运行情况,而现在到了数据结构这一部分<br>
+我们就需要关注怎样能更高效的运行程序了</p>
+<p>对于如何衡量程序是否有效率,我们可以从它循环多不多之类的的来看,<br>
+但很不精确,所以我们可以使用类似<code>time</code>之类的计时器来比较,不过根据机器性能、具体参数等差异会很大,另外也需要我们等待运行结束,像之前的[Lab3 时间测试 resume按钮  随机比较 创建执行断点 ] 使用的<code>Stopwatch</code>也是类似的东西</p>
+<p>所以可以按照运算次数来进行比较,还有更准确的符号表示(算是概括了)</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_16.51.27.png" alt="截屏2022-08-12 16.51.27.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_17.02.07.png" alt="截屏2022-08-12 17.02.07.png" loading="lazy"></figure>
+<p>为什么说dup2比1好呢:</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_17.12.32.png" alt="截屏2022-08-12 17.12.32.png" loading="lazy"></figure>
+<p>scale很重要,当N足够大时差别就很明显了</p>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_17.27.18.png" alt="截屏2022-08-12 17.27.18.png" loading="lazy"></figure>
+<p>如同数学里算极限一样,当大到一定程度后其他常数(包括常数乘法)什么的都可以忽略掉,我们只关心order of growth(一个算法的增长顺序是随着输入大小的增加，运行一个计算机程序所需时间的近似值。增长顺序忽略了固定操作所需的恒定系数，而是关注与输入大小成比例增加的操作。)</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_17.39.01.png" alt="截屏2022-08-12 17.39.01.png" loading="lazy"></figure>
+<p>虽然简化后不错,但我们可以有更简单的衡量速度的方法<br>
+选择一个代表操作(cost model),后化简</p>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_18.01.15.png" alt="截屏2022-08-12 18.01.15.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_18.01.00.png" alt="截屏2022-08-12 18.01.00.png" loading="lazy"></figure>
+<h2 id="渐进符号-asymptotic-notations-渐进分析part1">渐进符号 asymptotic notations 渐进分析part1</h2>
+<h3 id="big-theta-符号"><strong><strong>Big-Theta 符号</strong></strong></h3>
+<p>被用于描述order of growth</p>
+<figure data-type="image" tabindex="9"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_18.25.39.png" alt="截屏2022-08-12 18.25.39.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_18.10.43.png" alt="使用的例子" loading="lazy"></figure>
+<p>使用的例子</p>
+<p>比如<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>N</mi><mn>3</mn></msup><mo>+</mo><mn>3</mn><msup><mi>N</mi><mn>4</mn></msup><mo>∈</mo><mi mathvariant="normal">Θ</mi><mrow><mo fence="true">(</mo><msup><mi>N</mi><mn>4</mn></msup><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">N^{3}+3 N^{4} \in \Theta\left(N^{4}\right)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.897438em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.853208em;vertical-align:-0.0391em;"></span><span class="mord">3</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.20001em;vertical-align:-0.35001em;"></span><span class="mord">Θ</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span></span></span></span>表示<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>N</mi><mn>3</mn></msup><mo>+</mo><mn>3</mn><msup><mi>N</mi><mn>4</mn></msup></mrow><annotation encoding="application/x-tex">N^{3}+3 N^{4}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.897438em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">3</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span></span></span></span></span> 属于<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mrow><mo fence="true">(</mo><msup><mi>N</mi><mn>4</mn></msup><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\Theta\left(N^{4}\right)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.20001em;vertical-align:-0.35001em;"></span><span class="mord">Θ</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span></span></span></span>这个家族</p>
+<h3 id="big-o-符号"><strong><strong>Big O 符号</strong></strong></h3>
+<p>不考虑下界限了</p>
+<figure data-type="image" tabindex="11"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_18.32.22.png" alt="截屏2022-08-12 18.32.22.png" loading="lazy"></figure>
+<blockquote>
+<p>这部分似乎微积分也有类似的,或许学到相应的东西后会更理解,也说明了数学在计算机中的重要性</p>
+</blockquote>
+<h1 id="week-6">Week 6</h1>
+<h2 id="并查集-disjoint-sets-data-structure"><strong>并查集</strong> Disjoint Sets data structure</h2>
+<p>用于处理不交集(Disjoint Sets)是否连接,和进行连接<br>
+简单来说就是可以查两个东西有没有关联</p>
+<p>Disjoint Sets就两个方法,用于连接元素和查看他们是否连接:</p>
+<pre><code class="language-java">public interface DisjointSets {
+	/** Connects two items P and Q. */
+	void connect(int p, int q);
+ 
+	/** Checks to see if two items are connected. */
+	boolean isConnected(int p, int q);
+}
+</code></pre>
+<figure data-type="image" tabindex="12"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_14.49.54.png" alt="截屏2022-08-13 14.49.54.png" loading="lazy"></figure>
+<p>但是如上面的链接,记录每一个元素之间的连接,查询时可能会进行某种迭代、循环<br>
+在元素量巨大时很不高效</p>
+<h3 id="使用listsetinteger组建">使用List&lt;Set<Integer>&gt;组建</h3>
+<p>我们其实不关心他们怎么连接的,而只关心他们有没有连接</p>
+<figure data-type="image" tabindex="13"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_14.56.16.png" alt="截屏2022-08-13 14.56.16.png" loading="lazy"></figure>
+<p>所以只需要记录每个元素属于哪个连接组件(Connected Components)</p>
+<p>我们可以使用Java中的 List&lt;Set<Integer>&gt; → [{0, 1, 2, 4}, {3, 5}, {6}]</p>
+<p>但是使用这种内置数据结构作为底层,速度会很慢很慢<br>
+比如我们要找5和6是不是连接的,就需要从头check一遍</p>
+<h3 id="使用int来组建">使用int[]来组建</h3>
+<p>所以我们可以使用相对好一点的int的数组来建立这个结果</p>
+<figure data-type="image" tabindex="14"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_15.28.28.png" alt="截屏2022-08-13 15.28.28.png" loading="lazy"></figure>
+<p>index是我们的数,而存储内容是他们的set<br>
+(只是个代表,只要是一样的数说明他们是一个连接组件就行)<br>
+而进行连接改变他们的存储内容就行了</p>
+<figure data-type="image" tabindex="15"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_15.30.53.png" alt="大概的实现" loading="lazy"></figure>
+<p>大概的实现</p>
+<p>这么做的好处是执行<code>isConnected</code>会很快,只需要他们内容是否相等</p>
+<p>(<code>isConnected</code>从O(N)→Θ(1))</p>
+<figure data-type="image" tabindex="16"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_15.31.46.png" alt="截屏2022-08-13 15.31.46.png" loading="lazy"></figure>
+<h3 id="使用quick-union组建改进">使用<strong><strong>Quick Union组建(改进)</strong></strong></h3>
+<p>和上面存储不同的连接组件ID不同的是,改为存储父级</p>
+<p>-1表示根,而其他的存储元素的上一个节点</p>
+<figure data-type="image" tabindex="17"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_16.33.47.png" alt="截屏2022-08-13 16.33.47.png" loading="lazy"></figure>
+<p>这样进行连接时,只需要把一个连接组件的根改为另一个根的元素</p>
+<figure data-type="image" tabindex="18"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_16.38.05.png" alt="截屏2022-08-13 16.38.05.png" loading="lazy"></figure>
+<p>但是这么做还是会有问题:</p>
+<p>在元素量足够大时,整个tree也会变得巨大<br>
+我们进行<code>isConnected</code>比较时是比较元素的root是不是相同的,所以tree很大的时候消耗的资源也很大</p>
+<figure data-type="image" tabindex="19"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_16.39.52.png" alt="大概的实现" loading="lazy"></figure>
+<p>大概的实现</p>
+<figure data-type="image" tabindex="20"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_16.50.34.png" alt="tree可能变得很巨大" loading="lazy"></figure>
+<p>tree可能变得很巨大</p>
+<h3 id="weighted-quick-union"><strong><strong>Weighted Quick Union</strong></strong></h3>
+<p>上面说到了tree变得很高时资源消耗会很大,所以改为连接不同连接组件时,连接到根部</p>
+<figure data-type="image" tabindex="21"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_17.44.21.png" alt="截屏2022-08-13 17.44.21.png" loading="lazy"></figure>
+<p>有两个需要注意的点</p>
+<ol>
+<li>记录tree的大小</li>
+<li>连接时把小的tree连接到大的tree的root</li>
+</ol>
+<p>而记录大小也有两种办法</p>
+<p>我们可以把根的存储数作为大小(负数代表是root)</p>
+<p>或者我们可以另外用一个size数组来记录大小</p>
+<figure data-type="image" tabindex="22"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_17.46.49.png" alt="截屏2022-08-13 17.46.49.png" loading="lazy"></figure>
+<p>小总结:</p>
+<figure data-type="image" tabindex="23"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_17.49.06.png" alt="截屏2022-08-13 17.49.06.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="24"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_17.49.14.png" alt="为什么不用heights作为size" loading="lazy"></figure>
+<p>为什么不用heights作为size</p>
+<h3 id="path-compression-路径压缩"><strong><strong>Path Compression 路径压缩</strong></strong></h3>
+<p>是cs170的内容,只做了解</p>
+<p>![log*(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_17.51.33.png)</p>
+<p>log*(n) is the iterated log</p>
+<p>大概就是每次比较后就把比较过的元素存储内容改为root</p>
+<p>这样可以获得长期的性能</p>
+<h3 id="disjoint-sets-总结">Disjoint Sets 总结</h3>
+<figure data-type="image" tabindex="25"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_17.53.13.png" alt="从简单但性能消耗大的实现→复杂但性能表现好的实现" loading="lazy"></figure>
+<p>从简单但性能消耗大的实现→复杂但性能表现好的实现</p>
+<figure data-type="image" tabindex="26"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_17.53.22.png" alt="截屏2022-08-13 17.53.22.png" loading="lazy"></figure>
+<h2 id="渐进分析-part2">渐进分析 part2</h2>
+<p>对于各种O的符号表示还不清楚,先跳过</p>
+<p>但是有一点很明确,想知道运行效率啥的 没有捷径可走,不能一看到几个循环就说大概多少,因为程序里可能随便一行就影响运行效率很多</p>
+<p>只有好好计算才呢得出结果</p>
+<figure data-type="image" tabindex="27"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.09.23.png" alt="截屏2022-08-16 15.09.23.png" loading="lazy"></figure>
+<h3 id="recursion">Recursion</h3>
+<figure data-type="image" tabindex="28"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.12.21.png" alt="截屏2022-08-16 15.12.21.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="29"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.12.28.png" alt="截屏2022-08-16 15.12.28.png" loading="lazy"></figure>
+<p>这种递归的运行时间其实观察就看出.每多一轮就是多一倍和一个root的1</p>
+<p>所以省略1后就是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>2</mn><mi>N</mi></msup></mrow><annotation encoding="application/x-tex">2^N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span></span></span></span></span></span></span></span></p>
+<h3 id="binary-search-二分法检索"><strong><strong>Binary Search 二分法检索</strong></strong></h3>
+<p>这个上CS50时撕电话本那里就很熟悉了,每次减半,</p>
+<figure data-type="image" tabindex="30"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.16.07.png" alt="从一个一个找数字,变成了每次减半" loading="lazy"></figure>
+<p>从一个一个找数字,变成了每次减半</p>
+<figure data-type="image" tabindex="31"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.19.14.png" alt="截屏2022-08-16 15.19.14.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="32"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.20.09.png" alt="相比一个一个找,在大量数量级下很省时间" loading="lazy"></figure>
+<p>相比一个一个找,在大量数量级下很省时间</p>
+<h3 id="mergesort-归并排序"><strong><strong>Mergesort 归并排序</strong></strong></h3>
+<p>以前介绍过<strong>选择排序</strong>(selection sort)</p>
+<blockquote>
+<p>第一次从待排序的数据元素中选出最小（或最大）的一个元素，存放在序列的起始位置，然后再从剩余的未排序元素中寻找到最小（大）元素，然后放到已排序的序列的末尾</p>
+</blockquote>
+<figure data-type="image" tabindex="33"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.23.02.png" alt="截屏2022-08-16 15.23.02.png" loading="lazy"></figure>
+<p>这种方法很耗时,6个元素时36次操作,而64个元素时就要4096次操作了</p>
+<hr>
+<p>所以引入了<strong><strong>Mergesort</strong></strong></p>
+<figure data-type="image" tabindex="34"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.25.15.png" alt="两边数组依次对比,把小的拿出来放入新的数组,这样操作次数就和元素本身一样" loading="lazy"></figure>
+<p>两边数组依次对比,把小的拿出来放入新的数组,这样操作次数就和元素本身一样</p>
+<p>所以我们可以把selection sort拆成2半<strong>整理完后</strong>使用Merge</p>
+<figure data-type="image" tabindex="35"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.31.51.png" alt="截屏2022-08-16 15.31.51.png" loading="lazy"></figure>
+<p>但是我们发现如果一直分下去的话,其实不需要selection sort</p>
+<figure data-type="image" tabindex="36"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.32.01.png" alt="截屏2022-08-16 15.32.01.png" loading="lazy"></figure>
+<p>完全使用Mergesort后发现每次操作其实都是N次((N/2)*2=N)所以只需要<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mo>=</mo><msub><mi>log</mi><mo>⁡</mo><mn>2</mn></msub><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">k=\log _{2}(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop"><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.20696799999999996em;"><span style="top:-2.4558600000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24414em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span>次</p>
+<figure data-type="image" tabindex="37"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.33.37.png" alt="截屏2022-08-16 15.33.37.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="38"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.36.24.png" alt="截屏2022-08-16 15.36.24.png" loading="lazy"></figure>
+<h3 id="渐进分析总结">渐进分析总结</h3>
+<p>渐进分析时不能一样看出来的,没有捷径 只能好好计算<br>
+符号表达还需要好好学习(<a href="https://www.youtube.com/playlist?list=PL8FaHk7qbOD4oAdQOZ765z6aeqyKs2593">video</a>)</p>
+<h2 id="抽象数据类型-abstract-data-types">抽象数据类型 <strong><strong>Abstract Data Types</strong></strong></h2>
+<p>一个抽象数据类型（ADT）只由其操作定义，而不是由其实现定义的</p>
+<p>比如像DIsjoinSets有很多种实现方式,当我们谈到抽象数据类型时其实并不关心它底层的实现,而只关心它的API</p>
+<figure data-type="image" tabindex="39"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.20.43.png" alt="截屏2022-08-17 18.20.43.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="40"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.21.36.png" alt="我们只关心它的API" loading="lazy"></figure>
+<p>我们只关心它的API</p>
+<p>集合有很多种类型,比如Map</p>
+<figure data-type="image" tabindex="41"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.23.37.png" alt="截屏2022-08-17 18.23.37.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="42"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.23.17.png" alt="使用Map记录文本里某个单词出现的次数" loading="lazy"></figure>
+<p>使用Map记录文本里某个单词出现的次数</p>
+<h2 id="二叉搜索树-binary-search-trees"><strong>二叉搜索树 Binary Search Trees</strong></h2>
+<p>CS里最重要的数据结构之一</p>
+<h3 id="制造一个二叉搜索树">制造一个二叉搜索树</h3>
+<p>假设我们有一个按照顺序排列的LinkList,</p>
+<p>可以发现加东西和查它是否存在都很耗时(没有利用到它按顺序的优势)</p>
+<figure data-type="image" tabindex="43"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.27.51.png" alt="截屏2022-08-17 18.27.51.png" loading="lazy"></figure>
+<p>(想法)我们可以给节点添加随机的指向其他节点的结构,性能就会好不少(真实存在的结构,叫做<strong>Skip list</strong>在有序链表的基础上增加了“跳跃”的功能)</p>
+<figure data-type="image" tabindex="44"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.29.55.png" alt="仅仅是个想法" loading="lazy"></figure>
+<p>仅仅是个想法</p>
+<figure data-type="image" tabindex="45"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.35.00.png" alt="截屏2022-08-17 18.35.00.png" loading="lazy"></figure>
+<p>我们可以把指针放在中间然后link指向两边,这样我们的效率就会加倍</p>
+<figure data-type="image" tabindex="46"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.37.31.png" alt="截屏2022-08-17 18.37.31.png" loading="lazy"></figure>
+<p>进一步提升的话,我们可以中间指向两边的中间,再进一步的话就诞生了二叉树</p>
+<figure data-type="image" tabindex="47"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.37.39.png" alt="二叉树的结构" loading="lazy"></figure>
+<p>二叉树的结构</p>
+<p>成功“制造”出了二叉树</p>
+<h3 id="bst的定义"><strong><strong>BST的定义</strong></strong></h3>
+<p>首先什么是Tree</p>
+<p>红色那样有两条路从上到下的就不是tree</p>
+<figure data-type="image" tabindex="48"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.45.36.png" alt="截屏2022-08-17 18.45.36.png" loading="lazy"></figure>
+<p>有根的树</p>
+<p>指我们指定了一个节点(node)为根,而除了它以外的节点都有父级</p>
+<hr>
+<p>二叉树</p>
+<p>一个节点只有0、1、2个子节点</p>
+<figure data-type="image" tabindex="49"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.47.19.png" alt="截屏2022-08-17 18.47.19.png" loading="lazy"></figure>
+<p>二叉搜索树</p>
+<p>要求左边必须小于右边</p>
+<p>不能有相同大小和重复的节点</p>
+<figure data-type="image" tabindex="50"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.49.35.png" alt="截屏2022-08-17 18.49.35.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="51"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.50.34.png" alt="截屏2022-08-17 18.50.34.png" loading="lazy"></figure>
+<h3 id="bst操作">BST操作</h3>
+<p><strong>搜索 search</strong></p>
+<p>比较搜索值searchKey就行了,<br>
+最糟糕的情况下也只需要Θ(log N)</p>
+<p>超级超级快<br>
+在每次操作1微秒的情况下，可以在一秒钟内从大小为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><msup><mn>0</mn><mn>300000</mn></msup></mrow><annotation encoding="application/x-tex">10^{300000}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span><span class="mord mtight">0</span><span class="mord mtight">0</span><span class="mord mtight">0</span><span class="mord mtight">0</span><span class="mord mtight">0</span></span></span></span></span></span></span></span></span></span></span></span>的tree上找到想要的东西</p>
+<figure data-type="image" tabindex="52"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.57.01.png" alt="注意接下来的代码都是描述性的,非真实代码" loading="lazy"></figure>
+<p>注意接下来的代码都是描述性的,非真实代码</p>
+<hr>
+<p><strong>插入 insert</strong></p>
+<p>代码解读:</p>
+<p>首先传入tree和要插入的东西的key,如果tree不存在就返回一颗新tree,然后不断深入迭代</p>
+<p>只有树是空的和node已经存在才不用递归</p>
+<aside>
+📚 现在理解可能并不对,后面的lab可以帮助理解,我们可能觉得迭代很危险,但熟悉了就好了
+</aside>
+<figure data-type="image" tabindex="53"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_19.04.49.png" alt="BST代表tree、 key代表searchKey
+右下角的是错误的代码示范" loading="lazy"></figure>
+<p>BST代表tree、 key代表searchKey<br>
+右下角的是错误的代码示范</p>
+<hr>
+<p><strong>删除</strong> <strong><strong>Delete</strong></strong></p>
+<p>删除有三种情况</p>
+<p>没有子节点的直接删除连接就行</p>
+<p>有1个子节点的删除🔗再把它的父节点指向子节点</p>
+<p>删除有2个子节点的比较复杂<br>
+但只要选择删除节点的前任和继任来作为新的节点就好了</p>
+<p>比如要删除dog那它前面一个是cat后面一个是elf,就都可以作为新的节点代替dog</p>
+<figure data-type="image" tabindex="54"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-18_10.58.14.png" alt="截屏2022-08-18 10.58.14.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="55"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-18_11.00.25.png" alt="截屏2022-08-18 11.00.25.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="56"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-18_11.02.13.png" alt="删除前" loading="lazy"></figure>
+<p>删除前</p>
+<figure data-type="image" tabindex="57"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-18_11.02.19.png" alt="删除后" loading="lazy"></figure>
+<p>删除后</p>
+<p>上图我们要删除k节点,而他的前一个是g后一个是m,所以都可以作为新的root<br>
+假如选择g作为新节点,那么g以前的父节点e指向g以前的子节点f就可以了,而g代替k</p>
+<p>删除操作要记住二叉树的右边比左边大</p>
+<hr>
+<p>如果想要用BST实现Maps,只需要在节点里加上存储的值就行了,当然缺点是排序和比如显示所有为1的节点必须全部过一遍</p>
+<figure data-type="image" tabindex="58"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-18_11.24.02.png" alt="截屏2022-08-18 11.24.02.png" loading="lazy"></figure>
+<hr>
+<p>naked recursion和arms length base cases(recursion)搞不清楚</p>
+<p>真正做的时候可能会清楚吧</p>
+<figure data-type="image" tabindex="59"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-18_11.26.10.png" alt="截屏2022-08-18 11.26.10.png" loading="lazy"></figure>
+<h1 id="week-7">Week 7</h1>
+<p>Θ(N)一般被用来表示最坏的情况(或者作为一个上限使用),O(N)一般表示最高(小于等于)的情况</p>
+<p>可以看<a href="https://www.bigocheatsheet.com/">Big-O备忘单</a>来看不同结构的运行时间</p>
+<h2 id="bst的height和depth">BST的<strong><strong>Height和Depth</strong></strong></h2>
+<p>下面介绍了height和depth的概念,depth就是某个节点到根部的距离</p>
+<figure data-type="image" tabindex="60"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_13.44.42.png" alt="截屏2022-08-28 13.44.42.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="61"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_13.45.15.png" alt="截屏2022-08-28 13.45.15.png" loading="lazy"></figure>
+<hr>
+<p>根据操作顺序不同生成的tree也会不同</p>
+<figure data-type="image" tabindex="62"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_13.45.28.png" alt="截屏2022-08-28 13.45.28.png" loading="lazy"></figure>
+<p>如果有个随机操作产生的BST,可以看出它会更bushy而不是spindly(所以更有利于性能)</p>
+<figure data-type="image" tabindex="63"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_13.48.47.png" alt="截屏2022-08-28 13.48.47.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="64"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_13.47.20.png" alt="截屏2022-08-28 13.47.20.png" loading="lazy"></figure>
+<p>在现实中因为数据随着时间产生,可能导致更spindly的tree</p>
+<figure data-type="image" tabindex="65"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_13.48.02.png" alt="截屏2022-08-28 13.48.02.png" loading="lazy"></figure>
+<hr>
+<h2 id="b树-b-tree"><strong>B树 B-tree</strong></h2>
+<blockquote>
+<p>B树适用于读写相对大的数据块的存储系统，例如磁盘。B树减少定位记录时所经历的中间过程，从而加快存取速度</p>
+</blockquote>
+<p>基本上就是一个拥有2个以上节点和一个节点可以存多个item的BST,并且会自动平衡 所以可以理解为Balance Tree</p>
+<p><a href="https://www.cs.usfca.edu/~galles/visualization/BTree.html">可视化B树操作</a></p>
+<h3 id="b树介绍">B树介绍</h3>
+<p>为了避免tree变得不平衡,我们可以设想在BST上一个节点加上多个值</p>
+<figure data-type="image" tabindex="66"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_14.15.35.png" alt="截屏2022-08-28 14.15.35.png" loading="lazy"></figure>
+<p>查找时只需要把塞了多个值的一个节点当成list之类的就行了</p>
+<p>不过再加入更多值后,和BST类似的优点也没了</p>
+<figure data-type="image" tabindex="67"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_14.17.04.png" alt="截屏2022-08-28 14.17.04.png" loading="lazy"></figure>
+<p>所以可以将超过限制(limit)数量的节点中的值向上移动</p>
+<figure data-type="image" tabindex="68"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_14.19.22.png" alt="截屏2022-08-28 14.19.22.png" loading="lazy"></figure>
+<hr>
+<figure data-type="image" tabindex="69"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_14.21.13.png" alt="截屏2022-08-28 14.21.13.png" loading="lazy"></figure>
+<p>如果我们分裂根节点的话,就相当于其他节点向下推了一层,分裂子节点的话高度不变</p>
+<figure data-type="image" tabindex="70"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_14.22.30.png" alt="截屏2022-08-28 14.22.30.png" loading="lazy"></figure>
+<p>一个限制为3(一个节点最多3个item)的B树可能被叫2-3-4或者2-4 trees,代表有2、3、4个子节点</p>
+<figure data-type="image" tabindex="71"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_14.24.07.png" alt="B树命名" loading="lazy"></figure>
+<p>B树命名</p>
+<p>限制可以自由设置,比如一个节点最多三个数,多了就向上传递</p>
+<p>(在数据库中这个限制L可能被设定的很大比如超过一百)</p>
+<p>如果限制为3,一个节点可以有最多3个item,4个子节点(注意3个数字之间可以插4个子节点)</p>
+<figure data-type="image" tabindex="72"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_14.25.09.png" alt="截屏2022-08-28 14.25.09.png" loading="lazy"></figure>
+<hr>
+<p>根据操作顺序的不同,我们得到的tree高度可能也不同,可以看出同样的高度最好和最差的容纳的item差了2倍多</p>
+<figure data-type="image" tabindex="73"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_14.49.20.png" alt="同样的高度不同的item数量" loading="lazy"></figure>
+<p>同样的高度不同的item数量</p>
+<figure data-type="image" tabindex="74"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_14.51.58.png" alt="运行时间" loading="lazy"></figure>
+<p>运行时间</p>
+<p>如果要删除B树的值,先交换再删除</p>
+<figure data-type="image" tabindex="75"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_15.02.14.png" alt="截屏2022-08-28 15.02.14.png" loading="lazy"></figure>
+<hr>
+<p>B树或者说2-3树等,实现起来很麻烦,解决这个问题就需要看更快更简单的红黑树了</p>
+<figure data-type="image" tabindex="76"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_13.27.00.png" alt="B树伪代码" loading="lazy"></figure>
+<p>B树伪代码</p>
+<p>2-3树是每一个节点有2个或者3个子节点,2-3-4/2-4树是每一个节点有2、3或者4个子节点的树<br>
+B-Tree 的关键思想是在底部过度填充节点以防止增加树的高度,所以B树肯定是平衡的<br>
+另外B树的实现很复杂</p>
+<h2 id="树旋转-tree-rotationbst">树旋转 <strong><strong>Tree Rotation(BST)</strong></strong></h2>
+<p>根据添加顺序的不同我们会得到各种BST</p>
+<figure data-type="image" tabindex="77"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_14.10.46.png" alt="截屏2022-08-29 14.10.46.png" loading="lazy"></figure>
+<p>可以通过<strong>树旋转</strong>来调整不同的节点</p>
+<p>想象成<strong>合并再分开</strong>后会更容易操作</p>
+<p>记住BST一个节点左边全比它小,又边全比它大的性质</p>
+<figure data-type="image" tabindex="78"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_14.12.05.png" alt="以旋转G到左边为例" loading="lazy"></figure>
+<p>以旋转G到左边为例</p>
+<p>树旋转可以让树高度更短或者更长,也有助于维护BST的性质(BST可能会不平衡,所以可以利用树旋转来维护,而B树是自平衡的就不需要树旋转来维护)</p>
+<figure data-type="image" tabindex="79"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_14.21.44.png" alt="截屏2022-08-29 14.21.44.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="80"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_14.22.43.png" alt="依靠树旋转维护BST" loading="lazy"></figure>
+<p>依靠树旋转维护BST</p>
+<blockquote>
+<p>描述一棵树的术语:</p>
+<p>**root:**树中最上层的节点，也是唯一一个其父节点为Null的节点</p>
+<p>**leaf:**没有子节点的节点称为leaf node。</p>
+<p>**external node:**没有子节点的node(和leaf同意)</p>
+<p>**internal node:**至少有一個child的node</p>
+<figure data-type="image" tabindex="81"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_11.26.55.png" alt="这个称为4 node,因间隙可以放4个子节点" loading="lazy"></figure>
+<p>这个称为4 node,因间隙可以放4个子节点</p>
+</blockquote>
+<h2 id="红黑树-red-black-trees">红黑树 <strong><strong>Red Black Trees</strong></strong></h2>
+<h3 id="建立一个在结构上与2-3树相同的bst">建立一个在结构上与2-3树相同的BST</h3>
+<p>2-3是自动平衡的,所以我们用它来建立一个BST解决BST会有不平衡的问题</p>
+<p>2个子节点的2-3树就和BST结构一样<br>
+但3个子节点的2-3树呢,怎么样才能变成BST的结构</p>
+<figure data-type="image" tabindex="82"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_15.48.57.png" alt="截屏2022-08-29 15.48.57.png" loading="lazy"></figure>
+<p>可以建立像哨兵节点(sentinel node)那样不存储值的节点,但是结构会很难看并且丑(但是是可以实现的方法之一)因此选择其他方式实现</p>
+<figure data-type="image" tabindex="83"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_15.51.14.png" alt="截屏2022-08-29 15.51.14.png" loading="lazy"></figure>
+<p>使用放在左边(约定俗成)的红色的连接线来表示有两个item的节点</p>
+<figure data-type="image" tabindex="84"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_15.52.28.png" alt="Java中也是这样处理的" loading="lazy"></figure>
+<p>Java中也是这样处理的</p>
+<hr>
+<h3 id="左倾红黑树-llrb"><strong>左倾红黑树 LLRB</strong></h3>
+<p>这样我们就得到了<strong>左倾红黑树Left-Leaning Red Black Binary Search Tree (LLRB)</strong></p>
+<p>本质上就是一种2-3树表现得像BST,所以每个LLRB都有对应的2-3树</p>
+<figure data-type="image" tabindex="85"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_15.54.18.png" alt="红色link只是种表达方式,并没有特别的作用" loading="lazy"></figure>
+<p>红色link只是种表达方式,并没有特别的作用</p>
+<h3 id="llrb的性质"><strong>LLRB的性质</strong></h3>
+<p>由于它本质上是2-3树所以:</p>
+<p>不会出现一个节点拥有两个红link(这样就会变成一个节点超过2个item了)</p>
+<p>leaf拥有的黑link相等(因为2-3树是自平衡的)比如例子第二个leaf“C”到根两根黑线,而X只有一根,说明他们不平衡</p>
+<figure data-type="image" tabindex="86"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_15.58.52.png" alt="LLRB的性质" loading="lazy"></figure>
+<p>LLRB的性质</p>
+<figure data-type="image" tabindex="87"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_15.57.18.png" alt="错误的LLRB例子
+1.B有2个红线 2、3.黑线不平衡 4.正确的结构" loading="lazy"></figure>
+<p>错误的LLRB例子<br>
+1.B有2个红线 2、3.黑线不平衡 4.正确的结构</p>
+<h3 id="llrb的height"><strong>LLRB的Height</strong></h3>
+<p>最大高度就是2H+1</p>
+<p>原本的高H(黑link)</p>
+<p>然后每个节点都可能是粉红节点(可以看作一个红link),节点数比H多1</p>
+<p>![可以把每个粉红节点看作一条连线<br>
+另外可以看出每个leaf(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_16.05.35.png)</p>
+<p>可以把每个粉红节点看作一条连线<br>
+另外可以看出每个leaf(没有子节点的节点)到root的黑线数量相同,说明是平衡的</p>
+<h3 id="llrb的实现"><strong>LLRB的实现</strong></h3>
+<p>由于我们就是为了避免B树的难以实现,所以采用红黑树,因此不可能再建立一个B树再转换为红黑树</p>
+<figure data-type="image" tabindex="88"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_16.09.27.png" alt="截屏2022-08-29 16.09.27.png" loading="lazy"></figure>
+<h3 id="llrb插入规则">LLRB插入规则</h3>
+<p>通过Rotations维护红黑树与2-3树一对一的关系</p>
+<p>进行修改操作时可以认为就是在修改2-3树</p>
+<figure data-type="image" tabindex="89"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_13.50.04.png" alt="截屏2022-08-30 13.50.04.png" loading="lazy"></figure>
+<ul>
+<li>
+<p>当插入新数值时,使用红线左连接</p>
+<figure data-type="image" tabindex="90"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_13.59.28.png" alt="截屏2022-08-30 13.59.28.png" loading="lazy"></figure>
+</li>
+<li>
+<p>如果有右倾的3 node(2个item)就要对合适的node “Rotate left”</p>
+<figure data-type="image" tabindex="91"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_14.00.39.png" alt="添加S后由于它比E大放在了右边,所以需要把E向左旋转" loading="lazy"></figure>
+<p>添加S后由于它比E大放在了右边,所以需要把E向左旋转</p>
+<figure data-type="image" tabindex="92"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_14.22.40.png" alt="S是右倾红线连接所以旋转B到左边修复成LLRB" loading="lazy"></figure>
+<p>S是右倾红线连接所以旋转B到左边修复成LLRB</p>
+</li>
+<li>
+<p>如果有两个连续的左边红线，就会产生4 node 就要对合适的node “Rotate right” (临时 )</p>
+<figure data-type="image" tabindex="93"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_14.11.52.png" alt="S两个子节点都是红线连接的问题下面解决" loading="lazy"></figure>
+<p>S两个子节点都是红线连接的问题下面解决</p>
+</li>
+<li>
+<p>如果有任何node有两个红线子节点，就产生了临时4 node(3个item),需要对node进行颜色翻转，以模拟分割操作(因为要一对一,结构不会发生变化)</p>
+<figure data-type="image" tabindex="94"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_14.09.52.png" alt="B有两个红线连接子节点,于是翻转B相关的线颜色,2-3树结构没有变化,但相当于把B与G合并了" loading="lazy"></figure>
+<p>B有两个红线连接子节点,于是翻转B相关的线颜色,2-3树结构没有变化,但相当于把B与G合并了</p>
+<p>![翻转后产生了子4的节点都是红线(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_14.31.05.png)</p>
+<p>翻转后产生了子4的节点都是红线(2-3里就是4 node:2 4 6)所以颜色翻转后就相当于分割了2 4 6</p>
+</li>
+</ul>
+<h3 id="llrb运行时间和实现">LLRB运行时间和实现</h3>
+<figure data-type="image" tabindex="95"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_15.38.54.png" alt="由于本质是2-3树高度和查找都一样,只是有旋转操作会花费更多时间" loading="lazy"></figure>
+<p>由于本质是2-3树高度和查找都一样,只是有旋转操作会花费更多时间</p>
+<figure data-type="image" tabindex="96"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_15.39.09.png" alt="LLRB实现需要考虑的规则" loading="lazy"></figure>
+<p>LLRB实现需要考虑的规则</p>
+<h3 id="llrb总结">LLRB总结</h3>
+<ul>
+<li>BST很简单但是不会自平衡</li>
+<li>2-3树(B树)会自平衡但是难实现</li>
+<li>LLRB(红黑树)实现简单(删除实现困难),只需要在BST的基础上加上各种旋转的规则(表现像2-3树) 用BST的结构实现了2-3树的功能解决了2-3树难以实现的问题<br>
+和2-3树有一对一的关系<br>
+Java使用的红黑树不是左倾的,并且是2-3-4树(没有一对一关系),允许两边都有红线,速度更快</li>
+</ul>
+<p>似乎我只学了2-3树并且左倾情况下的特殊的红黑树,以后还得继续深入啊~</p>
+<h2 id="散列表hash-table-哈希表">散列表Hash table (哈希表）</h2>
+<h3 id="data-indexed-arrays只是为了课程设计的结构"><strong><strong>Data Indexed Arrays(只是为了课程设计的结构)</strong></strong></h3>
+<p>用index作为data,存储data是否存在(true/false)</p>
+<p>我们已经知道了Set和Map的几种实现方式</p>
+<p>但我们并不一定需要对他们的item进行比较(而且有些item不可以比较)能不能避免比较呢</p>
+<p>性能虽然很棒了,但能不能更进一步呢</p>
+<figure data-type="image" tabindex="97"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_21.51.26.png" alt="截屏2022-08-30 21.51.26.png" loading="lazy"></figure>
+<p>所以我们可以设计一个index就是data本身,然后存储的东西就是有没有这个data的数组</p>
+<p>这样运行效率就很快</p>
+<figure data-type="image" tabindex="98"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_21.55.24.png" alt="用index作为data,存储true和false表示有没有这个data" loading="lazy"></figure>
+<p>用index作为data,存储true和false表示有没有这个data</p>
+<figure data-type="image" tabindex="99"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_21.55.43.png" alt="实现代码" loading="lazy"></figure>
+<p>实现代码</p>
+<p>缺点是会浪费大量内存,因为我们需要给把所有数字都设为false</p>
+<p>并且我们只能存整数,下面的结构将会扩展到存储英文</p>
+<figure data-type="image" tabindex="100"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_21.58.17.png" alt="截屏2022-08-30 21.58.17.png" loading="lazy"></figure>
+<h3 id="dataindexedenglishwordset"><strong><strong>DataIndexedEnglishWordSet</strong></strong></h3>
+<p>我们可以长度为26的数组,代表a~z</p>
+<p>这样就可以把“cat”存入3了(c开头)</p>
+<p>这样有两个问题</p>
+<ol>
+<li>很容易就重复了<br>
+想找”huhu“时可能为“hub“存过了所以显示”huhu“也存在</li>
+<li>无法存储数字开头的东西</li>
+</ol>
+<figure data-type="image" tabindex="101"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.18.02.png" alt="截屏2022-08-31 16.18.02.png" loading="lazy"></figure>
+<p>首先为了防止冲突可以使用如图的方法为每个单词生成<strong>不会重复</strong>唯一的字符</p>
+<p>但是这个方法不支持大写字母也不支持数字</p>
+<figure data-type="image" tabindex="102"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.21.37.png" alt="截屏2022-08-31 16.21.37.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="103"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.22.59.png" alt="就像数字不会重复一样,27也避免了字母组成重复" loading="lazy"></figure>
+<p>就像数字不会重复一样,27也避免了字母组成重复</p>
+<figure data-type="image" tabindex="104"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.24.35.png" alt="只要base≥ 26就不用担心重复问题
+想象成给每个字母划了一块内存然后一个单词由多个字母组成" loading="lazy"></figure>
+<p>只要base≥ 26就不用担心重复问题<br>
+想象成给每个字母划了一块内存然后一个单词由多个字母组成</p>
+<h3 id="dataindexedstringset"><strong><strong>DataIndexedStringSet</strong></strong></h3>
+<blockquote>
+<p>ASCII是基于拉丁字母的一套电脑编码系统。它主要用于显示现代英语</p>
+</blockquote>
+<p>用126个代表的ASCII为base就可以解决大小写和数字不能存储的问题</p>
+<figure data-type="image" tabindex="105"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.27.57.png" alt="ASCII 33以前的是换位符之类不能打印的字符" loading="lazy"></figure>
+<p>ASCII 33以前的是换位符之类不能打印的字符</p>
+<figure data-type="image" tabindex="106"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.30.25.png" alt="使用ASCII存储例子" loading="lazy"></figure>
+<p>使用ASCII存储例子</p>
+<p>不能存储像中文等非英文词,我们使用Unicode的话就可以支持了</p>
+<p>但问题又来了,这样一个简单的词需要的index都会非常巨大</p>
+<p>就会造成<strong><strong>Integer Overflow</strong></strong><br>
+Java的最大整数是:2,147,483,647,超过就会回到-2,147,483,648</p>
+<p>比如omens(base:126)= 28,196,917,171最后会变成-1,867,853,901</p>
+<figure data-type="image" tabindex="107"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.33.11.png" alt="截屏2022-08-31 16.33.11.png" loading="lazy"></figure>
+<h3 id="散列值-hash-codes">散列值 <strong><strong>Hash Codes</strong></strong></h3>
+<p>简单来说就是通过一种计算方式把所有东西都计算出一个较小的值,一样的东西得到的散列值是相同</p>
+<p>因为值小所以不可避免地会重复<br>
+比如(“melt banana” vs. “subterrestrial anticosmetic”)是一样的值,而解决这个问题叫<em>collision handling</em></p>
+<p>Java中所有对象都有散列值(.hashCode()</p>
+<p>),如果对象改变散列值也会改变</p>
+<figure data-type="image" tabindex="108"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.39.54.png" alt="截屏2022-08-31 16.39.54.png" loading="lazy"></figure>
+<h3 id="hash-tableshandling-collisions"><strong>Hash Tables:Handling Collisions</strong></h3>
+<p>为了解决不同对象相同的散列值可能造成的冲突,可以把存储true/false改为存储这个对象<br>
+比如创建一个LL放对象然后存储指向LL的地址</p>
+<p>有新的对象直接加在LL里就可以了,重复的添加忽略就可以了</p>
+<figure data-type="image" tabindex="109"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.47.12.png" alt="截屏2022-08-31 16.47.12.png" loading="lazy"></figure>
+<p><strong>改为index存储添加的对象列表</strong></p>
+<p>![向对应index(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.50.09.png)</p>
+<p>向对应index(代表散列值)的列表里添加对象本身</p>
+<figure data-type="image" tabindex="110"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.50.18.png" alt="运行速度要取决于对象散列值对应index储存的list长度" loading="lazy"></figure>
+<p>运行速度要取决于对象散列值对应index储存的list长度</p>
+<h3 id="建立散列表-hash-table">建立散列表 <strong><strong>Hash Table</strong></strong></h3>
+<p><strong>节省内存</strong></p>
+<p>有大量index并没有被使用,所以我们可以取余 把散列值余数相同的对象放在一起</p>
+<figure data-type="image" tabindex="111"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.52.47.png" alt="截屏2022-08-31 16.52.47.png" loading="lazy"></figure>
+<p>通过这种操作我们就成功建立出了<strong>散列表</strong>了!</p>
+<figure data-type="image" tabindex="112"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.55.38.png" alt="哪怕散列值不同的对象也被存储在一个bucket里" loading="lazy"></figure>
+<p>哪怕散列值不同的对象也被存储在一个bucket里</p>
+<h3 id="散列表运行时间">散列表运行时间</h3>
+<p>虽然节省了空间,但运行时间也增加了,最坏的时间取决于存储的最长列表</p>
+<p>![最坏的情况下所有的对象都存在一个bucket里,运行时间就是Θ(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.57.56.png)</p>
+<p>最坏的情况下所有的对象都存在一个bucket里,运行时间就是Θ(N)</p>
+<p>为了解决bucket(index对应的存储)太少导致list过长影响运行时间的问题,可以学习之前做AD(数组内核的双端队列)太满了就加倍数组的操作</p>
+<p>一旦存储对象和散列表长度的比值超过设定值就对散列表进行扩大(会让对象重新分配bucket,以前在一起的可能分开,不在一起的可能在一起)</p>
+<p>通过这样的操作就可以让存储和运行时间保持平衡</p>
+<figure data-type="image" tabindex="113"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_17.08.13.png" alt="1.5只是随便选的值,
+M代表bucket数量, N代表item数量" loading="lazy"></figure>
+<p>1.5只是随便选的值,<br>
+M代表bucket数量, N代表item数量</p>
+<h3 id="java中的散列表-hash-tables-in-java">Java中的散列表 <strong><strong>Hash Tables in Java</strong></strong></h3>
+<p>sets和maps很多都是依靠散列表实现的<br>
+因为性能出色,不需要对象可以比较,实现相对简单<br>
+像python的dictionaries就是散列表</p>
+<p>在Java的实现为java.util.HashMap 和 java.util.HashSet</p>
+<p>并且每个Java对象都有.hashCode()的方法可以给出对象的散列值</p>
+<figure data-type="image" tabindex="114"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_17.18.14.png" alt="截屏2022-08-31 17.18.14.png" loading="lazy"></figure>
+<p>使用<strong><strong>HashMaps/HashSets</strong></strong>的注意事项</p>
+<ol>
+<li>不要存储会变化的对象到里面,因为对象变化散列值也会变化</li>
+<li>不要在不重写hashCode的情况下重写equals(原因如图)</li>
+</ol>
+<h3 id="如何实现一个好的hashcodes方法">如何实现一个好的<strong><strong>HashCodes()方法</strong></strong></h3>
+<figure data-type="image" tabindex="115"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_17.19.15.png" alt="截屏2022-08-31 17.19.15.png" loading="lazy"></figure>
+<p>好的****.hashCode()****会让item更分散在不同bucket</p>
+<p>使用base的计算方式就不错(如上面提到的)</p>
+<figure data-type="image" tabindex="116"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_19.01.00.png" alt="1~3不好的生成hashcode方法举例" loading="lazy"></figure>
+<p>1~3不好的生成hashcode方法举例</p>
+<p><strong>String:</strong></p>
+<p>Java8中的String的****.hashCode()****实现</p>
+<p>主要有两点不同:</p>
+<ol>
+<li>使用了31作为base,因为不需要是唯一值</li>
+<li>存储了计算后的散列值,下次使用更快</li>
+</ol>
+<p>代码解读:</p>
+<p>先读取存储的散列值<br>
+如果存在(表示计算过了)就不用计算</p>
+<p>把之前的值乘base:31,用i读取String的每一个字母后相加</p>
+<p>最后存储计算出的String的散列值</p>
+<figure data-type="image" tabindex="117"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_19.04.55.png" alt="对String的散列值处理" loading="lazy"></figure>
+<p>对String的散列值处理</p>
+<p>我们之前使用ASCII作为base和Java的比较</p>
+<p>虽然base:126能获得唯一值(如果是ASCII strings的话)但是有overflow的问题</p>
+<p>因为overflow超过32个字符后,126base只要后面32个字符一样散列值就一样</p>
+<p>而由于接下来的处理我们并不太担心不同string的散列值重复</p>
+<figure data-type="image" tabindex="118"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_19.14.21.png" alt="两种散列值计算方式" loading="lazy"></figure>
+<p>两种散列值计算方式</p>
+<figure data-type="image" tabindex="119"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_19.17.37.png" alt="散列值的计算会有各种问题" loading="lazy"></figure>
+<p>散列值的计算会有各种问题</p>
+<p>好的Base一般选择小的质数(只能被1和本身整除)</p>
+<figure data-type="image" tabindex="120"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_19.20.06.png" alt="为什么要小的质数" loading="lazy"></figure>
+<p>为什么要小的质数</p>
+<p><strong><strong>Collection:</strong></strong></p>
+<p>对于集合的散列值基本就是把集合里每项的散列值遍历并乘base后加在一起</p>
+<p>但一般只会计算集合前面一小部分</p>
+<figure data-type="image" tabindex="121"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_19.23.52.png" alt="截屏2022-08-31 19.23.52.png" loading="lazy"></figure>
+<p><strong><strong>Recursive Data Structure:</strong></strong></p>
+<p>递归的数据结构比如BST就会把节点和两个子节点相加</p>
+<figure data-type="image" tabindex="122"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_19.27.50.png" alt="截屏2022-08-31 19.27.50.png" loading="lazy"></figure>
+<p><strong>总结Java中的散列表</strong></p>
+<ol>
+<li>获得数据的散列值</li>
+<li>把散列值减少到一定位数(比如取余)</li>
+<li>把数据存到上一部减少后散列值对应index(bucket)</li>
+<li>如果items(data)/bucket的比到了设定值就扩张bucket</li>
+<li>如果items分布均匀,运行时间就很理想</li>
+</ol>
+<figure data-type="image" tabindex="123"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_19.30.22.png" alt="截屏2022-08-31 19.30.22.png" loading="lazy"></figure>
+<h1 id="week-8">Week 8</h1>
+<h2 id="优先队列-priority-queue">优先队列 Priority queue</h2>
+<blockquote>
+<p>普通的队列是一种先进先出的数据结构，元素在队列尾追加，而从队列头删除。在优先队列中，元素被赋予优先级。当访问元素时，具有最高优先级的元素最先删除。优先队列具有最高级先出 （first in, largest out）的行为特征。通常采用堆数据结构来实现</p>
+</blockquote>
+<figure data-type="image" tabindex="124"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_16.21.01.png" alt="优先队列的接口" loading="lazy"></figure>
+<p>优先队列的接口</p>
+<p>也就是说如果我们需要一堆数据里最大/小的的几个,最高效的办法就是只留下几个的位置,然后每添加一个新的数据就删除原有队列里的最大/小的一个.(也就是只记录最大/小的几个数据)</p>
+<figure data-type="image" tabindex="125"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_16.22.41.png" alt="几种优先队列实现方法的运行效率区别" loading="lazy"></figure>
+<p>几种优先队列实现方法的运行效率区别</p>
+<p>使用不同的结构实现优先队列</p>
+<p>有序数组:添加需要遍历整个数组,找到极值很容易,删除的话可能会resize数组所以极端情况也很慢</p>
+<p>平衡的BST:所有操作效率都差不多 但还不够快</p>
+<p>散列表: 完全不可用,散列表就像数组加上一堆bucket,添加很快但查找效率极低 需要去每个bucket里找极值</p>
+<p>因此引入了下一个数据结构概念:Heap</p>
+<h2 id="堆-heaps">堆 Heaps</h2>
+<p>非常适合用于实现优先队列,本质上是一种特别的二叉树</p>
+<p>注意区分抽象类型和实现的区别</p>
+<blockquote>
+<p>堆是计算机科学中的一种特别的完全二叉树(bushy或者说平衡,除了最后一层都是满的,最后一层也只在右边缺)。若是满足以下特性，即可称为堆：“给定堆中任意节点P和C，若P是C的母节点，那么P的值会小于等于（或大于等于）C的值”。若母节点的值恒小于等于子节点的值，此堆称为最小堆（min heap）；反之，若母节点的值恒大于等于子节的值，此堆称为最大堆（max heap）。在堆中最顶端的那一个节点，称作根节点（root node），根节点本身没有母节点（parent node）。</p>
+</blockquote>
+<figure data-type="image" tabindex="126"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_16.54.14.png" alt="第三个不完整,第四个没用遵守子节点小于/等于的性质" loading="lazy"></figure>
+<p>第三个不完整,第四个没用遵守子节点小于/等于的性质</p>
+<figure data-type="image" tabindex="127"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_16.58.36.png" alt="截屏2022-09-13 16.58.36.png" loading="lazy"></figure>
+<h3 id="binary-min-heap">Binary min-heap</h3>
+<p>是一种特殊的堆,有两个性质</p>
+<ol>
+<li>Binary min-heap的每一个节点都等于或者小于它的两个子节点</li>
+<li>只会在最后一层缺少节点(并且是右边的节点),其他层都是满的</li>
+</ol>
+<p><strong>操作:</strong></p>
+<ol>
+<li>
+<p><strong>getSmallest()</strong></p>
+<p>另外可以注意到,Binary min-heap的最小值总是root,所以<code>getSmallest()</code>很快速!</p>
+</li>
+<li>
+<p><strong>add()</strong></p>
+</li>
+</ol>
+<p>比如要在这样一个heap里add(3)</p>
+<figure data-type="image" tabindex="128"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_17.57.47.png" alt="截屏2022-09-13 17.57.47.png" loading="lazy"></figure>
+<p>首先要找个一个有缺口的地方(也就是最后一层右边是空的节点)以满足我们左边是满的的要求</p>
+<p>然后放下这个要添加的节点</p>
+<p>再将这个节点与它的父节点比较(由于是min-heap所以越小越靠近root)如果节点更小就与父节点交换</p>
+<figure data-type="image" tabindex="129"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_17.58.43.png" alt="截屏2022-09-13 17.58.43.png" loading="lazy"></figure>
+<p>经过各种交换上升后最终这个添加的节点,放置到了合适的位置</p>
+<figure data-type="image" tabindex="130"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.01.16.png" alt="截屏2022-09-13 18.01.16.png" loading="lazy"></figure>
+<ol>
+<li><strong>removeSmallest()</strong></li>
+</ol>
+<p>基本就是add的反向操作,记住在Binary min-heap中最小的节点就是root</p>
+<figure data-type="image" tabindex="131"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.03.36.png" alt="截屏2022-09-13 18.03.36.png" loading="lazy"></figure>
+<p>删除root后再把最后一个节点移动到原本root的位置</p>
+<p>再将这个新的“root”与子节点比较、交换</p>
+<figure data-type="image" tabindex="132"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.04.17.png" alt="截屏2022-09-13 18.04.17.png" loading="lazy"></figure>
+<p>经过不断的下降、交换后替代原本root的节点也到了正确的位置</p>
+<figure data-type="image" tabindex="133"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.06.41.png" alt="截屏2022-09-13 18.06.41.png" loading="lazy"></figure>
+<p>![再执行一次removeSmallest(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.10.45.png)</p>
+<p>再执行一次removeSmallest(),另外被移动到root的节点往哪边下降都可以</p>
+<h3 id="在java中怎么表示树的结构">在Java中怎么表示树的结构</h3>
+<figure data-type="image" tabindex="134"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.18.16.png" alt="1a:比较直观的一种,和BSTMap差不多 存下本身的值和子节点的位置" loading="lazy"></figure>
+<p>1a:比较直观的一种,和BSTMap差不多 存下本身的值和子节点的位置</p>
+<p>![1b:用一个数组来存储子节点们的位置,好处是可以无限扩张子节点数量,坏处是效率低(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.19.15.png)</p>
+<p>1b:用一个数组来存储子节点们的位置,好处是可以无限扩张子节点数量,坏处是效率低(连指针都有2个)</p>
+<hr>
+<figure data-type="image" tabindex="135"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.22.45.png" alt="1c.每个节点有一个指向子节点和一个指向“兄弟”的指针" loading="lazy"></figure>
+<p>1c.每个节点有一个指向子节点和一个指向“兄弟”的指针</p>
+<hr>
+<p>2.使用数组存储key和父节点</p>
+<figure data-type="image" tabindex="136"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.26.44.png" alt="注意存储父节点的数组,在树完整有顺序的情况下,就是1 1 2 2 3 3 4 4的形式" loading="lazy"></figure>
+<p>注意存储父节点的数组,在树完整有顺序的情况下,就是1 1 2 2 3 3 4 4的形式</p>
+<p>这一个的实现和disjointSets的使用<strong><strong>Quick Union组建(改进)</strong></strong> 有点类似,不显式地存储<br>
+用两个数组一个存储它的值一个存储它的父级节点</p>
+<p>如果是一个完整的tree并且按照了顺序,那么它的parents数组是有顺序的</p>
+<hr>
+<p>3.由于这个树很标准,可以只存储key不存储父节点</p>
+<figure data-type="image" tabindex="137"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.33.33.png" alt="截屏2022-09-13 18.33.33.png" loading="lazy"></figure>
+<p>所以在完整有顺序的tree的情况下(就像我们的BMT),我们可以完全抛弃父节点的数组</p>
+<p>要找到父节点位置也很简单,Java “/”会只保留整数,所以可以使用<code>(k - 1) / 2</code>得到父节点位置(root可能不适用)</p>
+<p>这也是现实中Heaps的实现方法,由于没有各种link所以速度很快!</p>
+<figure data-type="image" tabindex="138"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.39.25.png" alt="似乎是节点位置的算法" loading="lazy"></figure>
+<p>似乎是节点位置的算法</p>
+<figure data-type="image" tabindex="139"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-15_20.42.15.png" alt="几种实现树的方法总结" loading="lazy"></figure>
+<p>几种实现树的方法总结</p>
+<hr>
+<p>3b.留空让计算更高效(教科书使用)</p>
+<figure data-type="image" tabindex="140"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-15_20.45.45.png" alt="无需每次计算都减1,性能提升 类似于哨兵节点" loading="lazy"></figure>
+<p>无需每次计算都减1,性能提升 类似于哨兵节点</p>
+<figure data-type="image" tabindex="141"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-15_21.19.14.png" alt="截屏2022-09-15 21.19.14.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="142"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-15_21.20.54.png" alt="截屏2022-09-15 21.20.54.png" loading="lazy"></figure>
+<h2 id="数据结构小总结">数据结构小总结</h2>
+<p>几乎所有的数据结构只为了解决一件事:搜索,<br>
+也就是找到数据,而不同的结构在不同的环境下性能和实现难度不一样</p>
+<figure data-type="image" tabindex="143"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-15_21.36.41.png" alt="截屏2022-09-15 21.36.41.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="144"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-15_21.36.57.png" alt="红色是不太好的实现方式" loading="lazy"></figure>
+<p>红色是不太好的实现方式</p>
+<h2 id="树的遍历"><strong>树的遍历</strong></h2>
+<p>tree traversa(tree iteration)</p>
+<p>和lists不同,遍历一个树不是只有前进后退两种操作,而是有很多种方式来访问每一个node</p>
+<p>几种树的遍历方式:</p>
+<figure data-type="image" tabindex="145"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_17.41.47.png" alt="截屏2022-09-20 17.41.47.png" loading="lazy"></figure>
+<ol>
+<li><strong>层序遍历</strong>( Level Order)</li>
+</ol>
+<p>按照从上到下然后从左到右的顺序来遍历(就像阅读一样),顺序: DBFACEG</p>
+<ol>
+<li><strong>深度优先搜索</strong> (Depth-first search) or DFS</li>
+</ol>
+<p>按照深度优先,下面的节点比上面的先遍历,分为三种类型:</p>
+<ul>
+<li>
+<p><strong>先序遍历 Preorder</strong></p>
+<figure data-type="image" tabindex="146"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_17.46.18.png" alt="顺序:DBACFEG" loading="lazy"></figure>
+<p>顺序:DBACFEG</p>
+<p>先打印出父节点再打印子节点,并且先左后右</p>
+<p>Preorder很适合作为文件目录打印(下图左)</p>
+<figure data-type="image" tabindex="147"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_18.06.05.png" alt="通过缩进来表示子节点" loading="lazy"></figure>
+<p>通过缩进来表示子节点</p>
+</li>
+<li>
+<p><strong>中序遍历 Inorder</strong></p>
+<figure data-type="image" tabindex="148"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_17.49.00.png" alt="顺序:ABCDEFG" loading="lazy"></figure>
+<p>顺序:ABCDEFG</p>
+<p>和真正的顺序一样,先左子节点再中节点再右子节点</p>
+</li>
+<li>
+<p><strong>后序遍历 Postorder</strong></p>
+<figure data-type="image" tabindex="149"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_18.03.30.png" alt="顺序:ACBEGFD" loading="lazy"></figure>
+<p>顺序:ACBEGFD</p>
+<p>基本上就是从下往上遍历</p>
+<p>Postorder适合用于计算文件夹大小,下方的文件大小一步步向上汇总</p>
+<figure data-type="image" tabindex="150"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_18.16.46.png" alt="截屏2022-09-20 18.16.46.png" loading="lazy"></figure>
+</li>
+</ul>
+<h2 id="图-graphs">图 <strong><strong>Graphs</strong></strong></h2>
+<p>一堆节点,并且节点之间有0或更多edges连接着节点们,但edges不能连接节点自己到自己,也没有多条edges连接着同样的两个节点</p>
+<hr>
+<p>树很适合表示层次关系,但还有不是层次的关系,比如地铁的线路 从一个站点到另一个站点可能有很多种不同的方式</p>
+<p>tree就是一种没有Cycles和每个vertex(node)相连的<strong><strong>Graphs</strong></strong></p>
+<figure data-type="image" tabindex="151"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_19.18.37.png" alt="图2是树,并且所以树都属于图" loading="lazy"></figure>
+<p>图2是树,并且所以树都属于图</p>
+<figure data-type="image" tabindex="152"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_19.20.50.png" alt="绿色的也称为简单图simple graph,本课里的graph都是simple graph" loading="lazy"></figure>
+<p>绿色的也称为简单图simple graph,本课里的graph都是simple graph</p>
+<h3 id="graph的类型">Graph的类型</h3>
+<figure data-type="image" tabindex="153"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_19.27.51.png" alt="Acyclic非循环、Cyclic:循环、Directed:有指向" loading="lazy"></figure>
+<p>Acyclic非循环、Cyclic:循环、Directed:有指向</p>
+<h3 id="graph的术语">Graph的术语</h3>
+<figure data-type="image" tabindex="154"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_19.29.23.png" alt="截屏2022-09-20 19.29.23.png" loading="lazy"></figure>
+<h3 id="graph相关的问题">Graph相关的问题</h3>
+<p>只作为展示Graph本身的深度用</p>
+<figure data-type="image" tabindex="155"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_21.02.50.png" alt="截屏2022-09-20 21.02.50.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="156"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_21.03.10.png" alt="截屏2022-09-20 21.03.10.png" loading="lazy"></figure>
+<h2 id="深度优先遍历-depth-first-traversal"><strong>深度优先遍历 (Depth-first traversal)</strong></h2>
+<h3 id="解决s-t-connectivity问题">解决<strong><strong>s-t Connectivity问题</strong></strong></h3>
+<p>通过遍历把s相邻的节点都判断是否等于t,这样遍历下去如果有一个相等(也就是s-t相连了)就返回ture,另外会给当过s的节点做上标记以防止无限循环比如0的邻居是1,1的又是0这样来来回回</p>
+<figure data-type="image" tabindex="157"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_21.06.16.png" alt="截屏2022-09-20 21.06.16.png" loading="lazy"></figure>
+<p>这样的算法其实就是<strong>深度优先遍历</strong>的一个子集</p>
+<p>深度优先就是先尽可能的深入一个子节点再探索另一个子节点</p>
+<ul>
+<li>使用DFS找到S到其他节点的路径 <a href="https://docs.google.com/presentation/d/1lTo8LZUGi3XQ1VlOmBUF9KkJTW_JWsw_DOPq8VBiI3A/edit#slide=id.g76e0dad85_2_380">Demo演示</a></li>
+</ul>
+<figure data-type="image" tabindex="158"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_21.26.09.png" alt="也被称为**DFS Preorder**" loading="lazy"></figure>
+<p>也被称为<strong>DFS Preorder</strong></p>
+<p>建立这个表需要从s点开始并选择一个点不断深入<br>
+访问的节点需要记录下是否被访问过,和访问它的那个节点</p>
+<h2 id="图的遍历">图的遍历</h2>
+<p>traversal可以解决大部分图的问题,通过在图（或树）的遍历过程中执行actions / setting实例变量，你可以解决像s-t Connectivity或path finding这样的问题。</p>
+<ol>
+<li>
+<p><strong>DFS Preorder</strong></p>
+<p>上面的DepthFirstPaths就是DFS Preorder,操作先于DFS</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="159"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_21.58.06.png" alt="dfs call:012543678" loading="lazy"></figure>
+<p>dfs call:012543678</p>
+<ol>
+<li>
+<p><strong>DFS Postorder</strong></p>
+<p>操作后于DFS</p>
+<figure data-type="image" tabindex="160"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_22.00.08.png" alt="dfs call: 347685210" loading="lazy"></figure>
+<p>dfs call: 347685210</p>
+</li>
+<li>
+<p><strong>BFS (广度优先搜索)</strong></p>
+<p>根据到s的距离来操作(会在下一节课讲到,也就是广度优先)</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="161"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_22.01.03.png" alt="0 1 24 53 68 7" loading="lazy"></figure>
+<p>0 1 24 53 68 7</p>
+<hr>
+<p>使用BFS找到顶点到每个节点的最短路径</p>
+<p>![不使用递归 (https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_10.42.22.png)</p>
+<p>不使用递归 (Recursion)操作</p>
+<p>解法:</p>
+<p>![<a href="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_10.45.31.png">演示地址</a></p>
+<p><a href="https://docs.google.com/presentation/d/1JoYCelH4YE6IkSMq_LfTJMzJ00WxDj7rEa49gYmAtc4/edit?usp=sharing">演示地址</a></p>
+<p>主要思想就是使用Queue这一先进先出的数据结构来对每一层进行记录</p>
+<figure data-type="image" tabindex="162"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_10.51.13.png" alt="distTo是节点到s的距离,每一层+1
+v不像dfs,bfs的顶点可以到处跳动" loading="lazy"></figure>
+<p>distTo是节点到s的距离,每一层+1<br>
+v不像dfs,bfs的顶点可以到处跳动</p>
+<p>由于先进先出的属性,总是把一层探索完后再进入下一层</p>
+<p>探索完成后就可以依靠distTo马上知道一个节点到s的距离了</p>
+<p>BFS还可以应用在如寻找两个演员之间的最短电影关联的网站数据结构</p>
+<figure data-type="image" tabindex="163"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_11.04.36.png" alt="截屏2022-09-22 11.04.36.png" loading="lazy"></figure>
+<p>图遍历和树遍历的一个大区别就是图遍历的顺序可能不是唯一的,比如上图1之后可以去4也可以去2</p>
+<h2 id="graph-api"><strong><strong>Graph API</strong></strong></h2>
+<figure data-type="image" tabindex="164"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.40.20.png" alt="实现用BFS/DFS实现图需要的东西" loading="lazy"></figure>
+<p>实现用BFS/DFS实现图需要的东西</p>
+<hr>
+<p>一般情况会给节点加上label而不是实际的值,可以通过map来对应</p>
+<figure data-type="image" tabindex="165"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.41.58.png" alt="截屏2022-09-22 14.41.58.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="166"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.43.05.png" alt="普林斯顿教材的图API
+注意degree就是edges的意思也就是连接线" loading="lazy"></figure>
+<p>普林斯顿教材的图API<br>
+注意degree就是edges的意思也就是连接线</p>
+<figure data-type="image" tabindex="167"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.43.17.png" alt="打印整个图的code" loading="lazy"></figure>
+<p>打印整个图的code</p>
+<h3 id="使用哪种数据结构实现图图的存储">使用哪种数据结构实现图(图的存储)</h3>
+<p><strong>树:</strong></p>
+<figure data-type="image" tabindex="168"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.47.03.png" alt="1.和一些树结构类似" loading="lazy"></figure>
+<p>1.和一些树结构类似</p>
+<figure data-type="image" tabindex="169"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.47.29.png" alt="2.和只存储key的结构类似⬇️,优点是使用较少的存储和快速,但只能用在完整的tree上" loading="lazy"></figure>
+<p>2.和只存储key的结构类似⬇️,优点是使用较少的存储和快速,但只能用在完整的tree上</p>
+<p>3.由于这个树很标准,可以只存储key不存储父节点</p>
+<p><strong>矩阵:</strong></p>
+<p>![3.使用**邻接矩阵 (https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.51.30.png)</p>
+<p>3.使用**邻接矩阵 (Adjacency matrix)**表示 通过boolean表示是否连接</p>
+<p>有指向的酒只存储父节点到子节点的,无指向的就双向标注</p>
+<p>缺点是有大量冗余</p>
+<p><strong>集合:</strong></p>
+<figure data-type="image" tabindex="170"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.54.22.png" alt="4.存储连接的集合" loading="lazy"></figure>
+<p>4.存储连接的集合</p>
+<hr>
+<p>![5.使用Adjacency lists(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.55.00.png)</p>
+<p>5.使用Adjacency lists(邻接表)</p>
+<p>和哈希表类似,比较适用于连接(edges)少的稀疏的图,也是最常用于实现图的数据结构</p>
+<p>index不存hash而是节点(vertex),bucket存邻居节点</p>
+<h3 id="不同实现图的数据结构的runtime">不同实现图的数据结构的Runtime</h3>
+<p>![注意Adjacency lists的print(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.59.09.png)</p>
+<p>注意Adjacency lists的print()和hasEdge()只是极端情况,大部分情况下图都是稀疏的</p>
+<h1 id="week9">Week9</h1>
+<h2 id="最短路径">最短路径</h2>
+<figure data-type="image" tabindex="171"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-28_15.57.28.png" alt="截屏2022-09-28 15.57.28.png" loading="lazy"></figure>
+<p>之前学过两种找到路径的方法,DFS不适用于瘦长的图,而BFS不适合饱满的图</p>
+<p>但BFS有个好处就是可以找到S点到任意点的<strong>最短路径</strong></p>
+<p>但是在现实中,比如地图APP如果使用这种策略的话就会出问题,因为不是每个点之间的路径都是相同长的</p>
+<figure data-type="image" tabindex="172"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-28_15.59.41.png" alt="最短的路径却有更多edge所以使用BFS会选择edge更少的更长的路径" loading="lazy"></figure>
+<p>最短的路径却有更多edge所以使用BFS会选择edge更少的更长的路径</p>
+<h2 id="戴克斯特拉算法-dijkstras-algorithm"><strong>戴克斯特拉算法 (Dijkstra's algorithm)</strong></h2>
+<p>要点:不断更新S到顶点的最小距离,选择路径更短(priority queue可以帮助)的顶点为下一个探索的顶点,最终形成一个最短路径的tree</p>
+<p>从S到各点的最短路径最终就像是tree一样</p>
+<figure data-type="image" tabindex="173"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-28_18.29.26.png" alt="截屏2022-09-28 18.29.26.png" loading="lazy"></figure>
+<p>而我们可以靠给S到节点标记距离来找到最短路径,最开始默认所有的S到节点的距离为♾️</p>
+<p>到实际访问时再标上真实的距离,如果有更短的距离就进行覆盖这样就得到了<strong>Dijkstra's algorithm</strong></p>
+<p><a href="https://docs.google.com/presentation/d/1_bw2z1ggUkquPdhl7gwdVBoTaoJmaZdpkV6MoAgxlJc/pub?start=false&amp;loop=false&amp;delayms=3000">Dijkstra’s Algorithm Demo Link</a></p>
+<p>另外访问下一个顶点(节点)时总是选择最小的路径来继续</p>
+<figure data-type="image" tabindex="174"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-28_18.34.42.png" alt="通常使用PQ来保证路径" loading="lazy"></figure>
+<p>通常使用PQ来保证路径</p>
+<figure data-type="image" tabindex="175"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-28_18.33.44.png" alt="截屏2022-09-28 18.33.44.png" loading="lazy"></figure>
+<h2 id="a">A*</h2>
+<p><a href="http://qiao.github.io/PathFinding.js/visual/">算法可视化</a></p>
+<p>Dijkstra有个缺点就是会探索所有顶点,但我们从A地到B地并不需要探索完A周围的所有顶点,于是就引入了一个估计值,也就是说我们会尽量探索靠近B点方向的节点(也就是说Dijkstra探索下一个顶点的依据是最短距离,而A*探索的下一个顶点是我们估计与目标顶点距离更近的顶点)</p>
+<blockquote>
+<p>A*算法根据f值f=g+h来构建优先级队列(D只有g)，其中g是起始点与顶点的距离，h是顶点到结束点的距离。D算法是根据g值来构建</p>
+</blockquote>
+<figure data-type="image" tabindex="176"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-28_19.08.25.png" alt="截屏2022-09-28 19.08.25.png" loading="lazy"></figure>
+<hr>
+<p>给定一个无向图，确定它是否包含任何循环</p>
+<figure data-type="image" tabindex="177"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_14.37.14.png" alt="截屏2022-09-29 14.37.14.png" loading="lazy"></figure>
+<p>解决方法</p>
+<p>1:使用DFS只要再次遇到已经标记过的顶点就说明有循环♻️(注意要除去到这个顶点的顶点)</p>
+<p>2:使用WeightedQuickUnionUF,大概就是没连接的点union,有连接的点之间比如4,5 4,6 5,6都union了说明是循环(这个我也不太懂)</p>
+<h2 id="生成树-spanning-trees">生成树 <strong><strong>Spanning Trees</strong></strong></h2>
+<p>是无向图的一个子图,无向图 G 的生成树是具有G 的全部顶点，但边数最少的连通子图</p>
+<figure data-type="image" tabindex="178"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_14.48.48.png" alt="连接、不循环→tree、包含所有顶点→spanning" loading="lazy"></figure>
+<p>连接、不循环→tree、包含所有顶点→spanning</p>
+<h2 id="mst-最小生成树-minimum-spanning-tree">MST <strong>最小生成树 (Minimum spanning tree)</strong></h2>
+<p>就是无向图的生成树里面权值最小的生成树</p>
+<p><a href="http://www.ics.uci.edu/~eppstein/gina/mst.html">MST的现实应用</a>:比如不同城镇间建立线路最短的电网</p>
+<h3 id="mst-vs-spt"><strong><strong>MST vs. SPT</strong></strong></h3>
+<p>MST是没有S(source)的,它的目标是连接所有顶点并且路径最短,而SPT的目标是找到S到所有节点最短的路径</p>
+<p>在某些情况下他们可能长得一样</p>
+<figure data-type="image" tabindex="179"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_15.21.58.png" alt="B点为S的SPT与MST一样" loading="lazy"></figure>
+<p>B点为S的SPT与MST一样</p>
+<p>![该图找不到一个S让SPT和MST相同,因为要实现路径最短中间那个顶点总有一边使用了两条edges<br>
+(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_15.25.29.png)</p>
+<p>该图找不到一个S让SPT和MST相同,因为要实现路径最短中间那个顶点总有一边使用了两条edges<br>
+(下图为S为紫色顶点的SPT图)</p>
+<p>正因为MST和SPT并不一定一样,所以也需要新的算法来找到MST</p>
+<h2 id="切分定理-the-cut-property">切分定理 The Cut Property</h2>
+<p>首先随机把顶点分为黑白两个set,这样连接黑白的边(edge)就是横切边(Crossing Edge),这些横切边里最短的边必定是MST的一部分</p>
+<figure data-type="image" tabindex="180"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_17.42.05.png" alt="如图红线就是横切边" loading="lazy"></figure>
+<p>如图红线就是横切边</p>
+<p>证明:如图我们找到了最短的横切边</p>
+<figure data-type="image" tabindex="181"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_17.46.25.png" alt="截屏2022-09-29 17.46.25.png" loading="lazy"></figure>
+<p>如果e不是MST的一部分,把它加入MST就会形成循环</p>
+<p>这时候减去f得到的MST,必定是路径更短的MST</p>
+<figure data-type="image" tabindex="182"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_17.47.56.png" alt="截屏2022-09-29 17.47.56.png" loading="lazy"></figure>
+<h3 id="使用切分定理来找到mst">使用切分定理来找到MST</h3>
+<p>我们可以一直生成不同的set(把顶点们随机分为两部分),然后其中最小的edge就加入MST,最终就能得到完整MST了</p>
+<figure data-type="image" tabindex="183"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_17.53.26.png" alt="截屏2022-09-29 17.53.26.png" loading="lazy"></figure>
+<p>但是又有一个新问题:“Random isn’t a very good idea.”也就是依靠随机分set并不是很可靠也就引入了使用切分定理的下一个算法</p>
+<h2 id="普里姆算法-prims-algorithm"><strong>普里姆算法 Prim's algorithm</strong></h2>
+<p>随便选择一个顶点开始,然后每次都选择最小的边加入MST,直到加入了V-1条边,就得到了MST</p>
+<p>其实就是切分定理的一个应用,相当于把已经选择过的顶点和余下部分分为了两个set,再找到最短的横切边加入MST</p>
+<figure data-type="image" tabindex="184"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_18.06.53.png" alt="截屏2022-09-29 18.06.53.png" loading="lazy"></figure>
+<hr>
+<p>不过这种<strong>Prim's algorithm</strong>有个缺点就是可能最后有太多需要考虑的边了,效率不高</p>
+<figure data-type="image" tabindex="185"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_18.37.02.png" alt="截屏2022-09-29 18.37.02.png" loading="lazy"></figure>
+<p><a href="https://docs.google.com/presentation/d/1NFLbVeCuhhaZAM1z3s9zIYGGnhT4M4PWwAc-TLmCJjc/edit#slide=id.g9a60b2f52_0_0">考虑所有边的演示</a>、<a href="https://docs.google.com/presentation/d/1GPizbySYMsUhnXSXKvbqV4UhPCvrt750MiqPPgU-eCY/edit#slide=id.g9a60b2f52_0_0">引入临时边的演示</a></p>
+<p>所以我们可以学习Dijkstra的想法,把顶点们以到S距离放入PQ,并且不断移除确认了最短边的节点,这样就不用考虑所有紫线了(不是很懂,建议看演示理解)</p>
+<h3 id="prims-vs-dijkstras"><strong><strong>Prim’s vs. Dijkstra’s</strong></strong></h3>
+<p>这两种算法基本相同,只是关注的东西不一样一个在乎相邻未加入顶点edge的PQ里的最短,一个在乎S到顶点的距离最短(也就是他们选择下一个顶点的逻辑不一样)</p>
+<p>总的来说Prim关注集合(Set)和集合,而Dijkstra关注一个顶点到其他所有顶点,除此之外思想是差不多的</p>
+<figure data-type="image" tabindex="186"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_19.16.41.png" alt="截屏2022-09-29 19.16.41.png" loading="lazy"></figure>
+<p>但是Prim的实现还是比较复杂的,所以有了更简单而且也不用随机选择相同权值的新算法——<strong>克鲁斯克尔算法 (Kruskal's algorithm)</strong></p>
+<h2 id="克鲁斯克尔算法-kruskals-algorithm"><strong>克鲁斯克尔算法 Kruskal's algorithm</strong></h2>
+<p>将edge按权值由小到大排列,然后只要新加入MST的edge不构成循环就加入.最终V-1是就完成了MST了(和Prim不一样,构建时的MST不一定都相连)</p>
+<p>同样也贯彻了Cut Property,可以把已经加入MST的点和未加入的想象为2个set,总之既然MST包含全部顶点,那么不构成循环的权值低的edge势必会被考虑</p>
+<p>![真实实现演示:<a href="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-01_15.31.24.png">Link</a></p>
+<p>真实实现演示:<a href="https://docs.google.com/presentation/d/1KpNiR7aLIEG9sm7HgX29nvf3yLD8_vdQEPa0ktQfuYc/edit?usp=sharing">Link</a></p>
+<p>如图一个按edge权值排列的PQ,检查后就删除这个边<br>
+一个WQU(Weighted Quick Union)来确定是否有循环(比如想连接1和4结果有“0-2-4-1-3”说明会构成循环,就不加入MST),就是通过能不能Union来判断是否有循环<br>
+和最小生成树的MST结构</p>
+<figure data-type="image" tabindex="187"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-01_15.45.57.png" alt="截屏2022-10-01 15.45.57.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="188"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-01_15.45.46.png" alt="截屏2022-10-01 15.45.46.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="189"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-01_17.39.25.png" alt="最短路径和各种MST算法总结,实际情况E和V的差别没多大,所以想用哪个算法都可以只是Dijkstra不适用于负的权值" loading="lazy"></figure>
+<p>最短路径和各种MST算法总结,实际情况E和V的差别没多大,所以想用哪个算法都可以只是Dijkstra不适用于负的权值</p>
+<h2 id="tree的结构可以支持各种操作一维">tree的结构可以支持各种操作(一维)</h2>
+<p>假定有set:{1, 4, 5, 6, 9, 11, 14, 17, 20}</p>
+<ul>
+<li>
+<p>select(int i): 返回按从小到达排列的第i个最小的值<br>
+select(0): 1、select(3): 6</p>
+</li>
+<li>
+<p>rank(T x): 返回 set中第几个的“rank”  (与select相反).<br>
+rank(1): 0、 rank(6): 3</p>
+</li>
+<li>
+<p>subSet(T from, T to):返回from到to之间的items(类似于子集)<br>
+subSet(4, 9): Returns {4, 5, 6, 9}、subSet(3, 12): Returns {4, 5, 6, 9, 11}、subSet(12, 13): Returns {}</p>
+</li>
+<li>
+<p>nearest(T x): 返回最接近x的值<br>
+nearest(6): Returns 6、nearest(8): Returns 9、nearest(10): Returns 9 or 11</p>
+<figure data-type="image" tabindex="190"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-01_18.56.05.png" alt="截屏2022-10-01 18.56.05.png" loading="lazy"></figure>
+<p>实现这个功能只需要search这个值并且不断更新并记录一个最靠近它的值就行了,其他功能的实现也与它很类似</p>
+</li>
+</ul>
+<p>以上这些都说了tree这个结构对各种操作都很有效率</p>
+<p>但是我们这些都是一维的数据,而多维的tree和各种功能怎么设计就需要更进一步讨论了</p>
+<figure data-type="image" tabindex="191"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-01_19.08.53.png" alt="截屏2022-10-01 19.08.53.png" loading="lazy"></figure>
+<h2 id="多维数据不能使用bst">多维数据不能使用BST</h2>
+<p>比如我们有一个有x,y信息的数据,只通过X或者Y得到的BST很可能不一样,想要在以Y生成的tree里找到X小于某个值的顶点的话必须遍历全部顶点</p>
+<figure data-type="image" tabindex="192"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-02_17.47.55.png" alt="截屏2022-10-02 17.47.55.png" loading="lazy"></figure>
+<h2 id="四叉树-quadtree"><strong>四叉树 Quadtree</strong></h2>
+<p>四叉树的基本想法就是把一个顶点从拥有两个子节点变成四个,这样就可以容纳二维的数据了</p>
+<figure data-type="image" tabindex="193"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-02_18.15.10.png" alt="截屏2022-10-02 18.15.10.png" loading="lazy"></figure>
+<p>所以我们就可以按照x和y这样的二维数据来决定新的数据放到它的NW、NE、SE还是SW了,X决定东西,Y决定南北</p>
+<p>其实回忆一下二叉树就像一个只有x的轴,而四叉树就像平面直角坐标系</p>
+<p>![<a href="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-02_18.17.01.png">四叉树添加节点的演示</a></p>
+<p><a href="https://docs.google.com/presentation/d/1vqAJkvUxSh-Eq4iIJZevjpY29nagNTjx-4N3HpDi0UQ/pub?start=false&amp;loop=false&amp;delayms=3000">四叉树添加节点的演示</a></p>
+<p>另外这样之后我们就可以进行**空间分割 (Space partitioning)**了按照NW、NE、SE、SW把一个顶点的空间划为4个,这样就可以进行剪枝(pruning)从而像二叉树支持一维数据的各种操作一样,支持二维数据的各种操作了</p>
+<h3 id="range-search"><strong><strong>Range Search</strong></strong></h3>
+<p>![<a href="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-02_18.23.56.png">演示地址</a></p>
+<p><a href="https://docs.google.com/presentation/d/1ZVvh_Q15Lh2D1_NnzZ4PR_aDsLBwvAU9JYQAwlSuXSM/edit?usp=sharing">演示地址</a></p>
+<p>通过剪枝来找到绿色方块,这样就不用访问其他空间了,节省时间,就和二叉树去左/右的想法类似</p>
+<h2 id="更高的维度">更高的维度</h2>
+<p>三维的数据四叉树就不行了,因为只有四个方向,而需要八个方向才行</p>
+<p>于是可以使用八叉树</p>
+<figure data-type="image" tabindex="194"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-02_19.29.40.png" alt="截屏2022-10-02 19.29.40.png" loading="lazy"></figure>
+<p>超过3维怎么办呢,就有了一个通用的结构k-d tree</p>
+<figure data-type="image" tabindex="195"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-02_19.31.09.png" alt="截屏2022-10-02 19.31.09.png" loading="lazy"></figure>
+<h2 id="k-d-tree">k-d tree</h2>
+<p>(一下例子为二维数据时)</p>
+<p>也就是k-dimensional tree的意思,可以支持任意高的维度</p>
+<p>基本思想就是根据深度交替把空间分为左右或者上下然后插入新的值(更多维度就根据深度来切换X,Y,Z……)</p>
+<figure data-type="image" tabindex="196"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-02_19.46.55.png" alt="截屏2022-10-02 19.46.55.png" loading="lazy"></figure>
+<p>与四叉树类似,只是k-d tree的每一个顶点都分出了两个子空间</p>
+<figure data-type="image" tabindex="197"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-02_19.38.44.png" alt="截屏2022-10-02 19.38.44.png" loading="lazy"></figure>
+<p>注意新加入的节点比较的时候,是哪一层就按照哪一层的重点值来比较,如果决定放入再比较另一个值</p>
+<p>注意节点F虽然到C时该和C比较x值,但值却一样,按照规定一样的值就当作更大的值对待,所以F就放在C的R了</p>
+<h2 id="k-d-trees寻找最近点"><strong><strong>K-d Trees寻找最近点</strong></strong></h2>
+<p>因为不怎么懂,不做过多说明</p>
+<p>总之就是通过一定找Good side而有条件地看Bad side找到理想的最近点</p>
+<p>![ <a href="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_16.00.06.png">K-d tree nearest demo.</a></p>
+<p><a href="https://docs.google.com/presentation/d/1DNunK22t-4OU_9c-OBgKkMAdly9aZQkWuv_tBkDg1G4/edit?usp=sharing">K-d tree nearest demo.</a></p>
+<p>两种实现找最近点的伪代码</p>
+<figure data-type="image" tabindex="198"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_16.02.21.png" alt="截屏2022-10-03 16.02.21.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="199"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_16.02.28.png" alt="截屏2022-10-03 16.02.28.png" loading="lazy"></figure>
+<h2 id="uniform-partitioning"><strong><strong>Uniform Partitioning</strong></strong></h2>
+<p>一种不适用tree而是划分区块来存储的结构 (不了解)同样也是<strong>spatial partitioning</strong></p>
+<figure data-type="image" tabindex="200"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_17.08.40.png" alt="截屏2022-10-03 17.08.40.png" loading="lazy"></figure>
+<h1 id="week-9">Week 9</h1>
+<h2 id="字典树-trie">字典树 <strong>Trie</strong></h2>
+<p>全称是Re<strong>trie</strong>val Tree,发音类似“try”</p>
+<p>之前我们有许多方式可以实现Set和Map,而Trie又是另一种可以实现它们的方式</p>
+<figure data-type="image" tabindex="201"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_17.59.00.png" alt="截屏2022-10-03 17.59.00.png" loading="lazy"></figure>
+<p>主要想法就是使用key值本身来存储数据,比如“sad”就是root-s-a-d,然后蓝色标号表示是一个结尾(实际可以给节点改变值来实现)这样就不会出现到底存没存“sa”的疑惑了</p>
+<figure data-type="image" tabindex="202"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_18.00.31.png" alt="包含 “sam”, “sad”, “sap”, “same”, “a”, and “awls”, 不包含“aw”, “awl”, “sa”, 等" loading="lazy"></figure>
+<p>包含 “sam”, “sad”, “sap”, “same”, “a”, and “awls”, 不包含“aw”, “awl”, “sa”, 等</p>
+<p>用trie实现Map也很简单,只需要加上存储值的位置就行了比如“shore”就对应7</p>
+<figure data-type="image" tabindex="203"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_18.03.16.png" alt="截屏2022-10-03 18.03.16.png" loading="lazy"></figure>
+<hr>
+<p>实现Set的几种方法对比</p>
+<figure data-type="image" tabindex="204"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_18.26.49.png" alt="截屏2022-10-03 18.26.49.png" loading="lazy"></figure>
+<h3 id="trie的基本实现">trie的基本实现</h3>
+<figure data-type="image" tabindex="205"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_18.26.18.png" alt="截屏2022-10-03 18.26.18.png" loading="lazy"></figure>
+<p>R代表有多少个子节点(更改它可以支持不同的字符集)</p>
+<p>ch,也就是节点本身的字母可以删去,因为只有通过相应的链接才能到达该节点 这样可以减少冗余也就是“键不是直接保存在节点中，而是由节点在树中的位置决定”)</p>
+<p>DataIndexedCharMap 代表子节点们</p>
+<pre><code class="language-java">public class DataIndexedCharMap&lt;V&gt; {
+   private V[] items;
+   public DataIndexedCharMap(int R) {
+       items = (V[]) new Object[R];
+   }
+   ...
+}
+</code></pre>
+<p>isKey表示该节点是否是一个结尾(也就是标记成蓝色的节点)</p>
+<hr>
+<p>能看出来这样需要大量的内存给空的地方</p>
+<figure data-type="image" tabindex="206"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_18.29.27.png" alt="截屏2022-10-03 18.29.27.png" loading="lazy"></figure>
+<h3 id="效率和运行时间">效率和运行时间</h3>
+<p>由于不需要额外寻找其他节点,所以添加和查询都是固定的时间</p>
+<figure data-type="image" tabindex="207"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_18.31.06.png" alt="截屏2022-10-03 18.31.06.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="208"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_18.32.07.png" alt="和其他实现对比有速度优势!" loading="lazy"></figure>
+<p>和其他实现对比有速度优势!</p>
+<p>速度很快并且恒定,但缺点是会使用大量存储给用不到的节点</p>
+<h3 id="改变指向子节点的策略">改变指向子节点的策略</h3>
+<p>上面说到这种存下全部子节点的方式,虽然速度很快,但是会浪费大量内存</p>
+<figure data-type="image" tabindex="209"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_19.10.11.png" alt="截屏2022-10-03 19.10.11.png" loading="lazy"></figure>
+<p>所以可以使用Hash table或者BST来追踪子代</p>
+<figure data-type="image" tabindex="210"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_19.10.41.png" alt="截屏2022-10-03 19.10.41.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="211"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_19.10.50.png" alt="截屏2022-10-03 19.10.50.png" loading="lazy"></figure>
+<p>不过这样虽然内存使用小了很多很多,但运行时间会稍微增加</p>
+<figure data-type="image" tabindex="212"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_19.12.00.png" alt="截屏2022-10-03 19.12.00.png" loading="lazy"></figure>
+<h3 id="trie的操作-trie-string-operations">Trie的操作 <strong><strong>Trie String Operations</strong></strong></h3>
+<p>理论上渐进式的速度改进是不错的。但Trie的主要吸引力在于它们能够有效地支持String的特定操作，如前缀匹配(prefix matchng)</p>
+<figure data-type="image" tabindex="213"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_14.32.16.png" alt="比如找到以“sa”开头的String,或者trie中拥有的最长的“sample”的前缀" loading="lazy"></figure>
+<p>比如找到以“sa”开头的String,或者trie中拥有的最长的“sample”的前缀</p>
+<p><strong>伪代码:找到trie中的所有值:</strong></p>
+<figure data-type="image" tabindex="214"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_14.35.01.png" alt="通过递归不断向下运算,并且把符合的词加入list" loading="lazy"></figure>
+<p>通过递归不断向下运算,并且把符合的词加入list</p>
+<p><strong>找到以某个前缀开头的所有值:</strong></p>
+<figure data-type="image" tabindex="215"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_14.37.16.png" alt="与上一个类似,知识把root定在想要找的前缀上" loading="lazy"></figure>
+<p>与上一个类似,知识把root定在想要找的前缀上</p>
+<p>上面这些应用都是Trie相比以前的BST、Map等拥有的优势,可以快速进行字符串相关的操作</p>
+<h3 id="自动补全-autocomplete">自动补全 <strong><strong>Autocomplete</strong></strong></h3>
+<p>像在搜索引擎中常见的输入几个字就提示可能的结果,就是Trie的一种应用</p>
+<p>比如一个Trie形式的map拥有权值,按照AI计算出的权值向用户推荐最有可能的补全结果</p>
+<figure data-type="image" tabindex="216"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_14.52.25.png" alt="截屏2022-10-05 14.52.25.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="217"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_14.42.13.png" alt="截屏2022-10-05 14.42.13.png" loading="lazy"></figure>
+<p>但是我们可能遇到只输入如“b”的话,有数百万乃至更多结果,如果要返回最高的几个的话计算量就太大了</p>
+<figure data-type="image" tabindex="218"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_14.50.42.png" alt="截屏2022-10-05 14.50.42.png" loading="lazy"></figure>
+<p>所以我们不止加入权值,还加入子代最高的权值</p>
+<p>也就是best值,记录下面最高的权值</p>
+<p>这样就可以快速找到最高的几个权值key,并返回给用户了</p>
+<p>(可以把他们使用PQ来决定访问顺序,比如s的PQ就是p、a、m)</p>
+<figure data-type="image" tabindex="219"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_14.53.47.png" alt="截屏2022-10-05 14.53.47.png" loading="lazy"></figure>
+<p>更进一步:</p>
+<p>可以看到中间有许多不是key的节点,所以可以进行压缩节省时间和内存</p>
+<p>这种结构被称为<strong>基数树 (Radix tree)</strong></p>
+<figure data-type="image" tabindex="220"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_14.57.38.png" alt="截屏2022-10-05 14.57.38.png" loading="lazy"></figure>
+<h3 id="总结">总结</h3>
+<p>trie理论上性能比BST、Map好,真正的优势是各种String操作,比如找前缀等来支持如自动补全等功能<br>
+还有解压缩时编码到字符的过程使用trie也会很快</p>
+<p>另外各种数据结构融合也能来更好的效果比如trie和pq和之前的各种trie的子节点实现方式</p>
+<p>当然除了trie外还有<strong>后缀树</strong>Suffix Trees (<a href="https://en.wikipedia.org/wiki/Suffix_tree">Link</a>)、<strong>无环确定有限状态自动机</strong>DAWG (<a href="https://en.wikipedia.org/wiki/Deterministic_acyclic_finite_state_automaton">Link</a>)等各种不同用途的数据结构</p>
+<figure data-type="image" tabindex="221"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_15.03.31.png" alt="截屏2022-10-05 15.03.31.png" loading="lazy"></figure>
+<h2 id="软件工程-software-engineering-i">软件工程 <strong>Software Engineering I</strong></h2>
+<p>之所以有这个内容是之前大部分的编程内容都是小规模的,根据指引完成的(project2、3除外)</p>
+<p>但对于真正编程来讲并不是这样的,所以要教导怎么样面对大的项目</p>
+<h3 id="复杂度-complexity-defined">复杂度 <strong><strong>Complexity Defined</strong></strong></h3>
+<p>编程是一种几乎纯粹的创造性的行为<br>
+我们在构建系统时面临的最大限制是能够理解我们正在构建的东西！这一点与其他学科非常不同</p>
+<p>随着真实程序的维护，它们会获得更多的功能和复杂性(也就是所谓的屎山形成吧,一开始哪怕很简洁后面也会慢慢复杂,所以不可避免但可以尽量减少)<br>
+随着时间的推移，程序员在未来进行修改时，要理解所有相关的部分会变得更加困难<br>
+各种工具可以帮助我们更容易面对复杂性</p>
+<p>最重要的目标就是保持我的软件“simple”</p>
+<h3 id="管理复杂度">管理复杂度</h3>
+<ul>
+<li>保持代码简单和明显<br>
+尽量减少特殊情况(比如哨兵节点)</li>
+<li>模块化(封装)<br>
+在模块化设计中，一个 &quot;模块 &quot;的创建者可以使用其他模块而不知道它们是如何工作的</li>
+</ul>
+<h3 id="复杂度定义">复杂度定义</h3>
+<p>究竟什么是复杂度？Ousterhout这样定义它:&quot;复杂性是与软件系统的结构有关的任何东西，它使人难以理解和修改系统&quot;。</p>
+<p>比如:<br>
+理解代码如何工作。<br>
+进行小的改进所需的时间<br>
+找到需要修改的地方以进行改进。<br>
+难以修复一个错误而不引入另一个错误。</p>
+<p>&quot;如果一个软件系统很难理解和修改，那么它就很复杂。如果它很容易理解和修改，那么它就很简单&quot;。</p>
+<p>所以像魔法数字、大量重复、不清楚的命名和没有注释等都将增加复杂度</p>
+<p>在写真正的项目时,代码能够工作是不够的,必须注意增加复杂度的苗头并且及时重构,写的时候也要想象未来可能会怎么修改代码</p>
+<h2 id="拓扑排序-topological-sorting"><strong>拓扑排序 Topological sorting</strong></h2>
+<p>假设有0~7项任务,而有箭头的任务必须在指向它的节点后发生,有什么算法可以给出顺序、从哪个点开始算法</p>
+<figure data-type="image" tabindex="222"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_17.43.37.png" alt="截屏2022-10-05 17.43.37.png" loading="lazy"></figure>
+<hr>
+<p>可以使用DFS从indegree(引入次数、入度)为0的点开始,并且完成后切换到另一个indegree为0的点后不清除标记(防止重复)</p>
+<p>按Postorder的方式把DFS访问记录到list</p>
+<p>然后翻转上面的list就得到了拓扑顺序</p>
+<figure data-type="image" tabindex="223"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_17.45.11.png" alt="这种拓扑的情况下,不存在节点的循环" loading="lazy"></figure>
+<p>这种拓扑的情况下,不存在节点的循环</p>
+<p>访问顺序</p>
+<p>![使用了DFS,但并不代表使用它就要重新启动(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_17.55.54.png)</p>
+<p>使用了DFS,但并不代表使用它就要重新启动(访问其他入度0的节点)</p>
+<figure data-type="image" tabindex="224"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_17.56.10.png" alt="截屏2022-10-05 17.56.10.png" loading="lazy"></figure>
+<p>这样就得到了postorde: [7, 4, 1, 3, 0, 6, 5, 2]然后翻转就得到了Topological ordering:[2, 5, 6, 0, 3, 1, 4, 7]</p>
+<p>之所以要使用Postorder再进行翻转的操作是因为,我们使用了DFS,也就是说先访问到的节点比较“深”那么也应该放在更后面的位置所以要倒序记录并翻转</p>
+<hr>
+<p>之所以叫拓扑排序是因为相当于对节点的排序让他们以固定的顺序来指向</p>
+<blockquote>
+<p>拓扑排序(Topological Order)是指,将一个有向无环图(Directed Acyclic Graph简称DAG)进行排序进而得到一个有序的<strong>线性序列</strong></p>
+</blockquote>
+<p>![如图上面一个就是之前的那个图只是摆放成了都指向右边的位置,经过拓扑排序后就有个固定的顺序(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_18.01.15.png)</p>
+<p>如图上面一个就是之前的那个图只是摆放成了都指向右边的位置,经过拓扑排序后就有个固定的顺序(不用思考按什么顺序访问了,对接下来的DAG找最短路线有用)</p>
+<p>补充:还有个更好的拓扑算法是从任意一点(入度不一定为0)开始DFS,直到所有节点都被标记</p>
+<hr>
+<p>从DAG得到TS的顺序:</p>
+<figure data-type="image" tabindex="225"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_18.21.38.png" alt="截屏2022-10-05 18.21.38.png" loading="lazy"></figure>
+<p>拓扑排序只适用于DAG(有向无环图),而且还有大量其他算法也只适用于DAG,向下面这个有环的图就不能使用拓扑排序</p>
+<figure data-type="image" tabindex="226"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_18.22.34.png" alt="截屏2022-10-05 18.22.34.png" loading="lazy"></figure>
+<h3 id="dag的最短路径">DAG的最短路径</h3>
+<p>像下面这的DAG可以使用Dijkstra’s algorithm,但一旦有负的权值就会失效了(因为Dijkstra’s algorithm不会访问标记过了的节点)</p>
+<figure data-type="image" tabindex="227"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_18.24.08.png" alt="截屏2022-10-05 18.24.08.png" loading="lazy"></figure>
+<p>使用拓扑排序后再用类似Dijkstra’s algorithm的方式就可以做到处理带负权值的最短路径了(使用了拓扑排序后我们的走向是固定的,也就不用担心某个顶点的上游下游有没有负权值之类的了)</p>
+<p>![<a href="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_18.25.58.png">Link</a></p>
+<p><a href="https://docs.google.com/presentation/d/1CfnLS3FSXV8X2sXPTravZGXeBUUkcFQv7Uf2iGWGUfs/edit?usp=sharing">Link</a></p>
+<p>也就是下面这样的<strong><strong>DAG SPT</strong></strong> 算法:</p>
+<figure data-type="image" tabindex="228"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_18.27.12.png" alt="截屏2022-10-05 18.27.12.png" loading="lazy"></figure>
+<h3 id="最长路径">最长路径</h3>
+<p>这是个还没有很好未解决的数学问题,最好的算法也是指数级别的</p>
+<figure data-type="image" tabindex="229"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_18.33.21.png" alt="截屏2022-10-05 18.33.21.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="230"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_18.39.14.png" alt="DAG中的解决办法" loading="lazy"></figure>
+<p>DAG中的解决办法</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[CS61b Part 1 Java]]></title>
+        <id>https://nhuji.github.io/post/cs61b-part-1-java/</id>
+        <link href="https://nhuji.github.io/post/cs61b-part-1-java/">
+        </link>
+        <updated>2021-11-03T15:07:03.000Z</updated>
+        <summary type="html"><![CDATA[<p>主要讨论了Java编程语言中的一些基础概念和进阶内容。包括static和non-static的区别，以及辅助函数helper function的使用、测试的重要性、进一步创建List、继承，Java的原始类型和引用类型的区别，以及接口、覆写与重载等概念的介绍还有继承的相关知识，包括extends关键词、super的作用、封装以及建立自己的比较函数等</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>主要讨论了Java编程语言中的一些基础概念和进阶内容。包括static和non-static的区别，以及辅助函数helper function的使用、测试的重要性、进一步创建List、继承，Java的原始类型和引用类型的区别，以及接口、覆写与重载等概念的介绍还有继承的相关知识，包括extends关键词、super的作用、封装以及建立自己的比较函数等</p>
+<!-- more -->
+<p>这个博客并不是我写这篇笔记地方,所以可能出各种包括发布时间、文字、样式等错误</p>
+<h1 id="week1-java入门">Week1 Java入门</h1>
+<p>终端使用教程</p>
+<p><a href="https://sp21.datastructur.es/materials/lab/lab1setup/lab1setup#c-learn-to-use-the-terminal-optional">Lab 1 Setup: Setting Up Your Computer | CS 61B Spring 2021</a></p>
+<p><strong>增强形For循环</strong></p>
+<blockquote>
+<p>Java also supports iteration through an array using an “enhanced for loop”. The basic idea is that there are many circumstances where we don’t actually care about the index at all. In this case, we avoid creating an index variable using a special syntax involving a colon.<br>
+For example, in the code below, we do the exact thing as in <code>BreakDemo</code> above. However, in this case, we do not create an index <code>i</code>. Instead, the <code>String</code> <code>s</code> takes on the identity of each <code>String</code> in <code>a</code> exactly once, starting from <code>a[0]</code>, all the way up to <code>a[a.length - 1]</code>. You can try out this code at <a href="https://goo.gl/wmhVPM">this link</a>.</p>
+</blockquote>
+<blockquote>
+<p>总结一下就是不关心index的时候可以直接遍历数组等</p>
+</blockquote>
+<pre><code class="language-java">public class EnhancedForBreakDemo {
+    public static void main(String[] args) {
+        String[] a = {&quot;cat&quot;, &quot;dog&quot;, &quot;laser horse&quot;, &quot;ketchup&quot;, &quot;horse&quot;, &quot;horbse&quot;};
+
+        for (String s : a) {
+            for (int j = 0; j &lt; 3; j += 1) {
+                System.out.println(s);
+                if (s.contains(&quot;horse&quot;)) {
+                    break;
+                }
+            }
+        }
+    }
+}
+</code></pre>
+<hr>
+<p>在Java中所有的代码都必须在一个class中(但main不一定,可以通过其他的main调用)</p>
+<h3 id="static和non-static的区别">static和non-static的区别:</h3>
+<p>project0会详细深入这一点</p>
+<ul>
+<li>
+<p>示例代码:狗叫.java</p>
+<pre><code class="language-bash">public class DogLoop {
+   public static void main(String[] args) {
+      Dog smallDog = new Dog(5);
+      Dog mediumDog = new Dog(25);
+      Dog hugeDog = new Dog(150);
+      
+      Dog[] manyDogs = new Dog[4];
+      manyDogs[0] = smallDog;
+      manyDogs[1] = hugeDog;
+      manyDogs[2] = new Dog(130);
+      
+      int i = 0;
+      while (i &lt; manyDogs.length) {
+         Dog.maxDog(manyDogs[i], mediumDog).makeNoise();
+         i = i + 1;
+      }
+   }
+   
+   public static class Dog {
+      /* Size of the dog in standard dog size units. */
+      public int size;
+
+      /* This is a constructor. It tells us how to construct
+	 * dogs from our ideal notion of dogness. */
+
+      public Dog(int s) {
+         size = s;
+      }
+
+      public void makeNoise() {
+         if (size &lt; 10) {
+            System.out.println(&quot;hideous yapping&quot;);
+         } else if (size &lt; 30) {
+            System.out.println(&quot;bark!&quot;);
+         } else {
+            System.out.println(&quot;woof!&quot;);
+         }
+      }
+
+      /* Return the larger of dog d1 and dog d2. */
+      public static Dog maxDog(Dog d1, Dog d2) {
+         if (d1.size &gt; d2.size) {
+            return d1;
+         }
+         return d2;
+      }   
+   }
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="辅助函数-helper-function">辅助函数 helper function:</h3>
+<ul>
+<li>将代码里许多功能变为一个个的辅助函数,不仅可以降低复杂度</li>
+<li>而且有利于将大任务变成小任务集中精力解决并且不容易出错</li>
+<li>出现问题时容易 🔧debug</li>
+</ul>
+<hr>
+<p>第一个大的project,据说有点难度<br>
+但目的是为了让我们熟悉突然接受一个大项目,并且不用搞懂所有东西并完成的感觉</p>
+<hr>
+<h1 id="week2-测试的重要性">Week2 测试的重要性</h1>
+<p>前面的课程中讲了Java的一些语法和怎么用辅助函数来管理复杂性<br>
+这一节将focus怎么测试写的代码和进行debug</p>
+<h3 id="以对sort编写测试为例">以对sort编写测试为例:</h3>
+<ul>
+<li>首先不能滥用“! =”因为数组比较要通过<code>Arrays.equals( , )</code>,<br>
+说明测试本身也可能编写出错</li>
+<li>详细的output指出错误的原因 信息等很重要</li>
+<li>怎么使用JUnit写出更好的测试代码</li>
+</ul>
+<p>比如原本要写出这样的代码来找到具体错误的信息:</p>
+<pre><code class="language-java">
+for (int i = 0; i &lt; input.length; i += 1) {
+    if (!input[i].equals(expected[i])) {
+        System.out.println(&quot;Mismatch at position &quot; + i + &quot;, expected: '&quot; 
+				+ expected[i] +  &quot;', but got '&quot; + input[i] + &quot;'&quot;);
+        return;
+  }
+}
+</code></pre>
+<p>使用JUnit可以只用一行<code>org.junit.Assert.assertArrayEquals(expected, input);</code> 替代</p>
+<ul>
+<li>
+<p>编写Sort的过程</p>
+<p>按照测试驱动开发Test-Driven Development (TDD)的思想,先写测试程序再完成功能</p>
+<blockquote>
+<p>编写测试程序</p>
+<p>首先遇到了不能直接用<code>&lt;</code> 比较String的问题,这时候要善用Google,可以找到使用<code>“a”.compareTo(”b”)</code> 这样的比较String的方法</p>
+<p>最终完成了测试程序,这时候就不再需要手动改值而是有个测试程序帮你了 感觉不错😊</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/%E6%88%AA%E5%B1%8F2022-07-19_17.04.21.png" alt="截屏2022-07-19 17.04.21.png" loading="lazy"></figure>
+</blockquote>
+<p>分为三个步骤,用三个helper functions来实现</p>
+<ol>
+<li>
+<p>找到最小的数</p>
+<pre><code class="language-java">/** Test the Sort.findSmallest method. */
+    @Test
+    public void testFindSmallest() {
+        String[] input = {&quot;i&quot;, &quot;have&quot;, &quot;an&quot;, &quot;egg&quot;};
+        int expected = 2;
+
+        int actual = Sort.findSmallest(input, 0);
+        assertEquals(expected, actual);
+
+        String[] input2 = {&quot;there&quot;, &quot;are&quot;, &quot;many&quot;, &quot;pigs&quot;};
+        int expected2 = 2;
+
+        int actual2 = Sort.findSmallest(input2, 2);
+        assertEquals(expected2, actual2);
+    }
+</code></pre>
+<pre><code class="language-java">public static int findSmallest(String[] x, int start) {
+        int smallestIndex = start;
+        for (int i = start; i &lt; x.length; i += 1) {
+            int cmp = x[i].compareTo(x[smallestIndex]);
+            // from the internet, if x[i] &lt; x[smallestIndex], cmp will be -1.
+            if (cmp &lt; 0) {
+                smallestIndex = i;
+            }
+        }
+        return smallestIndex;
+    }
+</code></pre>
+</li>
+<li>
+<p>移动到数组最前面</p>
+</li>
+</ol>
+<p>通过一个temp变量就可以交换a b的位置了</p>
+<pre><code class="language-java">/** Swap item a with b. */
+	public static void swap(String[] x, int a, int b) {
+	    String temp = x[a];
+	    x[a] = x[b];
+	    x[b] = temp;
+    }
+</code></pre>
+<ol>
+<li>在其余的数中继续(迭代)</li>
+</ol>
+<p>完成前两个helper functions就可以汇总了</p>
+<pre><code class="language-java">public static void sort(String[] x) {
+	/* 对下面的辅助函数起始的调用 */
+        sort(x, 0);
+	}
+
+	/** Sorts x starting at position start. */
+	private static void sort(String[] x, int start) {
+	    if (start == x.length) {
+	        return;
+        }
+	    int smallestIndex = findSmallest(x, start);
+	    swap(x, start, smallestIndex);
+	    sort(x, start + 1);
+    }
+</code></pre>
+<p>有时会遇到编写的helper functions 配合不好API不同之类的,很正常 修改一下下就好了</p>
+<p>调用好两个辅助方法就需要思考怎么完成第三部分的<em>在其余的数中继续</em> 的问题<br>
+Java不像python那样支持子索引 x[1:],<br>
+于是也许可以写个辅助函数来帮助我们完成从<code>x的某个位置开始进行</code><br>
+总之就是公共的方法让别人可以使用,private的提供特殊的切片服务</p>
+<blockquote>
+<p>断点可以提供条件,帮助定位问题</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/%E6%88%AA%E5%B1%8F2022-07-19_16.21.41.png" alt="截屏2022-07-19 16.21.41.png" loading="lazy"></figure>
+</blockquote>
+<p>最后发现是第一步<code>findSmallest(String[] x)</code> 始终在整个x数组里找最小的,于是修改为<code>findSmallest(String[] x, int start)</code> 问题解决 (善用debugger在出错的位置思考为什么会出错),而测试和辅助函数可以让我在一堆复杂流程中,只关心修改后的<code>findSmallest</code> 到底对没对,这样就很轻松了</p>
+<p>最后整个Sort完成!🎉</p>
+<ul>
+<li>
+<p>完整的测试代码:</p>
+<pre><code class="language-java">import org.junit.Test;
+import static org.junit.Assert.*;
+
+/** Tests the the Sort class. */
+public class TestSort {
+    /** Test the Sort.sort method. */
+    @Test
+    public void testSort() {
+        String[] input = {&quot;i&quot;, &quot;have&quot;, &quot;an&quot;, &quot;egg&quot;};
+        String[] expected = {&quot;an&quot;, &quot;egg&quot;, &quot;have&quot;, &quot;i&quot;};
+
+        Sort.sort(input);
+
+        assertArrayEquals(expected, input);
+    }
+
+    /** Test the Sort.findSmallest method. */
+    @Test
+    public void testFindSmallest() {
+        String[] input = {&quot;i&quot;, &quot;have&quot;, &quot;an&quot;, &quot;egg&quot;};
+        int expected = 2;
+
+        int actual = Sort.findSmallest(input, 0);
+        assertEquals(expected, actual);
+
+        String[] input2 = {&quot;there&quot;, &quot;are&quot;, &quot;many&quot;, &quot;pigs&quot;};
+        int expected2 = 2;
+
+        int actual2 = Sort.findSmallest(input2, 2);
+        assertEquals(expected2, actual2);
+    }
+
+    /** Test the Sort.swap method. */
+    @Test
+    public void testSwap() {
+        String[] input = {&quot;i&quot;, &quot;have&quot;, &quot;an&quot;, &quot;egg&quot;};
+        int a = 0;
+        int b = 2;
+        String[] expected = {&quot;an&quot;, &quot;have&quot;, &quot;i&quot;, &quot;egg&quot;};
+
+        Sort.swap(input, a, b);
+        assertArrayEquals(expected, input);
+    }
+}
+</code></pre>
+</li>
+</ul>
+<p><a href="https://github.com/Berkeley-CS61B/lectureCode-fa20/tree/master/testing">lectureCode-fa20/testing at master · Berkeley-CS61B/lectureCode-fa20</a></p>
+<p>整个Sort和测试Sort代码</p>
+</li>
+</ul>
+<p><strong>总结</strong></p>
+<p>在现实的开发时个循序渐进的过程,涉及大量的修改,<br>
+而测试可以帮助我们对基本单位的正确性有信心,<br>
+也可以让我们的大脑更专注于具体的一个任务,<br>
+重构代码时也能更方便知道这块代码还是没问题的~</p>
+<blockquote>
+<p>在测试里删掉main,并且在每个测试函数前加上<code>@org.junit.Test</code> 最后run的时候选择有测试的<br>
+就可以很方便的进行测试<br>
+如果进行了import 直接写Test  就可以了 ,可以让代码更简洁</p>
+</blockquote>
+<p>但把握测试和效率的平衡也很重要</p>
+<hr>
+<h3 id="discussion-02-static和-instance区别"><strong><strong>Discussion 02 S</strong></strong>tatic和 Instance区别</h3>
+<ul>
+<li>声明各种变量注意类型比如<code>name = “huhu”</code> ❌,<code>String name = “huhu”</code> ✔️</li>
+<li>Java中数组一旦声明就不能扩张了</li>
+<li>static是什么</li>
+</ul>
+<pre><code class="language-java">class Book {
+public Library library;
+public static Book last = null;
+}
+</code></pre>
+<p>区别在于没有static的会在每个实例中独自存在,一个类的实例都共享static的值</p>
+<p>对于方法来说,Static method 属于class而不是具体的实例,所以static就像一个公共区域</p>
+<p>把61b的教师看成static而每个学生的都有同一个教授,而学生的ID就像Instance,教授改变每个学生的都会变,而一个学生的ID变化不影响其他学生的ID</p>
+<h3 id="lecture-45-构建list-迭代和递归">Lecture 4,5 构建List、迭代和递归</h3>
+<p>“=”只是复制比特,所以这就是为什么对于<code>int a = int b</code> 再修改b的话 a不变,对于对象 <code>a = new Some(),b = a</code> 修改b会让a也变化,因为a本质是对新的Some位置的引用<br>
+更为正式的说法就是值类型与引用类型的区别</p>
+<ul>
+<li>构建一个list</li>
+</ul>
+<p>在Java中构建一个可以扩大的list对象(Java数组一旦声明就不能改变大小了)</p>
+<p>可以注意到对IntList大小的实现方法有两种一种是使用迭代<code>.size()</code> 另一种是不使用迭代的<code>.iterativeSize()</code></p>
+<ul>
+<li>
+<p>迭代和递归的区别</p>
+<p><strong>递归</strong>（recursion）：递归常被用来描述以自相似方法重复事物的过程，在数学和计算机科学中，指的是在函数定义中使用函数自身的方法。（A调用A）</p>
+<p><strong>迭代</strong>（iteration）：重复反馈过程的活动，每一次迭代的结果会作为下一次迭代的初始值。（A重复调用B）</p>
+</li>
+</ul>
+<pre><code class="language-java">public class IntList {
+	public int first;
+	public IntList rest;
+
+	public IntList(int f, IntList r) {
+		first = f;
+		rest = r;
+	}
+
+	/** Return the size of the list using... recursion! */
+	public int size() {
+		if (rest == null) {
+			return 1;
+		}
+		return 1 + this.rest.size();
+	}
+
+	/** Return the size of the list using no recursion! */
+	public int iterativeSize() {
+		IntList p = this;
+		int totalSize = 0;
+		while (p != null) {
+			totalSize += 1;
+			p = p.rest;
+		}
+		return totalSize;
+	}
+
+	/** Returns the ith item of this IntList. */
+	public int get(int i) {
+		if (i == 0) {
+			return first;
+		}
+		return rest.get(i - 1);
+	}
+
+	public static void main(String[] args) {
+		IntList L = new IntList(15, null);
+		L = new IntList(10, L);
+		L = new IntList(5, L);
+
+		System.out.println(L.get(100));
+	}
+}
+</code></pre>
+<p>在完成了IntList后我们还能更进一步,因为现在直接把public迭代展现给用户,并且需要用户手动了解和指定数字的位置比如<code>L = new IntList(5, L);</code> 同时这样使用方法也并不规范,<br>
+所以新建了SLList,这样我们添加数字到List就变为了更简单和规范的<code>L.addLast(20);</code>,此外很多东西也变成了<code>private</code> 防止用户使用设计以外的方法</p>
+<p>另外可以注意到<code>Size()</code> 的实现有点棘手,但通过private做迭代逻辑和public提供外部访问这种常见模式可以解决,当然更好的解决办法是在添加时就记录List大小的改变,这样效率更高 不用每次使用时重新计算大小</p>
+<h3 id="头节点-哨兵节点-sentinel-nodes">头节点 哨兵节点 <strong><strong>Sentinel Nodes</strong></strong></h3>
+<blockquote>
+<p>头结点是链表里面第一个结点，他的数据域可以不存放任何信息（有时候也会存放链表的长度等等信息），他的指针区域存放的是链表中第一个数据元素的结点（就是传说中的首元结点）存放的地址。</p>
+<p>1、防止单链表是空的而设的.当链表为空的时候,带头结点的头指针就指向头结点.如果当链表为空的时候,头结点的指针域的数值为NULL.</p>
+<p>2、是为了方便单链表的特殊操作,插入在表头或者删除第一个结点.这样就保持了单链表操作的统一性!</p>
+<p>3、单链表加上头结点之后，无论单链表是否为空，头指针始终指向头结点，因此空表和非空表的处理也统一了，方便了单链表的操作，也减少了程序的复杂性和出现bug的机会 [1]  。</p>
+<p>4、对单链表的多数操作应明确对哪个结点以及该结点的前驱。不带头结点的链表对首元结点、中间结点分别处理等；而带头结点的链表因为有头结点，首元结点、中间结点的操作相同,从而减少分支，使算法变得简单，流程清晰。对单链表进行插入、删除操作时，如果在首元结点之前插入或删除的是首元结点，不带头结点的单链表需改变头指针的值，在TurboC算法的函数形参表中头指针一般使用指针的指针(在C++中使用引用&amp;)；而带头结点的单链表不需改变头指针的值，函数参数表中头结点使用指针变量即可，对初学者更易接受。</p>
+</blockquote>
+<p>为了避免空list出现的问题我们使用了<strong><strong>Sentinel Nodes作为默认值,而实际的第一项放在了它的next,这样list就永远不为null了</strong></strong></p>
+<pre><code class="language-java">/** An SLList is a list of integers, which hides the terrible truth
+   * of the nakedness within. */
+public class SLList {	
+	//IntNode就是上面IntList的改名,
+//另外因为IntNode不看使用SLList的方法之类的设置为static可以节约内存
+	private static class IntNode {
+		public int item;
+		public IntNode next;
+
+		public IntNode(int i, IntNode n) {
+			item = i;
+			next = n;
+			System.out.println(size);
+		}
+	} 
+
+	/* The first item (if it exists) is at sentinel.next. */
+	private IntNode sentinel;
+	private int size;
+
+	private static void lectureQuestion() {
+		SLList L = new SLList();
+		IntNode n = IntNode(5, null);
+	}
+
+	/** Creates an empty SLList. */
+	public SLList() {
+		sentinel = new IntNode(63, null);
+		size = 0;
+	}
+
+	public SLList(int x) {
+		sentinel = new IntNode(63, null);
+		sentinel.next = new IntNode(x, null);
+		size = 1;
+	}
+
+ 	/** Adds x to the front of the list. */
+ 	public void addFirst(int x) {
+ 		sentinel.next = new IntNode(x, sentinel.next);
+ 		size = size + 1;
+ 	}
+
+ 	/** Returns the first item in the list. */
+ 	public int getFirst() {
+ 		return sentinel.next.item;
+ 	}
+
+ 	/** Adds x to the end of the list. */
+ 	public void addLast(int x) {
+ 		size = size + 1; 		
+
+ 		IntNode p = sentinel;
+
+ 		/* Advance p to the end of the list. */
+ 		while (p.next != null) {
+ 			p = p.next;
+ 		}
+
+ 		p.next = new IntNode(x, null);
+ 	}
+ 	
+ 	/** Returns the size of the list. */
+ 	public int size() {
+ 		return size;
+ 	}
+
+	public static void main(String[] args) {
+ 		/* Creates a list of one integer, namely 10 */
+ 		SLList L = new SLList();
+ 		L.addLast(20);
+ 		System.out.println(L.size());
+ 	}
+}
+</code></pre>
+<hr>
+<h1 id="week3-进一步创建list-继承">Week3 进一步创建List、继承</h1>
+<p>在上周完成了SLList后仍然存在一些效率问题,比如想在末尾添加需要使用<code>while (p.next != null) {p = p.next;}</code> 来遍历整个List<br>
+删除的效率也很低,因为只存了指向下一个的指针(删除b时a的next也需要修改)<br>
+于是需要使用双向链表(Doubly Linked Lists),增加一个指向上一个的指针<br>
+这样我们的List就从<code>SLList</code>→<code>DLList</code>了<br>
+另外为了避免sentinel的next指向自己,所以在末尾也添加了一个<br>
+并且按照要求最末尾的next指向第一个sentinel(据说在完成project1时很有用)</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-22_10.54.01.png" alt="截屏2022-07-22 10.54.01.png" loading="lazy"></figure>
+<ul>
+<li>
+<p>完成DLList的改动总结</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-22_11.08.58.png" alt="截屏2022-07-22 11.08.58.png" loading="lazy"></figure>
+</li>
+</ul>
+<hr>
+<p>现在还有个问题就是由于使用了 <code>IntNode</code> 我们的List只能储存int类型<br>
+可以制作多个不同类型的SLList,但太不优雅了 于是我们可以将它参数化:</p>
+<pre><code class="language-java">public class SLList {	
+	private  class IntNode {
+		public int item;
+		public IntNode next;
+
+		public IntNode(int i, IntNode n) {
+			item = i;
+			next = n;
+		}
+	} 
+//……省略接下来的代码
+}
+//创建也会有变化 以前:
+SLList s1 = new SLList(“123”)
+</code></pre>
+<pre><code class="language-java">public class SLList&lt;LochNess&gt; {	
+	private class StuffNode {
+		public LochNess item;
+		public StuffNode next;
+
+		public StuffNode(LochNess i, StuffNode n) {
+			item = i;
+			next = n;
+		}
+	}
+//……省略接下来的代码
+}
+//创建也会有变化 参数化后加入类型:
+SLList&lt;String&gt; s1 = new SLList(“123”)
+</code></pre>
+<p>注意以前int相关的都被placeholder<code>LochNess</code> 替代了</p>
+<hr>
+<p>创建Arrays的三种方法,注意第三种只能在声明变量时才能使用</p>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-22_11.57.30.png" alt="截屏2022-07-22 11.57.30.png" loading="lazy"></figure>
+<hr>
+<h3 id="java的原始类型和引用类型区别">Java的原始类型和引用类型区别:</h3>
+<p>原始类型(<a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Data Types</a>):比如double、float、byte、short、int、long、char、boolean等的值是直接存储在内存中的<br>
+引用类型(<a href="https://www.javatpoint.com/reference-data-types-in-java">Reference Data Types</a>):则在内存中存储实际对象的内存地址(指针),同时它需要使用new来创建比如Array、String</p>
+<p>对于引用类型使用<code>=</code> 进行比较时只会比较内存地址而不是对象的值,同样地引用类型传递值的时候也只是传递内存地址的copy</p>
+<hr>
+<p>觉得有意思的练习:将两个数组放入二维数组的两个对角三角形: <a href="https://sp21.datastructur.es/materials/discussion/examprep03sol.pdf">disc3exam</a></p>
+<hr>
+<p>改变数组大小Resizing Arrays:Java中不能改变数组的大小,但是我们可以通过将a数组放入更大的b数组,并将引用更改来达到这个目的</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-22_17.31.49.png" alt="截屏2022-07-22 17.31.49.png" loading="lazy"></figure>
+<p>但通过每次+1创建新数组的方式在比如把a[100]→a[100000]时就要接近10万次创建新数组和copy到新数组,也许我们能通过将每次新生成的数组+10、+100,速度是会提高,但在更高的数量级时依然存在问题,所以我们可以通过*2(或者其他数字)的形式,每次数组大小不够时给新数组翻倍,这样减少了大量创建和copy并且能保证在更大的数量级时依然很快</p>
+<h3 id="interface-接口">Interface <strong>接口</strong></h3>
+<p>接口（英文：Interface），在JAVA编程语言中是一个抽象类型，是抽象方法的集合，接口通常以interface来声明。一个类通过继承接口的方式，从而来继承接口的抽象方法。</p>
+<p>接口是一种“规范”和约束,可以有多个接口</p>
+<p>我的理解:<code>Interface</code> 可以让我们在有大量相同功能的不同方法之上创建一个抽象比如给大型犬和小猫咪洗澡可能都要冲水、擦干,但大型犬听话但要吃个骨头,小型犬需要另一个人按着洗澡不然抓你就洗不成了,如果为给洗澡写说明的话,那么<code>洗澡</code>就是接口,<code>大型犬</code>、<code>小猫咪</code>就是<code>洗澡</code>的<strong>implements</strong>,他们可以继承<code>洗澡</code> 的大部分规则(比如冲水、沐浴、吹干这个流程,但具体的操作要我们自己实现),而只需要加上自己的吃骨头,按着洗等等.如果对<code>洗澡</code> 里的水流大小不满意可以<code>@Override</code> 新的水流大小,如果他们需要不同的沐浴露可以<strong>Overloading</strong>来指定不同的沐浴露(注意java8后才能在接口里就实现功能,所以也可以说这个<code>洗澡</code>只是给你了流程(规则)没给你具体的步骤(实现))</p>
+<p>使用<code>Interface</code>替代<code>Class</code> 就可以做出一个接口了,在JAVA编程语言中是一个抽象类型，是抽象方法的集合，接口通常以interface来声明。一个类通过继承接口的方式，从而来继承接口的抽象方法。</p>
+<h3 id="覆写-overriding与重载-overloading"><strong>覆写 (Overriding)与重载 (Overloading)</strong></h3>
+<p><strong>覆写</strong>会覆盖之前的实现,<strong>重载</strong> 在Java中可以允许有不同实现的同名函数</p>
+<p>比如你不满意继承的实现就可以重写一个实现<br>
+而在求和时如果你有int和string两种如果没有重载用户就需要有<code>sumInt()</code>和<code>sumString()</code>两种,而重载可以让我们写<code>sum(int)</code>和<code>sum(string)</code> 来自动识别用户想要使用哪个方法</p>
+<p>Java中子类必须overriding全部方法,不然会报错</p>
+<p>Overriding的函数前需要加上<code>@Override</code>的标签,这样在并非Overriding的函数前加上的话就会有提示,另外这个并不是必须加的 只是个提示</p>
+<p>如果要在Interface加上代码,需要在方法前加上default <code>default public void print() {}</code></p>
+<blockquote>
+<p>接口中所有的方法必须是抽象方法，Java 8 之后 接口中可以使用 default 关键字修饰的非抽象方法</p>
+</blockquote>
+<hr>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-23_18.53.51.png" alt="截屏2022-07-23 18.53.51.png" loading="lazy"></figure>
+<p>以上图为例就可以看到,<code>Animal a = **new** Dog();</code> 是可行的,因为Dog是Animal的子类,<br>
+同时Dog中<code>sniff()</code> 是@Override(标识本身没作用,是sniff的结构和父类一样),的所以<code>a.sniff(d)</code> 使用的Dog的方法<br>
+而注意<code>praise(**Dog a**)</code> 是Overloading,他的参数(<strong>signature</strong>)和和Animal中的<code>praise(**Animal a**)</code> 不一样了</p>
+<figure data-type="image" tabindex="8"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-23_19.07.00.png" alt="截屏2022-07-23 19.07.00.png" loading="lazy"></figure>
+<p>最后两项<code>d.praise(d); // praise(Dog a)</code>和<code>a.praise(d); **// praise(Animal a)**</code></p>
+<p>由于编译时会选择Overloading的方法是哪个所以:<br>
+<code>Dog d =new Dog();</code> 那么找<code>praise()</code> 的时候会优先在Dog类里找,由于<code>praise()</code> 是Overloading的所以就选择了<code>void praise(Dog a)</code><br>
+<code>Animal a = new Dog();</code> 那么找<code>praise()</code> 的时候会优先在Animal类里找,由于<code>praise()</code> 是Overloading的所以就选择了<code>void praise(Animal a)</code><br>
+new Dog()放入什么就很重要,new放入Animal类的编译时的选择就只有Animal类,而放入Dog则是两者包含</p>
+<h3 id="变量的static-type-dynamic-type">变量的static type &amp; dynamic type</h3>
+<p>上面的重点就是每个Java变量都拥有两种类型:</p>
+<p><strong>编译时的“compile-time type”→“static type”,永远不会改变<br>
+运行时的“run-time type”→ “dynamic type”和对象的类型有关,实例化时指定</strong></p>
+<p>拿上面的a举例他的static type: Animal、dynamic type: Dog<br>
+而b的static type: Dog、dynamic type: Dog</p>
+<p>当我们说<code>Animal c;</code>他的static type: Animal、dynamic type: null<br>
+再继续说<code>c= new Dog();</code>他的static type: Animal、dynamic type: Dog<br>
+再继续说<code>Dog d = c;</code>他的static type: Dog、dynamic type: Dog<br>
+或者说<code>c= new Cat();</code>他的static type: Animal、dynamic type: Cat</p>
+<p>在编译时会优先选择dynamic type中override的方法,也就是<strong><strong>Dynamic Method Selection</strong></strong><br>
+而有多个Overloading的方法时,会选择static type的方法,也就是上面选<code>praise(Animal a)</code>还是<code>praise(Dog a)</code>的关键点</p>
+<figure data-type="image" tabindex="9"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-24_18.45.48.png" alt="截屏2022-07-24 18.45.48.png" loading="lazy"></figure>
+<p>注意当<strong>编译时编译器会检查右边的是否属于左边的</strong>,也就是看他们的static type,所以不能把SLList的放入VengefulSLList,哪怕它是SLList的子类<br>
+另外<strong>编译器编译时调用方法也只看static type</strong>,如果这个类型里没有那么就会报错<br>
+(比如Dog有bark(),但Object o=((Dog)someDog)是不能使用o.bark()的,哪怕Dog本身有这个方法)</p>
+<figure data-type="image" tabindex="10"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-24_18.51.54.png" alt="截屏2022-07-24 18.51.54.png" loading="lazy"></figure>
+<p>方法调用同样也有static type 而<code>maxDog</code>就是Dog,所以不能把Dog类型放入Poodle,毕竟狗有时可以是贵宾犬有时可以不是贵宾犬,这个时候如果想成功放入就需要<strong><strong>Casting</strong></strong></p>
+<blockquote>
+<p><strong>Overridden non-static methods are selected at run time based on dynamic type</strong>.</p>
+<ul>
+<li><strong>Everything else is based on static type</strong>, including <a href="https://docs.google.com/presentation/d/128PmKI2zpI4pi21_sQxAgeLj7eF3dJzoLciJea4W37A/edit#slide=id.g6292bcebc_9247">overloaded methods</a>. Note: No overloaded methods for problem at left.</li>
+</ul>
+</blockquote>
+<h3 id="casting-对象转型"><strong><strong>Casting 对象转型</strong></strong></h3>
+<p>通过<strong><strong>Casting</strong></strong>可以告诉编译器把maxDog的static type看成Poodle,这样就能成功编译啦</p>
+<p>这样做编译器就不会检查类型是否一致了,所以是个有用但是危险的工具 应该谨慎使用</p>
+<p>另外注意Casting是非持久性效果,并不会永久改变对象的static type,只是临时把这个对象当成Casting的类型</p>
+<figure data-type="image" tabindex="11"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-24_18.55.04.png" alt="截屏2022-07-24 18.55.04.png" loading="lazy"></figure>
+<h3 id="java-包-package"><strong>Java 包 (package)</strong></h3>
+<p>(在 Project1:<strong>Data Structures</strong>中开始使用)</p>
+<p>包把功能相似或相关的类或接口组织在同一个包中，方便类的查找和使用。</p>
+<p>通过在顶部使用package关键字来指定包如<code>package deque;</code><br>
+然后就可以通过如<code>deque.ArrayDeque</code>来使用包里的类和方法<br>
+如果在使用时<code>import deque.ArrayDeque</code>就可以直接用<code>ArrayDeque</code>来使用包里的类和方法</p>
+<h1 id="week4-进一步讨论继承">Week4 进一步讨论继承</h1>
+<h3 id="extends关键词"><strong><strong>extends关键词</strong></strong></h3>
+<p>如**<code>public class** RotatingSLList&lt;Blorp&gt; **extends** SLList&lt;Blorp&gt;</code>使用extends会继承<code>SLList</code>全部的成员(实例、变量、方法、嵌套的类…)</p>
+<p>Java中所有的type都会隐式的extends Object</p>
+<h3 id="super的作用">super的作用</h3>
+<p>Java的private声明很严格,即使子类也不能访问,所以可以使用<code>super</code> 关键词来使用父类的成员如下:</p>
+<figure data-type="image" tabindex="12"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-24_17.36.26.png" alt="这样就不用在removeLast()里重复父类的代码了
+Ps:这里想做的是在SLList的基础上实现一个可以记住删除了的元素的SSList" loading="lazy"></figure>
+<p>这样就不用在removeLast()里重复父类的代码了<br>
+Ps:这里想做的是在SLList的基础上实现一个可以记住删除了的元素的SSList</p>
+<p>在构造函数里哪怕没写<code>super();</code>也会自动call,但是如果父类有两个构造函数,不写<code>super(x);</code>的话还是会自动call<code>super();</code></p>
+<figure data-type="image" tabindex="13"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-24_17.51.44.png" alt="截屏2022-07-24 17.51.44.png" loading="lazy"></figure>
+<h3 id="encapsulation-封装"><strong><strong>Encapsulation 封装</strong></strong></h3>
+<p>能否管理复杂性是能不能成为一个好的programmer的关键</p>
+<figure data-type="image" tabindex="14"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-24_18.12.22.png" alt="抽象、模块方便更改、隐藏不需要的信息" loading="lazy"></figure>
+<p>抽象、模块方便更改、隐藏不需要的信息</p>
+<h3 id="继承对封装的破坏">继承对封装的破坏</h3>
+<figure data-type="image" tabindex="15"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-24_18.31.57.png" alt="截屏2022-07-24 18.31.57.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="16"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-24_18.32.09.png" alt="截屏2022-07-24 18.32.09.png" loading="lazy"></figure>
+<p>上面两个图“我”的代码没有变化,但写Dog的人对Dog方法实现进行了改变,<br>
+所以在第二张图里<code>VerboseDog.barkMany()</code>-&gt;<code>Dog.bark()</code>(由于他的dynamic type是VerboseDog接下来会调用this.barkMany(1) )-&gt;<code>VerboseDog.barkMany()</code>这样下去就变了无限循环</p>
+<h3 id="higher-order-functions"><strong><strong>Higher Order Functions</strong></strong></h3>
+<p>把其他函数作为参数的函数</p>
+<figure data-type="image" tabindex="17"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-24_19.06.26.png" alt="截屏2022-07-24 19.06.26.png" loading="lazy"></figure>
+<p>在Java8前不能直接做到,所以需要上图中把函数接口当作参数放进去的操作</p>
+<p><a href="https://www.youtube.com/playlist?list=PL8FaHk7qbOD56r1sGUGifsfC0KRDAsuZ3">~~Subtype Polymorphism vs. HoFs</a>介绍了多态性和**<a href="https://www.youtube.com/watch?v=1oow3NGoExg&amp;list=PL8FaHk7qbOD56r1sGUGifsfC0KRDAsuZ3&amp;index=7">[Inheritance3, Video 6] Comparator</a>等**~~</p>
+<h3 id="set-in-java">Set (in Java)</h3>
+<p>不允许重复,没有顺序(不能说要第几个,但可以说某个东西存不存在在set里)</p>
+<p>和List一样也是集合的一种</p>
+<h3 id="迭代-iterable"><strong><strong>迭代 Iterable</strong></strong></h3>
+<p>如果要支持for循环:<br>
+如**<code>for** **(int** x **:** javaset**) {**System**.**out**.**println**(**x**);}**</code></p>
+<ul>
+<li>在class里添加一个iterator() 返回Iterator<T>的方法.</li>
+<li>Iterator<T> 拥有hasNext()和next()方法.</li>
+<li>在定义class的行里添加 <code>implements Iterable&lt;T&gt;</code></li>
+</ul>
+<blockquote>
+<p>当在Java中使用print时会隐式的call <code>toString()</code>如<code>System**.**out**.**println**(**javaset**);**</code></p>
+<p>![Java<a href="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-05_14.16.55.png">源代码</a></p>
+<p>Java<a href="https://github.com/AdoptOpenJDK/openjdk-jdk11/blob/999dbd4192d0f819cb5224f26e9e7fa75ca6f289/src/java.base/share/classes/java/io/PrintStream.java#L896">源代码</a></p>
+<p>另外如果把String和不是String的相加(结合),也会隐式的call <code>toString()</code></p>
+</blockquote>
+<p><code>toString()</code>的两种实现方式(效率/简洁):</p>
+<pre><code class="language-java">@Override
+    public String toString() {
+        StringBuilder returnSB = new StringBuilder(&quot;{&quot;);
+        for (int i = 0; i &lt; size - 1; i += 1) {
+            returnSB.append(items[i].toString());
+            returnSB.append(&quot;, &quot;);
+        }
+        returnSB.append(items[size - 1]);
+        returnSB.append(&quot;}&quot;);
+        return returnSB.toString();
+    }
+</code></pre>
+<pre><code class="language-java">		@Override
+    public String toString() {
+        List&lt;String&gt; listOfItems = new ArrayList&lt;&gt;();
+        for (T x : this) {
+            listOfItems.add(x.toString());
+        }
+        return &quot;{&quot; + String.join(&quot;, &quot;, listOfItems) + &quot;}&quot;;
+    } 
+</code></pre>
+<h2 id="子类多态性-subtype-polymorphism">子类多态性 <strong>Subtype Polymorphism</strong></h2>
+<p>子类多态性:子类可以利用父类的性质,比如animal都可以叫,而cat是一种animal,那cat.bark()就是继承了父类</p>
+<p>实践:</p>
+<h3 id="建立自己的比较函数">建立自己的比较函数</h3>
+<p>由于对象不能比较(java不知道比较string、size还是别的什么东西)</p>
+<figure data-type="image" tabindex="18"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-10_16.26.57.png" alt="截屏2022-08-10 16.26.57.png" loading="lazy"></figure>
+<p>为了让我们的对象可以比较,我们可以写一个函数来比较</p>
+<figure data-type="image" tabindex="19"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-10_16.28.11.png" alt="截屏2022-08-10 16.28.11.png" loading="lazy"></figure>
+<p>但是这就引入了新的问题,我们要为每一个类型都写一个max吗?<br>
+这样非常冗余比如要写maxDog()、maxCat()、maxBee()……<br>
+于是这时候就可以引入interface来保证我们的dog、cat等类型是可以比较的</p>
+<h3 id="建立ourcomparable接口保证对象可以比较">建立OurComparable接口保证对象可以比较</h3>
+<figure data-type="image" tabindex="20"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-10_16.43.41.png" alt="这里Dog继承了max的要求,所以保证了dog是可以进行比较的并且这里的dog就表现了出了子类多态性" loading="lazy"></figure>
+<p>这里Dog继承了max的要求,所以保证了dog是可以进行比较的并且这里的dog就表现了出了子类多态性</p>
+<figure data-type="image" tabindex="21"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-10_16.49.39.png" alt="注意compareTo的return数字正负和0就表示了大小
+第一个是接口、第二个是类型、第三个是返回大的对象的函数
+然后是我们使用的代码" loading="lazy"></figure>
+<p>注意compareTo的return数字正负和0就表示了大小<br>
+第一个是接口、第二个是类型、第三个是返回大的对象的函数<br>
+然后是我们使用的代码</p>
+<figure data-type="image" tabindex="22"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-10_16.57.47.png" alt="截屏2022-08-10 16.57.47.png" loading="lazy"></figure>
+<p>另外可以看到把这么一长串优化成一行的解决方式</p>
+<p>当然上面还有点小问题比如把Dog和Cat比的话,上面被强制转换为了<code>Dog uddaDog = (Dog) obj;</code><br>
+为了解决这个问题我们其实可以使用官方的<strong><strong>Comparables</strong></strong></p>
+<h3 id="使用内建的comparable">使用内建的Comparable</h3>
+<figure data-type="image" tabindex="23"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-10_17.23.48.png" alt="使用内建的Comparable" loading="lazy"></figure>
+<p>使用内建的Comparable</p>
+<figure data-type="image" tabindex="24"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-10_17.27.31.png" alt="截屏2022-08-10 17.27.31.png" loading="lazy"></figure>
+<h3 id="comparator"><strong><strong>Comparator</strong></strong></h3>
+<p>我们想要多种比较的办法,这个时候Comparator就派上用场了<br>
+如何做一个comparator参考<a href="https://www.youtube.com/watch?v=1oow3NGoExg&amp;list=PL8FaHk7qbOD56r1sGUGifsfC0KRDAsuZ3&amp;index=7&amp;ab_channel=JoshHug">这里</a></p>
+<p>其他语言可能是传入一个比较函数,但java中我们传入不同的comparator</p>
+<blockquote>
+<p>Comparable表示“我这个对象”是可以被比较的,而Comparator是比较其他两个对象</p>
+</blockquote>
+]]></content>
+    </entry>
+</feed>

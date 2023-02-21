@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>CS61b Part 2 数据结构 | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1676959783334">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="主要介绍了数据结构相关的内容，包括命令行参数、渐进符号、并查集、抽象数据类型、二叉搜索树、B树、红黑树、散列表、优先队列、图、最短路径和字典树等。同时还涉及了软件工程中的复杂度定义和拓扑排序等内容
+
+这个博客并不是我最初写这篇笔记地方,所以..." />
+    <meta name="keywords" content="CS61b" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1676959783334" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1676959783334" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1676959783334" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://twitter.com/pikanhuji" target="_blank">
+            <i class="fa-brands fa-twitter"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://space.bilibili.com/1760189" target="_blank">
+            <i class="fa-brands fa-bilibili"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">@2023 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">CS61b Part 2 数据结构</h2>
+            <div class="post-date">2022-01-02</div>
+            
+              <div class="feature-container" style="background-image: url('https://nhuji.github.io/post-images/cs61b-part-2-shu-ju-jie-gou.png')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <p>主要介绍了数据结构相关的内容，包括命令行参数、渐进符号、并查集、抽象数据类型、二叉搜索树、B树、红黑树、散列表、优先队列、图、最短路径和字典树等。同时还涉及了软件工程中的复杂度定义和拓扑排序等内容</p>
+<!-- more -->
+<p>这个博客并不是我最初写这篇笔记地方,所以可能出现各种包括发布时间、文字、样式等错误</p>
+<h1 id="week-5">Week 5</h1>
+<h2 id="命令行参数">命令行参数</h2>
+<p><code>public static void main(String[] args)</code></p>
+<p>我们知道public公共的、static静态不被实例化、void返回为空、main就是main<br>
+那么<code>(String[] args)</code>是什么呢 其实就是接受的参数</p>
+<p>比如</p>
+<pre><code class="language-java">public class ArgsDemo {
+	/** Prints out the 0th command line argument. */
+	public static void main(String[] args) {
+    	System.out.println(args[0]);
+	}
+}
+</code></pre>
+<p>再在终端使用它</p>
+<pre><code class="language-bash">nhuji@huhudeMacbook Desktop % java hello big bug
+big //得到的结果
+</code></pre>
+<p>就会把我们打进去的big bug的第一个big打印出来,如果替换成<code>System.out.println(args[1]);</code>就会打印bug</p>
+<blockquote>
+<p>一个使用参数的例子,会返回相加的值</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_14.21.45.png" alt="截屏2022-08-07 14.21.45.png" loading="lazy"></figure>
+</blockquote>
+<hr>
+<h2 id="如何更有运行效率">如何更有运行效率</h2>
+<p>之前的课程我们并不关心运行情况,而现在到了数据结构这一部分<br>
+我们就需要关注怎样能更高效的运行程序了</p>
+<p>对于如何衡量程序是否有效率,我们可以从它循环多不多之类的的来看,<br>
+但很不精确,所以我们可以使用类似<code>time</code>之类的计时器来比较,不过根据机器性能、具体参数等差异会很大,另外也需要我们等待运行结束,像之前的[Lab3 时间测试 resume按钮  随机比较 创建执行断点 ] 使用的<code>Stopwatch</code>也是类似的东西</p>
+<p>所以可以按照运算次数来进行比较,还有更准确的符号表示(算是概括了)</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_16.51.27.png" alt="截屏2022-08-12 16.51.27.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_17.02.07.png" alt="截屏2022-08-12 17.02.07.png" loading="lazy"></figure>
+<p>为什么说dup2比1好呢:</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_17.12.32.png" alt="截屏2022-08-12 17.12.32.png" loading="lazy"></figure>
+<p>scale很重要,当N足够大时差别就很明显了</p>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_17.27.18.png" alt="截屏2022-08-12 17.27.18.png" loading="lazy"></figure>
+<p>如同数学里算极限一样,当大到一定程度后其他常数(包括常数乘法)什么的都可以忽略掉,我们只关心order of growth(一个算法的增长顺序是随着输入大小的增加，运行一个计算机程序所需时间的近似值。增长顺序忽略了固定操作所需的恒定系数，而是关注与输入大小成比例增加的操作。)</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_17.39.01.png" alt="截屏2022-08-12 17.39.01.png" loading="lazy"></figure>
+<p>虽然简化后不错,但我们可以有更简单的衡量速度的方法<br>
+选择一个代表操作(cost model),后化简</p>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_18.01.15.png" alt="截屏2022-08-12 18.01.15.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_18.01.00.png" alt="截屏2022-08-12 18.01.00.png" loading="lazy"></figure>
+<h2 id="渐进符号-asymptotic-notations-渐进分析part1">渐进符号 asymptotic notations 渐进分析part1</h2>
+<h3 id="big-theta-符号"><strong><strong>Big-Theta 符号</strong></strong></h3>
+<p>被用于描述order of growth</p>
+<figure data-type="image" tabindex="9"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_18.25.39.png" alt="截屏2022-08-12 18.25.39.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_18.10.43.png" alt="使用的例子" loading="lazy"></figure>
+<p>使用的例子</p>
+<p>比如<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>N</mi><mn>3</mn></msup><mo>+</mo><mn>3</mn><msup><mi>N</mi><mn>4</mn></msup><mo>∈</mo><mi mathvariant="normal">Θ</mi><mrow><mo fence="true">(</mo><msup><mi>N</mi><mn>4</mn></msup><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">N^{3}+3 N^{4} \in \Theta\left(N^{4}\right)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.897438em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.853208em;vertical-align:-0.0391em;"></span><span class="mord">3</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.20001em;vertical-align:-0.35001em;"></span><span class="mord">Θ</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span></span></span></span>表示<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>N</mi><mn>3</mn></msup><mo>+</mo><mn>3</mn><msup><mi>N</mi><mn>4</mn></msup></mrow><annotation encoding="application/x-tex">N^{3}+3 N^{4}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.897438em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">3</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span></span></span></span></span> 属于<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Θ</mi><mrow><mo fence="true">(</mo><msup><mi>N</mi><mn>4</mn></msup><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\Theta\left(N^{4}\right)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.20001em;vertical-align:-0.35001em;"></span><span class="mord">Θ</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span></span></span></span>这个家族</p>
+<h3 id="big-o-符号"><strong><strong>Big O 符号</strong></strong></h3>
+<p>不考虑下界限了</p>
+<figure data-type="image" tabindex="11"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-12_18.32.22.png" alt="截屏2022-08-12 18.32.22.png" loading="lazy"></figure>
+<blockquote>
+<p>这部分似乎微积分也有类似的,或许学到相应的东西后会更理解,也说明了数学在计算机中的重要性</p>
+</blockquote>
+<h1 id="week-6">Week 6</h1>
+<h2 id="并查集-disjoint-sets-data-structure"><strong>并查集</strong> Disjoint Sets data structure</h2>
+<p>用于处理不交集(Disjoint Sets)是否连接,和进行连接<br>
+简单来说就是可以查两个东西有没有关联</p>
+<p>Disjoint Sets就两个方法,用于连接元素和查看他们是否连接:</p>
+<pre><code class="language-java">public interface DisjointSets {
+	/** Connects two items P and Q. */
+	void connect(int p, int q);
+ 
+	/** Checks to see if two items are connected. */
+	boolean isConnected(int p, int q);
+}
+</code></pre>
+<figure data-type="image" tabindex="12"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_14.49.54.png" alt="截屏2022-08-13 14.49.54.png" loading="lazy"></figure>
+<p>但是如上面的链接,记录每一个元素之间的连接,查询时可能会进行某种迭代、循环<br>
+在元素量巨大时很不高效</p>
+<h3 id="使用listsetinteger组建">使用List&lt;Set<Integer>&gt;组建</h3>
+<p>我们其实不关心他们怎么连接的,而只关心他们有没有连接</p>
+<figure data-type="image" tabindex="13"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_14.56.16.png" alt="截屏2022-08-13 14.56.16.png" loading="lazy"></figure>
+<p>所以只需要记录每个元素属于哪个连接组件(Connected Components)</p>
+<p>我们可以使用Java中的 List&lt;Set<Integer>&gt; → [{0, 1, 2, 4}, {3, 5}, {6}]</p>
+<p>但是使用这种内置数据结构作为底层,速度会很慢很慢<br>
+比如我们要找5和6是不是连接的,就需要从头check一遍</p>
+<h3 id="使用int来组建">使用int[]来组建</h3>
+<p>所以我们可以使用相对好一点的int的数组来建立这个结果</p>
+<figure data-type="image" tabindex="14"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_15.28.28.png" alt="截屏2022-08-13 15.28.28.png" loading="lazy"></figure>
+<p>index是我们的数,而存储内容是他们的set<br>
+(只是个代表,只要是一样的数说明他们是一个连接组件就行)<br>
+而进行连接改变他们的存储内容就行了</p>
+<figure data-type="image" tabindex="15"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_15.30.53.png" alt="大概的实现" loading="lazy"></figure>
+<p>大概的实现</p>
+<p>这么做的好处是执行<code>isConnected</code>会很快,只需要他们内容是否相等</p>
+<p>(<code>isConnected</code>从O(N)→Θ(1))</p>
+<figure data-type="image" tabindex="16"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_15.31.46.png" alt="截屏2022-08-13 15.31.46.png" loading="lazy"></figure>
+<h3 id="使用quick-union组建改进">使用<strong><strong>Quick Union组建(改进)</strong></strong></h3>
+<p>和上面存储不同的连接组件ID不同的是,改为存储父级</p>
+<p>-1表示根,而其他的存储元素的上一个节点</p>
+<figure data-type="image" tabindex="17"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_16.33.47.png" alt="截屏2022-08-13 16.33.47.png" loading="lazy"></figure>
+<p>这样进行连接时,只需要把一个连接组件的根改为另一个根的元素</p>
+<figure data-type="image" tabindex="18"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_16.38.05.png" alt="截屏2022-08-13 16.38.05.png" loading="lazy"></figure>
+<p>但是这么做还是会有问题:</p>
+<p>在元素量足够大时,整个tree也会变得巨大<br>
+我们进行<code>isConnected</code>比较时是比较元素的root是不是相同的,所以tree很大的时候消耗的资源也很大</p>
+<figure data-type="image" tabindex="19"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_16.39.52.png" alt="大概的实现" loading="lazy"></figure>
+<p>大概的实现</p>
+<figure data-type="image" tabindex="20"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_16.50.34.png" alt="tree可能变得很巨大" loading="lazy"></figure>
+<p>tree可能变得很巨大</p>
+<h3 id="weighted-quick-union"><strong><strong>Weighted Quick Union</strong></strong></h3>
+<p>上面说到了tree变得很高时资源消耗会很大,所以改为连接不同连接组件时,连接到根部</p>
+<figure data-type="image" tabindex="21"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_17.44.21.png" alt="截屏2022-08-13 17.44.21.png" loading="lazy"></figure>
+<p>有两个需要注意的点</p>
+<ol>
+<li>记录tree的大小</li>
+<li>连接时把小的tree连接到大的tree的root</li>
+</ol>
+<p>而记录大小也有两种办法</p>
+<p>我们可以把根的存储数作为大小(负数代表是root)</p>
+<p>或者我们可以另外用一个size数组来记录大小</p>
+<figure data-type="image" tabindex="22"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_17.46.49.png" alt="截屏2022-08-13 17.46.49.png" loading="lazy"></figure>
+<p>小总结:</p>
+<figure data-type="image" tabindex="23"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_17.49.06.png" alt="截屏2022-08-13 17.49.06.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="24"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_17.49.14.png" alt="为什么不用heights作为size" loading="lazy"></figure>
+<p>为什么不用heights作为size</p>
+<h3 id="path-compression-路径压缩"><strong><strong>Path Compression 路径压缩</strong></strong></h3>
+<p>是cs170的内容,只做了解</p>
+<p>![log*(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_17.51.33.png)</p>
+<p>log*(n) is the iterated log</p>
+<p>大概就是每次比较后就把比较过的元素存储内容改为root</p>
+<p>这样可以获得长期的性能</p>
+<h3 id="disjoint-sets-总结">Disjoint Sets 总结</h3>
+<figure data-type="image" tabindex="25"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_17.53.13.png" alt="从简单但性能消耗大的实现→复杂但性能表现好的实现" loading="lazy"></figure>
+<p>从简单但性能消耗大的实现→复杂但性能表现好的实现</p>
+<figure data-type="image" tabindex="26"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-13_17.53.22.png" alt="截屏2022-08-13 17.53.22.png" loading="lazy"></figure>
+<h2 id="渐进分析-part2">渐进分析 part2</h2>
+<p>对于各种O的符号表示还不清楚,先跳过</p>
+<p>但是有一点很明确,想知道运行效率啥的 没有捷径可走,不能一看到几个循环就说大概多少,因为程序里可能随便一行就影响运行效率很多</p>
+<p>只有好好计算才呢得出结果</p>
+<figure data-type="image" tabindex="27"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.09.23.png" alt="截屏2022-08-16 15.09.23.png" loading="lazy"></figure>
+<h3 id="recursion">Recursion</h3>
+<figure data-type="image" tabindex="28"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.12.21.png" alt="截屏2022-08-16 15.12.21.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="29"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.12.28.png" alt="截屏2022-08-16 15.12.28.png" loading="lazy"></figure>
+<p>这种递归的运行时间其实观察就看出.每多一轮就是多一倍和一个root的1</p>
+<p>所以省略1后就是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>2</mn><mi>N</mi></msup></mrow><annotation encoding="application/x-tex">2^N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span></span></span></span></span></span></span></span></p>
+<h3 id="binary-search-二分法检索"><strong><strong>Binary Search 二分法检索</strong></strong></h3>
+<p>这个上CS50时撕电话本那里就很熟悉了,每次减半,</p>
+<figure data-type="image" tabindex="30"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.16.07.png" alt="从一个一个找数字,变成了每次减半" loading="lazy"></figure>
+<p>从一个一个找数字,变成了每次减半</p>
+<figure data-type="image" tabindex="31"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.19.14.png" alt="截屏2022-08-16 15.19.14.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="32"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.20.09.png" alt="相比一个一个找,在大量数量级下很省时间" loading="lazy"></figure>
+<p>相比一个一个找,在大量数量级下很省时间</p>
+<h3 id="mergesort-归并排序"><strong><strong>Mergesort 归并排序</strong></strong></h3>
+<p>以前介绍过<strong>选择排序</strong>(selection sort)</p>
+<blockquote>
+<p>第一次从待排序的数据元素中选出最小（或最大）的一个元素，存放在序列的起始位置，然后再从剩余的未排序元素中寻找到最小（大）元素，然后放到已排序的序列的末尾</p>
+</blockquote>
+<figure data-type="image" tabindex="33"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.23.02.png" alt="截屏2022-08-16 15.23.02.png" loading="lazy"></figure>
+<p>这种方法很耗时,6个元素时36次操作,而64个元素时就要4096次操作了</p>
+<hr>
+<p>所以引入了<strong><strong>Mergesort</strong></strong></p>
+<figure data-type="image" tabindex="34"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.25.15.png" alt="两边数组依次对比,把小的拿出来放入新的数组,这样操作次数就和元素本身一样" loading="lazy"></figure>
+<p>两边数组依次对比,把小的拿出来放入新的数组,这样操作次数就和元素本身一样</p>
+<p>所以我们可以把selection sort拆成2半<strong>整理完后</strong>使用Merge</p>
+<figure data-type="image" tabindex="35"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.31.51.png" alt="截屏2022-08-16 15.31.51.png" loading="lazy"></figure>
+<p>但是我们发现如果一直分下去的话,其实不需要selection sort</p>
+<figure data-type="image" tabindex="36"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.32.01.png" alt="截屏2022-08-16 15.32.01.png" loading="lazy"></figure>
+<p>完全使用Mergesort后发现每次操作其实都是N次((N/2)*2=N)所以只需要<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mo>=</mo><msub><mi>log</mi><mo>⁡</mo><mn>2</mn></msub><mo>(</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">k=\log _{2}(N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop"><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.20696799999999996em;"><span style="top:-2.4558600000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24414em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span>次</p>
+<figure data-type="image" tabindex="37"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.33.37.png" alt="截屏2022-08-16 15.33.37.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="38"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-16_15.36.24.png" alt="截屏2022-08-16 15.36.24.png" loading="lazy"></figure>
+<h3 id="渐进分析总结">渐进分析总结</h3>
+<p>渐进分析时不能一样看出来的,没有捷径 只能好好计算<br>
+符号表达还需要好好学习(<a href="https://www.youtube.com/playlist?list=PL8FaHk7qbOD4oAdQOZ765z6aeqyKs2593">video</a>)</p>
+<h2 id="抽象数据类型-abstract-data-types">抽象数据类型 <strong><strong>Abstract Data Types</strong></strong></h2>
+<p>一个抽象数据类型（ADT）只由其操作定义，而不是由其实现定义的</p>
+<p>比如像DIsjoinSets有很多种实现方式,当我们谈到抽象数据类型时其实并不关心它底层的实现,而只关心它的API</p>
+<figure data-type="image" tabindex="39"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.20.43.png" alt="截屏2022-08-17 18.20.43.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="40"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.21.36.png" alt="我们只关心它的API" loading="lazy"></figure>
+<p>我们只关心它的API</p>
+<p>集合有很多种类型,比如Map</p>
+<figure data-type="image" tabindex="41"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.23.37.png" alt="截屏2022-08-17 18.23.37.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="42"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.23.17.png" alt="使用Map记录文本里某个单词出现的次数" loading="lazy"></figure>
+<p>使用Map记录文本里某个单词出现的次数</p>
+<h2 id="二叉搜索树-binary-search-trees"><strong>二叉搜索树 Binary Search Trees</strong></h2>
+<p>CS里最重要的数据结构之一</p>
+<h3 id="制造一个二叉搜索树">制造一个二叉搜索树</h3>
+<p>假设我们有一个按照顺序排列的LinkList,</p>
+<p>可以发现加东西和查它是否存在都很耗时(没有利用到它按顺序的优势)</p>
+<figure data-type="image" tabindex="43"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.27.51.png" alt="截屏2022-08-17 18.27.51.png" loading="lazy"></figure>
+<p>(想法)我们可以给节点添加随机的指向其他节点的结构,性能就会好不少(真实存在的结构,叫做<strong>Skip list</strong>在有序链表的基础上增加了“跳跃”的功能)</p>
+<figure data-type="image" tabindex="44"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.29.55.png" alt="仅仅是个想法" loading="lazy"></figure>
+<p>仅仅是个想法</p>
+<figure data-type="image" tabindex="45"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.35.00.png" alt="截屏2022-08-17 18.35.00.png" loading="lazy"></figure>
+<p>我们可以把指针放在中间然后link指向两边,这样我们的效率就会加倍</p>
+<figure data-type="image" tabindex="46"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.37.31.png" alt="截屏2022-08-17 18.37.31.png" loading="lazy"></figure>
+<p>进一步提升的话,我们可以中间指向两边的中间,再进一步的话就诞生了二叉树</p>
+<figure data-type="image" tabindex="47"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.37.39.png" alt="二叉树的结构" loading="lazy"></figure>
+<p>二叉树的结构</p>
+<p>成功“制造”出了二叉树</p>
+<h3 id="bst的定义"><strong><strong>BST的定义</strong></strong></h3>
+<p>首先什么是Tree</p>
+<p>红色那样有两条路从上到下的就不是tree</p>
+<figure data-type="image" tabindex="48"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.45.36.png" alt="截屏2022-08-17 18.45.36.png" loading="lazy"></figure>
+<p>有根的树</p>
+<p>指我们指定了一个节点(node)为根,而除了它以外的节点都有父级</p>
+<hr>
+<p>二叉树</p>
+<p>一个节点只有0、1、2个子节点</p>
+<figure data-type="image" tabindex="49"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.47.19.png" alt="截屏2022-08-17 18.47.19.png" loading="lazy"></figure>
+<p>二叉搜索树</p>
+<p>要求左边必须小于右边</p>
+<p>不能有相同大小和重复的节点</p>
+<figure data-type="image" tabindex="50"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.49.35.png" alt="截屏2022-08-17 18.49.35.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="51"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.50.34.png" alt="截屏2022-08-17 18.50.34.png" loading="lazy"></figure>
+<h3 id="bst操作">BST操作</h3>
+<p><strong>搜索 search</strong></p>
+<p>比较搜索值searchKey就行了,<br>
+最糟糕的情况下也只需要Θ(log N)</p>
+<p>超级超级快<br>
+在每次操作1微秒的情况下，可以在一秒钟内从大小为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><msup><mn>0</mn><mn>300000</mn></msup></mrow><annotation encoding="application/x-tex">10^{300000}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span><span class="mord mtight">0</span><span class="mord mtight">0</span><span class="mord mtight">0</span><span class="mord mtight">0</span><span class="mord mtight">0</span></span></span></span></span></span></span></span></span></span></span></span>的tree上找到想要的东西</p>
+<figure data-type="image" tabindex="52"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_18.57.01.png" alt="注意接下来的代码都是描述性的,非真实代码" loading="lazy"></figure>
+<p>注意接下来的代码都是描述性的,非真实代码</p>
+<hr>
+<p><strong>插入 insert</strong></p>
+<p>代码解读:</p>
+<p>首先传入tree和要插入的东西的key,如果tree不存在就返回一颗新tree,然后不断深入迭代</p>
+<p>只有树是空的和node已经存在才不用递归</p>
+<aside>
+📚 现在理解可能并不对,后面的lab可以帮助理解,我们可能觉得迭代很危险,但熟悉了就好了
+</aside>
+<figure data-type="image" tabindex="53"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_19.04.49.png" alt="BST代表tree、 key代表searchKey
+右下角的是错误的代码示范" loading="lazy"></figure>
+<p>BST代表tree、 key代表searchKey<br>
+右下角的是错误的代码示范</p>
+<hr>
+<p><strong>删除</strong> <strong><strong>Delete</strong></strong></p>
+<p>删除有三种情况</p>
+<p>没有子节点的直接删除连接就行</p>
+<p>有1个子节点的删除🔗再把它的父节点指向子节点</p>
+<p>删除有2个子节点的比较复杂<br>
+但只要选择删除节点的前任和继任来作为新的节点就好了</p>
+<p>比如要删除dog那它前面一个是cat后面一个是elf,就都可以作为新的节点代替dog</p>
+<figure data-type="image" tabindex="54"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-18_10.58.14.png" alt="截屏2022-08-18 10.58.14.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="55"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-18_11.00.25.png" alt="截屏2022-08-18 11.00.25.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="56"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-18_11.02.13.png" alt="删除前" loading="lazy"></figure>
+<p>删除前</p>
+<figure data-type="image" tabindex="57"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-18_11.02.19.png" alt="删除后" loading="lazy"></figure>
+<p>删除后</p>
+<p>上图我们要删除k节点,而他的前一个是g后一个是m,所以都可以作为新的root<br>
+假如选择g作为新节点,那么g以前的父节点e指向g以前的子节点f就可以了,而g代替k</p>
+<p>删除操作要记住二叉树的右边比左边大</p>
+<hr>
+<p>如果想要用BST实现Maps,只需要在节点里加上存储的值就行了,当然缺点是排序和比如显示所有为1的节点必须全部过一遍</p>
+<figure data-type="image" tabindex="58"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-18_11.24.02.png" alt="截屏2022-08-18 11.24.02.png" loading="lazy"></figure>
+<hr>
+<p>naked recursion和arms length base cases(recursion)搞不清楚</p>
+<p>真正做的时候可能会清楚吧</p>
+<figure data-type="image" tabindex="59"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-18_11.26.10.png" alt="截屏2022-08-18 11.26.10.png" loading="lazy"></figure>
+<h1 id="week-7">Week 7</h1>
+<p>Θ(N)一般被用来表示最坏的情况(或者作为一个上限使用),O(N)一般表示最高(小于等于)的情况</p>
+<p>可以看<a href="https://www.bigocheatsheet.com/">Big-O备忘单</a>来看不同结构的运行时间</p>
+<h2 id="bst的height和depth">BST的<strong><strong>Height和Depth</strong></strong></h2>
+<p>下面介绍了height和depth的概念,depth就是某个节点到根部的距离</p>
+<figure data-type="image" tabindex="60"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_13.44.42.png" alt="截屏2022-08-28 13.44.42.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="61"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_13.45.15.png" alt="截屏2022-08-28 13.45.15.png" loading="lazy"></figure>
+<hr>
+<p>根据操作顺序不同生成的tree也会不同</p>
+<figure data-type="image" tabindex="62"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_13.45.28.png" alt="截屏2022-08-28 13.45.28.png" loading="lazy"></figure>
+<p>如果有个随机操作产生的BST,可以看出它会更bushy而不是spindly(所以更有利于性能)</p>
+<figure data-type="image" tabindex="63"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_13.48.47.png" alt="截屏2022-08-28 13.48.47.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="64"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_13.47.20.png" alt="截屏2022-08-28 13.47.20.png" loading="lazy"></figure>
+<p>在现实中因为数据随着时间产生,可能导致更spindly的tree</p>
+<figure data-type="image" tabindex="65"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_13.48.02.png" alt="截屏2022-08-28 13.48.02.png" loading="lazy"></figure>
+<hr>
+<h2 id="b树-b-tree"><strong>B树 B-tree</strong></h2>
+<blockquote>
+<p>B树适用于读写相对大的数据块的存储系统，例如磁盘。B树减少定位记录时所经历的中间过程，从而加快存取速度</p>
+</blockquote>
+<p>基本上就是一个拥有2个以上节点和一个节点可以存多个item的BST,并且会自动平衡 所以可以理解为Balance Tree</p>
+<p><a href="https://www.cs.usfca.edu/~galles/visualization/BTree.html">可视化B树操作</a></p>
+<h3 id="b树介绍">B树介绍</h3>
+<p>为了避免tree变得不平衡,我们可以设想在BST上一个节点加上多个值</p>
+<figure data-type="image" tabindex="66"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_14.15.35.png" alt="截屏2022-08-28 14.15.35.png" loading="lazy"></figure>
+<p>查找时只需要把塞了多个值的一个节点当成list之类的就行了</p>
+<p>不过再加入更多值后,和BST类似的优点也没了</p>
+<figure data-type="image" tabindex="67"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_14.17.04.png" alt="截屏2022-08-28 14.17.04.png" loading="lazy"></figure>
+<p>所以可以将超过限制(limit)数量的节点中的值向上移动</p>
+<figure data-type="image" tabindex="68"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_14.19.22.png" alt="截屏2022-08-28 14.19.22.png" loading="lazy"></figure>
+<hr>
+<figure data-type="image" tabindex="69"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_14.21.13.png" alt="截屏2022-08-28 14.21.13.png" loading="lazy"></figure>
+<p>如果我们分裂根节点的话,就相当于其他节点向下推了一层,分裂子节点的话高度不变</p>
+<figure data-type="image" tabindex="70"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_14.22.30.png" alt="截屏2022-08-28 14.22.30.png" loading="lazy"></figure>
+<p>一个限制为3(一个节点最多3个item)的B树可能被叫2-3-4或者2-4 trees,代表有2、3、4个子节点</p>
+<figure data-type="image" tabindex="71"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_14.24.07.png" alt="B树命名" loading="lazy"></figure>
+<p>B树命名</p>
+<p>限制可以自由设置,比如一个节点最多三个数,多了就向上传递</p>
+<p>(在数据库中这个限制L可能被设定的很大比如超过一百)</p>
+<p>如果限制为3,一个节点可以有最多3个item,4个子节点(注意3个数字之间可以插4个子节点)</p>
+<figure data-type="image" tabindex="72"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_14.25.09.png" alt="截屏2022-08-28 14.25.09.png" loading="lazy"></figure>
+<hr>
+<p>根据操作顺序的不同,我们得到的tree高度可能也不同,可以看出同样的高度最好和最差的容纳的item差了2倍多</p>
+<figure data-type="image" tabindex="73"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_14.49.20.png" alt="同样的高度不同的item数量" loading="lazy"></figure>
+<p>同样的高度不同的item数量</p>
+<figure data-type="image" tabindex="74"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_14.51.58.png" alt="运行时间" loading="lazy"></figure>
+<p>运行时间</p>
+<p>如果要删除B树的值,先交换再删除</p>
+<figure data-type="image" tabindex="75"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-28_15.02.14.png" alt="截屏2022-08-28 15.02.14.png" loading="lazy"></figure>
+<hr>
+<p>B树或者说2-3树等,实现起来很麻烦,解决这个问题就需要看更快更简单的红黑树了</p>
+<figure data-type="image" tabindex="76"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_13.27.00.png" alt="B树伪代码" loading="lazy"></figure>
+<p>B树伪代码</p>
+<p>2-3树是每一个节点有2个或者3个子节点,2-3-4/2-4树是每一个节点有2、3或者4个子节点的树<br>
+B-Tree 的关键思想是在底部过度填充节点以防止增加树的高度,所以B树肯定是平衡的<br>
+另外B树的实现很复杂</p>
+<h2 id="树旋转-tree-rotationbst">树旋转 <strong><strong>Tree Rotation(BST)</strong></strong></h2>
+<p>根据添加顺序的不同我们会得到各种BST</p>
+<figure data-type="image" tabindex="77"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_14.10.46.png" alt="截屏2022-08-29 14.10.46.png" loading="lazy"></figure>
+<p>可以通过<strong>树旋转</strong>来调整不同的节点</p>
+<p>想象成<strong>合并再分开</strong>后会更容易操作</p>
+<p>记住BST一个节点左边全比它小,又边全比它大的性质</p>
+<figure data-type="image" tabindex="78"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_14.12.05.png" alt="以旋转G到左边为例" loading="lazy"></figure>
+<p>以旋转G到左边为例</p>
+<p>树旋转可以让树高度更短或者更长,也有助于维护BST的性质(BST可能会不平衡,所以可以利用树旋转来维护,而B树是自平衡的就不需要树旋转来维护)</p>
+<figure data-type="image" tabindex="79"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_14.21.44.png" alt="截屏2022-08-29 14.21.44.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="80"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_14.22.43.png" alt="依靠树旋转维护BST" loading="lazy"></figure>
+<p>依靠树旋转维护BST</p>
+<blockquote>
+<p>描述一棵树的术语:</p>
+<p>**root:**树中最上层的节点，也是唯一一个其父节点为Null的节点</p>
+<p>**leaf:**没有子节点的节点称为leaf node。</p>
+<p>**external node:**没有子节点的node(和leaf同意)</p>
+<p>**internal node:**至少有一個child的node</p>
+<figure data-type="image" tabindex="81"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_11.26.55.png" alt="这个称为4 node,因间隙可以放4个子节点" loading="lazy"></figure>
+<p>这个称为4 node,因间隙可以放4个子节点</p>
+</blockquote>
+<h2 id="红黑树-red-black-trees">红黑树 <strong><strong>Red Black Trees</strong></strong></h2>
+<h3 id="建立一个在结构上与2-3树相同的bst">建立一个在结构上与2-3树相同的BST</h3>
+<p>2-3是自动平衡的,所以我们用它来建立一个BST解决BST会有不平衡的问题</p>
+<p>2个子节点的2-3树就和BST结构一样<br>
+但3个子节点的2-3树呢,怎么样才能变成BST的结构</p>
+<figure data-type="image" tabindex="82"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_15.48.57.png" alt="截屏2022-08-29 15.48.57.png" loading="lazy"></figure>
+<p>可以建立像哨兵节点(sentinel node)那样不存储值的节点,但是结构会很难看并且丑(但是是可以实现的方法之一)因此选择其他方式实现</p>
+<figure data-type="image" tabindex="83"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_15.51.14.png" alt="截屏2022-08-29 15.51.14.png" loading="lazy"></figure>
+<p>使用放在左边(约定俗成)的红色的连接线来表示有两个item的节点</p>
+<figure data-type="image" tabindex="84"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_15.52.28.png" alt="Java中也是这样处理的" loading="lazy"></figure>
+<p>Java中也是这样处理的</p>
+<hr>
+<h3 id="左倾红黑树-llrb"><strong>左倾红黑树 LLRB</strong></h3>
+<p>这样我们就得到了<strong>左倾红黑树Left-Leaning Red Black Binary Search Tree (LLRB)</strong></p>
+<p>本质上就是一种2-3树表现得像BST,所以每个LLRB都有对应的2-3树</p>
+<figure data-type="image" tabindex="85"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_15.54.18.png" alt="红色link只是种表达方式,并没有特别的作用" loading="lazy"></figure>
+<p>红色link只是种表达方式,并没有特别的作用</p>
+<h3 id="llrb的性质"><strong>LLRB的性质</strong></h3>
+<p>由于它本质上是2-3树所以:</p>
+<p>不会出现一个节点拥有两个红link(这样就会变成一个节点超过2个item了)</p>
+<p>leaf拥有的黑link相等(因为2-3树是自平衡的)比如例子第二个leaf“C”到根两根黑线,而X只有一根,说明他们不平衡</p>
+<figure data-type="image" tabindex="86"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_15.58.52.png" alt="LLRB的性质" loading="lazy"></figure>
+<p>LLRB的性质</p>
+<figure data-type="image" tabindex="87"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_15.57.18.png" alt="错误的LLRB例子
+1.B有2个红线 2、3.黑线不平衡 4.正确的结构" loading="lazy"></figure>
+<p>错误的LLRB例子<br>
+1.B有2个红线 2、3.黑线不平衡 4.正确的结构</p>
+<h3 id="llrb的height"><strong>LLRB的Height</strong></h3>
+<p>最大高度就是2H+1</p>
+<p>原本的高H(黑link)</p>
+<p>然后每个节点都可能是粉红节点(可以看作一个红link),节点数比H多1</p>
+<p>![可以把每个粉红节点看作一条连线<br>
+另外可以看出每个leaf(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_16.05.35.png)</p>
+<p>可以把每个粉红节点看作一条连线<br>
+另外可以看出每个leaf(没有子节点的节点)到root的黑线数量相同,说明是平衡的</p>
+<h3 id="llrb的实现"><strong>LLRB的实现</strong></h3>
+<p>由于我们就是为了避免B树的难以实现,所以采用红黑树,因此不可能再建立一个B树再转换为红黑树</p>
+<figure data-type="image" tabindex="88"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-29_16.09.27.png" alt="截屏2022-08-29 16.09.27.png" loading="lazy"></figure>
+<h3 id="llrb插入规则">LLRB插入规则</h3>
+<p>通过Rotations维护红黑树与2-3树一对一的关系</p>
+<p>进行修改操作时可以认为就是在修改2-3树</p>
+<figure data-type="image" tabindex="89"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_13.50.04.png" alt="截屏2022-08-30 13.50.04.png" loading="lazy"></figure>
+<ul>
+<li>
+<p>当插入新数值时,使用红线左连接</p>
+<figure data-type="image" tabindex="90"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_13.59.28.png" alt="截屏2022-08-30 13.59.28.png" loading="lazy"></figure>
+</li>
+<li>
+<p>如果有右倾的3 node(2个item)就要对合适的node “Rotate left”</p>
+<figure data-type="image" tabindex="91"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_14.00.39.png" alt="添加S后由于它比E大放在了右边,所以需要把E向左旋转" loading="lazy"></figure>
+<p>添加S后由于它比E大放在了右边,所以需要把E向左旋转</p>
+<figure data-type="image" tabindex="92"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_14.22.40.png" alt="S是右倾红线连接所以旋转B到左边修复成LLRB" loading="lazy"></figure>
+<p>S是右倾红线连接所以旋转B到左边修复成LLRB</p>
+</li>
+<li>
+<p>如果有两个连续的左边红线，就会产生4 node 就要对合适的node “Rotate right” (临时 )</p>
+<figure data-type="image" tabindex="93"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_14.11.52.png" alt="S两个子节点都是红线连接的问题下面解决" loading="lazy"></figure>
+<p>S两个子节点都是红线连接的问题下面解决</p>
+</li>
+<li>
+<p>如果有任何node有两个红线子节点，就产生了临时4 node(3个item),需要对node进行颜色翻转，以模拟分割操作(因为要一对一,结构不会发生变化)</p>
+<figure data-type="image" tabindex="94"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_14.09.52.png" alt="B有两个红线连接子节点,于是翻转B相关的线颜色,2-3树结构没有变化,但相当于把B与G合并了" loading="lazy"></figure>
+<p>B有两个红线连接子节点,于是翻转B相关的线颜色,2-3树结构没有变化,但相当于把B与G合并了</p>
+<p>![翻转后产生了子4的节点都是红线(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_14.31.05.png)</p>
+<p>翻转后产生了子4的节点都是红线(2-3里就是4 node:2 4 6)所以颜色翻转后就相当于分割了2 4 6</p>
+</li>
+</ul>
+<h3 id="llrb运行时间和实现">LLRB运行时间和实现</h3>
+<figure data-type="image" tabindex="95"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_15.38.54.png" alt="由于本质是2-3树高度和查找都一样,只是有旋转操作会花费更多时间" loading="lazy"></figure>
+<p>由于本质是2-3树高度和查找都一样,只是有旋转操作会花费更多时间</p>
+<figure data-type="image" tabindex="96"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_15.39.09.png" alt="LLRB实现需要考虑的规则" loading="lazy"></figure>
+<p>LLRB实现需要考虑的规则</p>
+<h3 id="llrb总结">LLRB总结</h3>
+<ul>
+<li>BST很简单但是不会自平衡</li>
+<li>2-3树(B树)会自平衡但是难实现</li>
+<li>LLRB(红黑树)实现简单(删除实现困难),只需要在BST的基础上加上各种旋转的规则(表现像2-3树) 用BST的结构实现了2-3树的功能解决了2-3树难以实现的问题<br>
+和2-3树有一对一的关系<br>
+Java使用的红黑树不是左倾的,并且是2-3-4树(没有一对一关系),允许两边都有红线,速度更快</li>
+</ul>
+<p>似乎我只学了2-3树并且左倾情况下的特殊的红黑树,以后还得继续深入啊~</p>
+<h2 id="散列表hash-table-哈希表">散列表Hash table (哈希表）</h2>
+<h3 id="data-indexed-arrays只是为了课程设计的结构"><strong><strong>Data Indexed Arrays(只是为了课程设计的结构)</strong></strong></h3>
+<p>用index作为data,存储data是否存在(true/false)</p>
+<p>我们已经知道了Set和Map的几种实现方式</p>
+<p>但我们并不一定需要对他们的item进行比较(而且有些item不可以比较)能不能避免比较呢</p>
+<p>性能虽然很棒了,但能不能更进一步呢</p>
+<figure data-type="image" tabindex="97"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_21.51.26.png" alt="截屏2022-08-30 21.51.26.png" loading="lazy"></figure>
+<p>所以我们可以设计一个index就是data本身,然后存储的东西就是有没有这个data的数组</p>
+<p>这样运行效率就很快</p>
+<figure data-type="image" tabindex="98"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_21.55.24.png" alt="用index作为data,存储true和false表示有没有这个data" loading="lazy"></figure>
+<p>用index作为data,存储true和false表示有没有这个data</p>
+<figure data-type="image" tabindex="99"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_21.55.43.png" alt="实现代码" loading="lazy"></figure>
+<p>实现代码</p>
+<p>缺点是会浪费大量内存,因为我们需要给把所有数字都设为false</p>
+<p>并且我们只能存整数,下面的结构将会扩展到存储英文</p>
+<figure data-type="image" tabindex="100"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-30_21.58.17.png" alt="截屏2022-08-30 21.58.17.png" loading="lazy"></figure>
+<h3 id="dataindexedenglishwordset"><strong><strong>DataIndexedEnglishWordSet</strong></strong></h3>
+<p>我们可以长度为26的数组,代表a~z</p>
+<p>这样就可以把“cat”存入3了(c开头)</p>
+<p>这样有两个问题</p>
+<ol>
+<li>很容易就重复了<br>
+想找”huhu“时可能为“hub“存过了所以显示”huhu“也存在</li>
+<li>无法存储数字开头的东西</li>
+</ol>
+<figure data-type="image" tabindex="101"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.18.02.png" alt="截屏2022-08-31 16.18.02.png" loading="lazy"></figure>
+<p>首先为了防止冲突可以使用如图的方法为每个单词生成<strong>不会重复</strong>唯一的字符</p>
+<p>但是这个方法不支持大写字母也不支持数字</p>
+<figure data-type="image" tabindex="102"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.21.37.png" alt="截屏2022-08-31 16.21.37.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="103"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.22.59.png" alt="就像数字不会重复一样,27也避免了字母组成重复" loading="lazy"></figure>
+<p>就像数字不会重复一样,27也避免了字母组成重复</p>
+<figure data-type="image" tabindex="104"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.24.35.png" alt="只要base≥ 26就不用担心重复问题
+想象成给每个字母划了一块内存然后一个单词由多个字母组成" loading="lazy"></figure>
+<p>只要base≥ 26就不用担心重复问题<br>
+想象成给每个字母划了一块内存然后一个单词由多个字母组成</p>
+<h3 id="dataindexedstringset"><strong><strong>DataIndexedStringSet</strong></strong></h3>
+<blockquote>
+<p>ASCII是基于拉丁字母的一套电脑编码系统。它主要用于显示现代英语</p>
+</blockquote>
+<p>用126个代表的ASCII为base就可以解决大小写和数字不能存储的问题</p>
+<figure data-type="image" tabindex="105"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.27.57.png" alt="ASCII 33以前的是换位符之类不能打印的字符" loading="lazy"></figure>
+<p>ASCII 33以前的是换位符之类不能打印的字符</p>
+<figure data-type="image" tabindex="106"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.30.25.png" alt="使用ASCII存储例子" loading="lazy"></figure>
+<p>使用ASCII存储例子</p>
+<p>不能存储像中文等非英文词,我们使用Unicode的话就可以支持了</p>
+<p>但问题又来了,这样一个简单的词需要的index都会非常巨大</p>
+<p>就会造成<strong><strong>Integer Overflow</strong></strong><br>
+Java的最大整数是:2,147,483,647,超过就会回到-2,147,483,648</p>
+<p>比如omens(base:126)= 28,196,917,171最后会变成-1,867,853,901</p>
+<figure data-type="image" tabindex="107"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.33.11.png" alt="截屏2022-08-31 16.33.11.png" loading="lazy"></figure>
+<h3 id="散列值-hash-codes">散列值 <strong><strong>Hash Codes</strong></strong></h3>
+<p>简单来说就是通过一种计算方式把所有东西都计算出一个较小的值,一样的东西得到的散列值是相同</p>
+<p>因为值小所以不可避免地会重复<br>
+比如(“melt banana” vs. “subterrestrial anticosmetic”)是一样的值,而解决这个问题叫<em>collision handling</em></p>
+<p>Java中所有对象都有散列值(.hashCode()</p>
+<p>),如果对象改变散列值也会改变</p>
+<figure data-type="image" tabindex="108"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.39.54.png" alt="截屏2022-08-31 16.39.54.png" loading="lazy"></figure>
+<h3 id="hash-tableshandling-collisions"><strong>Hash Tables:Handling Collisions</strong></h3>
+<p>为了解决不同对象相同的散列值可能造成的冲突,可以把存储true/false改为存储这个对象<br>
+比如创建一个LL放对象然后存储指向LL的地址</p>
+<p>有新的对象直接加在LL里就可以了,重复的添加忽略就可以了</p>
+<figure data-type="image" tabindex="109"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.47.12.png" alt="截屏2022-08-31 16.47.12.png" loading="lazy"></figure>
+<p><strong>改为index存储添加的对象列表</strong></p>
+<p>![向对应index(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.50.09.png)</p>
+<p>向对应index(代表散列值)的列表里添加对象本身</p>
+<figure data-type="image" tabindex="110"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.50.18.png" alt="运行速度要取决于对象散列值对应index储存的list长度" loading="lazy"></figure>
+<p>运行速度要取决于对象散列值对应index储存的list长度</p>
+<h3 id="建立散列表-hash-table">建立散列表 <strong><strong>Hash Table</strong></strong></h3>
+<p><strong>节省内存</strong></p>
+<p>有大量index并没有被使用,所以我们可以取余 把散列值余数相同的对象放在一起</p>
+<figure data-type="image" tabindex="111"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.52.47.png" alt="截屏2022-08-31 16.52.47.png" loading="lazy"></figure>
+<p>通过这种操作我们就成功建立出了<strong>散列表</strong>了!</p>
+<figure data-type="image" tabindex="112"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.55.38.png" alt="哪怕散列值不同的对象也被存储在一个bucket里" loading="lazy"></figure>
+<p>哪怕散列值不同的对象也被存储在一个bucket里</p>
+<h3 id="散列表运行时间">散列表运行时间</h3>
+<p>虽然节省了空间,但运行时间也增加了,最坏的时间取决于存储的最长列表</p>
+<p>![最坏的情况下所有的对象都存在一个bucket里,运行时间就是Θ(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_16.57.56.png)</p>
+<p>最坏的情况下所有的对象都存在一个bucket里,运行时间就是Θ(N)</p>
+<p>为了解决bucket(index对应的存储)太少导致list过长影响运行时间的问题,可以学习之前做AD(数组内核的双端队列)太满了就加倍数组的操作</p>
+<p>一旦存储对象和散列表长度的比值超过设定值就对散列表进行扩大(会让对象重新分配bucket,以前在一起的可能分开,不在一起的可能在一起)</p>
+<p>通过这样的操作就可以让存储和运行时间保持平衡</p>
+<figure data-type="image" tabindex="113"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_17.08.13.png" alt="1.5只是随便选的值,
+M代表bucket数量, N代表item数量" loading="lazy"></figure>
+<p>1.5只是随便选的值,<br>
+M代表bucket数量, N代表item数量</p>
+<h3 id="java中的散列表-hash-tables-in-java">Java中的散列表 <strong><strong>Hash Tables in Java</strong></strong></h3>
+<p>sets和maps很多都是依靠散列表实现的<br>
+因为性能出色,不需要对象可以比较,实现相对简单<br>
+像python的dictionaries就是散列表</p>
+<p>在Java的实现为java.util.HashMap 和 java.util.HashSet</p>
+<p>并且每个Java对象都有.hashCode()的方法可以给出对象的散列值</p>
+<figure data-type="image" tabindex="114"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_17.18.14.png" alt="截屏2022-08-31 17.18.14.png" loading="lazy"></figure>
+<p>使用<strong><strong>HashMaps/HashSets</strong></strong>的注意事项</p>
+<ol>
+<li>不要存储会变化的对象到里面,因为对象变化散列值也会变化</li>
+<li>不要在不重写hashCode的情况下重写equals(原因如图)</li>
+</ol>
+<h3 id="如何实现一个好的hashcodes方法">如何实现一个好的<strong><strong>HashCodes()方法</strong></strong></h3>
+<figure data-type="image" tabindex="115"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_17.19.15.png" alt="截屏2022-08-31 17.19.15.png" loading="lazy"></figure>
+<p>好的****.hashCode()****会让item更分散在不同bucket</p>
+<p>使用base的计算方式就不错(如上面提到的)</p>
+<figure data-type="image" tabindex="116"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_19.01.00.png" alt="1~3不好的生成hashcode方法举例" loading="lazy"></figure>
+<p>1~3不好的生成hashcode方法举例</p>
+<p><strong>String:</strong></p>
+<p>Java8中的String的****.hashCode()****实现</p>
+<p>主要有两点不同:</p>
+<ol>
+<li>使用了31作为base,因为不需要是唯一值</li>
+<li>存储了计算后的散列值,下次使用更快</li>
+</ol>
+<p>代码解读:</p>
+<p>先读取存储的散列值<br>
+如果存在(表示计算过了)就不用计算</p>
+<p>把之前的值乘base:31,用i读取String的每一个字母后相加</p>
+<p>最后存储计算出的String的散列值</p>
+<figure data-type="image" tabindex="117"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_19.04.55.png" alt="对String的散列值处理" loading="lazy"></figure>
+<p>对String的散列值处理</p>
+<p>我们之前使用ASCII作为base和Java的比较</p>
+<p>虽然base:126能获得唯一值(如果是ASCII strings的话)但是有overflow的问题</p>
+<p>因为overflow超过32个字符后,126base只要后面32个字符一样散列值就一样</p>
+<p>而由于接下来的处理我们并不太担心不同string的散列值重复</p>
+<figure data-type="image" tabindex="118"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_19.14.21.png" alt="两种散列值计算方式" loading="lazy"></figure>
+<p>两种散列值计算方式</p>
+<figure data-type="image" tabindex="119"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_19.17.37.png" alt="散列值的计算会有各种问题" loading="lazy"></figure>
+<p>散列值的计算会有各种问题</p>
+<p>好的Base一般选择小的质数(只能被1和本身整除)</p>
+<figure data-type="image" tabindex="120"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_19.20.06.png" alt="为什么要小的质数" loading="lazy"></figure>
+<p>为什么要小的质数</p>
+<p><strong><strong>Collection:</strong></strong></p>
+<p>对于集合的散列值基本就是把集合里每项的散列值遍历并乘base后加在一起</p>
+<p>但一般只会计算集合前面一小部分</p>
+<figure data-type="image" tabindex="121"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_19.23.52.png" alt="截屏2022-08-31 19.23.52.png" loading="lazy"></figure>
+<p><strong><strong>Recursive Data Structure:</strong></strong></p>
+<p>递归的数据结构比如BST就会把节点和两个子节点相加</p>
+<figure data-type="image" tabindex="122"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_19.27.50.png" alt="截屏2022-08-31 19.27.50.png" loading="lazy"></figure>
+<p><strong>总结Java中的散列表</strong></p>
+<ol>
+<li>获得数据的散列值</li>
+<li>把散列值减少到一定位数(比如取余)</li>
+<li>把数据存到上一部减少后散列值对应index(bucket)</li>
+<li>如果items(data)/bucket的比到了设定值就扩张bucket</li>
+<li>如果items分布均匀,运行时间就很理想</li>
+</ol>
+<figure data-type="image" tabindex="123"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-31_19.30.22.png" alt="截屏2022-08-31 19.30.22.png" loading="lazy"></figure>
+<h1 id="week-8">Week 8</h1>
+<h2 id="优先队列-priority-queue">优先队列 Priority queue</h2>
+<blockquote>
+<p>普通的队列是一种先进先出的数据结构，元素在队列尾追加，而从队列头删除。在优先队列中，元素被赋予优先级。当访问元素时，具有最高优先级的元素最先删除。优先队列具有最高级先出 （first in, largest out）的行为特征。通常采用堆数据结构来实现</p>
+</blockquote>
+<figure data-type="image" tabindex="124"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_16.21.01.png" alt="优先队列的接口" loading="lazy"></figure>
+<p>优先队列的接口</p>
+<p>也就是说如果我们需要一堆数据里最大/小的的几个,最高效的办法就是只留下几个的位置,然后每添加一个新的数据就删除原有队列里的最大/小的一个.(也就是只记录最大/小的几个数据)</p>
+<figure data-type="image" tabindex="125"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_16.22.41.png" alt="几种优先队列实现方法的运行效率区别" loading="lazy"></figure>
+<p>几种优先队列实现方法的运行效率区别</p>
+<p>使用不同的结构实现优先队列</p>
+<p>有序数组:添加需要遍历整个数组,找到极值很容易,删除的话可能会resize数组所以极端情况也很慢</p>
+<p>平衡的BST:所有操作效率都差不多 但还不够快</p>
+<p>散列表: 完全不可用,散列表就像数组加上一堆bucket,添加很快但查找效率极低 需要去每个bucket里找极值</p>
+<p>因此引入了下一个数据结构概念:Heap</p>
+<h2 id="堆-heaps">堆 Heaps</h2>
+<p>非常适合用于实现优先队列,本质上是一种特别的二叉树</p>
+<p>注意区分抽象类型和实现的区别</p>
+<blockquote>
+<p>堆是计算机科学中的一种特别的完全二叉树(bushy或者说平衡,除了最后一层都是满的,最后一层也只在右边缺)。若是满足以下特性，即可称为堆：“给定堆中任意节点P和C，若P是C的母节点，那么P的值会小于等于（或大于等于）C的值”。若母节点的值恒小于等于子节点的值，此堆称为最小堆（min heap）；反之，若母节点的值恒大于等于子节的值，此堆称为最大堆（max heap）。在堆中最顶端的那一个节点，称作根节点（root node），根节点本身没有母节点（parent node）。</p>
+</blockquote>
+<figure data-type="image" tabindex="126"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_16.54.14.png" alt="第三个不完整,第四个没用遵守子节点小于/等于的性质" loading="lazy"></figure>
+<p>第三个不完整,第四个没用遵守子节点小于/等于的性质</p>
+<figure data-type="image" tabindex="127"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_16.58.36.png" alt="截屏2022-09-13 16.58.36.png" loading="lazy"></figure>
+<h3 id="binary-min-heap">Binary min-heap</h3>
+<p>是一种特殊的堆,有两个性质</p>
+<ol>
+<li>Binary min-heap的每一个节点都等于或者小于它的两个子节点</li>
+<li>只会在最后一层缺少节点(并且是右边的节点),其他层都是满的</li>
+</ol>
+<p><strong>操作:</strong></p>
+<ol>
+<li>
+<p><strong>getSmallest()</strong></p>
+<p>另外可以注意到,Binary min-heap的最小值总是root,所以<code>getSmallest()</code>很快速!</p>
+</li>
+<li>
+<p><strong>add()</strong></p>
+</li>
+</ol>
+<p>比如要在这样一个heap里add(3)</p>
+<figure data-type="image" tabindex="128"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_17.57.47.png" alt="截屏2022-09-13 17.57.47.png" loading="lazy"></figure>
+<p>首先要找个一个有缺口的地方(也就是最后一层右边是空的节点)以满足我们左边是满的的要求</p>
+<p>然后放下这个要添加的节点</p>
+<p>再将这个节点与它的父节点比较(由于是min-heap所以越小越靠近root)如果节点更小就与父节点交换</p>
+<figure data-type="image" tabindex="129"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_17.58.43.png" alt="截屏2022-09-13 17.58.43.png" loading="lazy"></figure>
+<p>经过各种交换上升后最终这个添加的节点,放置到了合适的位置</p>
+<figure data-type="image" tabindex="130"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.01.16.png" alt="截屏2022-09-13 18.01.16.png" loading="lazy"></figure>
+<ol>
+<li><strong>removeSmallest()</strong></li>
+</ol>
+<p>基本就是add的反向操作,记住在Binary min-heap中最小的节点就是root</p>
+<figure data-type="image" tabindex="131"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.03.36.png" alt="截屏2022-09-13 18.03.36.png" loading="lazy"></figure>
+<p>删除root后再把最后一个节点移动到原本root的位置</p>
+<p>再将这个新的“root”与子节点比较、交换</p>
+<figure data-type="image" tabindex="132"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.04.17.png" alt="截屏2022-09-13 18.04.17.png" loading="lazy"></figure>
+<p>经过不断的下降、交换后替代原本root的节点也到了正确的位置</p>
+<figure data-type="image" tabindex="133"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.06.41.png" alt="截屏2022-09-13 18.06.41.png" loading="lazy"></figure>
+<p>![再执行一次removeSmallest(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.10.45.png)</p>
+<p>再执行一次removeSmallest(),另外被移动到root的节点往哪边下降都可以</p>
+<h3 id="在java中怎么表示树的结构">在Java中怎么表示树的结构</h3>
+<figure data-type="image" tabindex="134"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.18.16.png" alt="1a:比较直观的一种,和BSTMap差不多 存下本身的值和子节点的位置" loading="lazy"></figure>
+<p>1a:比较直观的一种,和BSTMap差不多 存下本身的值和子节点的位置</p>
+<p>![1b:用一个数组来存储子节点们的位置,好处是可以无限扩张子节点数量,坏处是效率低(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.19.15.png)</p>
+<p>1b:用一个数组来存储子节点们的位置,好处是可以无限扩张子节点数量,坏处是效率低(连指针都有2个)</p>
+<hr>
+<figure data-type="image" tabindex="135"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.22.45.png" alt="1c.每个节点有一个指向子节点和一个指向“兄弟”的指针" loading="lazy"></figure>
+<p>1c.每个节点有一个指向子节点和一个指向“兄弟”的指针</p>
+<hr>
+<p>2.使用数组存储key和父节点</p>
+<figure data-type="image" tabindex="136"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.26.44.png" alt="注意存储父节点的数组,在树完整有顺序的情况下,就是1 1 2 2 3 3 4 4的形式" loading="lazy"></figure>
+<p>注意存储父节点的数组,在树完整有顺序的情况下,就是1 1 2 2 3 3 4 4的形式</p>
+<p>这一个的实现和disjointSets的使用<strong><strong>Quick Union组建(改进)</strong></strong> 有点类似,不显式地存储<br>
+用两个数组一个存储它的值一个存储它的父级节点</p>
+<p>如果是一个完整的tree并且按照了顺序,那么它的parents数组是有顺序的</p>
+<hr>
+<p>3.由于这个树很标准,可以只存储key不存储父节点</p>
+<figure data-type="image" tabindex="137"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.33.33.png" alt="截屏2022-09-13 18.33.33.png" loading="lazy"></figure>
+<p>所以在完整有顺序的tree的情况下(就像我们的BMT),我们可以完全抛弃父节点的数组</p>
+<p>要找到父节点位置也很简单,Java “/”会只保留整数,所以可以使用<code>(k - 1) / 2</code>得到父节点位置(root可能不适用)</p>
+<p>这也是现实中Heaps的实现方法,由于没有各种link所以速度很快!</p>
+<figure data-type="image" tabindex="138"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-13_18.39.25.png" alt="似乎是节点位置的算法" loading="lazy"></figure>
+<p>似乎是节点位置的算法</p>
+<figure data-type="image" tabindex="139"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-15_20.42.15.png" alt="几种实现树的方法总结" loading="lazy"></figure>
+<p>几种实现树的方法总结</p>
+<hr>
+<p>3b.留空让计算更高效(教科书使用)</p>
+<figure data-type="image" tabindex="140"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-15_20.45.45.png" alt="无需每次计算都减1,性能提升 类似于哨兵节点" loading="lazy"></figure>
+<p>无需每次计算都减1,性能提升 类似于哨兵节点</p>
+<figure data-type="image" tabindex="141"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-15_21.19.14.png" alt="截屏2022-09-15 21.19.14.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="142"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-15_21.20.54.png" alt="截屏2022-09-15 21.20.54.png" loading="lazy"></figure>
+<h2 id="数据结构小总结">数据结构小总结</h2>
+<p>几乎所有的数据结构只为了解决一件事:搜索,<br>
+也就是找到数据,而不同的结构在不同的环境下性能和实现难度不一样</p>
+<figure data-type="image" tabindex="143"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-15_21.36.41.png" alt="截屏2022-09-15 21.36.41.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="144"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-15_21.36.57.png" alt="红色是不太好的实现方式" loading="lazy"></figure>
+<p>红色是不太好的实现方式</p>
+<h2 id="树的遍历"><strong>树的遍历</strong></h2>
+<p>tree traversa(tree iteration)</p>
+<p>和lists不同,遍历一个树不是只有前进后退两种操作,而是有很多种方式来访问每一个node</p>
+<p>几种树的遍历方式:</p>
+<figure data-type="image" tabindex="145"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_17.41.47.png" alt="截屏2022-09-20 17.41.47.png" loading="lazy"></figure>
+<ol>
+<li><strong>层序遍历</strong>( Level Order)</li>
+</ol>
+<p>按照从上到下然后从左到右的顺序来遍历(就像阅读一样),顺序: DBFACEG</p>
+<ol>
+<li><strong>深度优先搜索</strong> (Depth-first search) or DFS</li>
+</ol>
+<p>按照深度优先,下面的节点比上面的先遍历,分为三种类型:</p>
+<ul>
+<li>
+<p><strong>先序遍历 Preorder</strong></p>
+<figure data-type="image" tabindex="146"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_17.46.18.png" alt="顺序:DBACFEG" loading="lazy"></figure>
+<p>顺序:DBACFEG</p>
+<p>先打印出父节点再打印子节点,并且先左后右</p>
+<p>Preorder很适合作为文件目录打印(下图左)</p>
+<figure data-type="image" tabindex="147"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_18.06.05.png" alt="通过缩进来表示子节点" loading="lazy"></figure>
+<p>通过缩进来表示子节点</p>
+</li>
+<li>
+<p><strong>中序遍历 Inorder</strong></p>
+<figure data-type="image" tabindex="148"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_17.49.00.png" alt="顺序:ABCDEFG" loading="lazy"></figure>
+<p>顺序:ABCDEFG</p>
+<p>和真正的顺序一样,先左子节点再中节点再右子节点</p>
+</li>
+<li>
+<p><strong>后序遍历 Postorder</strong></p>
+<figure data-type="image" tabindex="149"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_18.03.30.png" alt="顺序:ACBEGFD" loading="lazy"></figure>
+<p>顺序:ACBEGFD</p>
+<p>基本上就是从下往上遍历</p>
+<p>Postorder适合用于计算文件夹大小,下方的文件大小一步步向上汇总</p>
+<figure data-type="image" tabindex="150"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_18.16.46.png" alt="截屏2022-09-20 18.16.46.png" loading="lazy"></figure>
+</li>
+</ul>
+<h2 id="图-graphs">图 <strong><strong>Graphs</strong></strong></h2>
+<p>一堆节点,并且节点之间有0或更多edges连接着节点们,但edges不能连接节点自己到自己,也没有多条edges连接着同样的两个节点</p>
+<hr>
+<p>树很适合表示层次关系,但还有不是层次的关系,比如地铁的线路 从一个站点到另一个站点可能有很多种不同的方式</p>
+<p>tree就是一种没有Cycles和每个vertex(node)相连的<strong><strong>Graphs</strong></strong></p>
+<figure data-type="image" tabindex="151"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_19.18.37.png" alt="图2是树,并且所以树都属于图" loading="lazy"></figure>
+<p>图2是树,并且所以树都属于图</p>
+<figure data-type="image" tabindex="152"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_19.20.50.png" alt="绿色的也称为简单图simple graph,本课里的graph都是simple graph" loading="lazy"></figure>
+<p>绿色的也称为简单图simple graph,本课里的graph都是simple graph</p>
+<h3 id="graph的类型">Graph的类型</h3>
+<figure data-type="image" tabindex="153"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_19.27.51.png" alt="Acyclic非循环、Cyclic:循环、Directed:有指向" loading="lazy"></figure>
+<p>Acyclic非循环、Cyclic:循环、Directed:有指向</p>
+<h3 id="graph的术语">Graph的术语</h3>
+<figure data-type="image" tabindex="154"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_19.29.23.png" alt="截屏2022-09-20 19.29.23.png" loading="lazy"></figure>
+<h3 id="graph相关的问题">Graph相关的问题</h3>
+<p>只作为展示Graph本身的深度用</p>
+<figure data-type="image" tabindex="155"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_21.02.50.png" alt="截屏2022-09-20 21.02.50.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="156"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_21.03.10.png" alt="截屏2022-09-20 21.03.10.png" loading="lazy"></figure>
+<h2 id="深度优先遍历-depth-first-traversal"><strong>深度优先遍历 (Depth-first traversal)</strong></h2>
+<h3 id="解决s-t-connectivity问题">解决<strong><strong>s-t Connectivity问题</strong></strong></h3>
+<p>通过遍历把s相邻的节点都判断是否等于t,这样遍历下去如果有一个相等(也就是s-t相连了)就返回ture,另外会给当过s的节点做上标记以防止无限循环比如0的邻居是1,1的又是0这样来来回回</p>
+<figure data-type="image" tabindex="157"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_21.06.16.png" alt="截屏2022-09-20 21.06.16.png" loading="lazy"></figure>
+<p>这样的算法其实就是<strong>深度优先遍历</strong>的一个子集</p>
+<p>深度优先就是先尽可能的深入一个子节点再探索另一个子节点</p>
+<ul>
+<li>使用DFS找到S到其他节点的路径 <a href="https://docs.google.com/presentation/d/1lTo8LZUGi3XQ1VlOmBUF9KkJTW_JWsw_DOPq8VBiI3A/edit#slide=id.g76e0dad85_2_380">Demo演示</a></li>
+</ul>
+<figure data-type="image" tabindex="158"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_21.26.09.png" alt="也被称为**DFS Preorder**" loading="lazy"></figure>
+<p>也被称为<strong>DFS Preorder</strong></p>
+<p>建立这个表需要从s点开始并选择一个点不断深入<br>
+访问的节点需要记录下是否被访问过,和访问它的那个节点</p>
+<h2 id="图的遍历">图的遍历</h2>
+<p>traversal可以解决大部分图的问题,通过在图（或树）的遍历过程中执行actions / setting实例变量，你可以解决像s-t Connectivity或path finding这样的问题。</p>
+<ol>
+<li>
+<p><strong>DFS Preorder</strong></p>
+<p>上面的DepthFirstPaths就是DFS Preorder,操作先于DFS</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="159"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_21.58.06.png" alt="dfs call:012543678" loading="lazy"></figure>
+<p>dfs call:012543678</p>
+<ol>
+<li>
+<p><strong>DFS Postorder</strong></p>
+<p>操作后于DFS</p>
+<figure data-type="image" tabindex="160"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_22.00.08.png" alt="dfs call: 347685210" loading="lazy"></figure>
+<p>dfs call: 347685210</p>
+</li>
+<li>
+<p><strong>BFS (广度优先搜索)</strong></p>
+<p>根据到s的距离来操作(会在下一节课讲到,也就是广度优先)</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="161"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-20_22.01.03.png" alt="0 1 24 53 68 7" loading="lazy"></figure>
+<p>0 1 24 53 68 7</p>
+<hr>
+<p>使用BFS找到顶点到每个节点的最短路径</p>
+<p>![不使用递归 (https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_10.42.22.png)</p>
+<p>不使用递归 (Recursion)操作</p>
+<p>解法:</p>
+<p>![<a href="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_10.45.31.png">演示地址</a></p>
+<p><a href="https://docs.google.com/presentation/d/1JoYCelH4YE6IkSMq_LfTJMzJ00WxDj7rEa49gYmAtc4/edit?usp=sharing">演示地址</a></p>
+<p>主要思想就是使用Queue这一先进先出的数据结构来对每一层进行记录</p>
+<figure data-type="image" tabindex="162"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_10.51.13.png" alt="distTo是节点到s的距离,每一层+1
+v不像dfs,bfs的顶点可以到处跳动" loading="lazy"></figure>
+<p>distTo是节点到s的距离,每一层+1<br>
+v不像dfs,bfs的顶点可以到处跳动</p>
+<p>由于先进先出的属性,总是把一层探索完后再进入下一层</p>
+<p>探索完成后就可以依靠distTo马上知道一个节点到s的距离了</p>
+<p>BFS还可以应用在如寻找两个演员之间的最短电影关联的网站数据结构</p>
+<figure data-type="image" tabindex="163"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_11.04.36.png" alt="截屏2022-09-22 11.04.36.png" loading="lazy"></figure>
+<p>图遍历和树遍历的一个大区别就是图遍历的顺序可能不是唯一的,比如上图1之后可以去4也可以去2</p>
+<h2 id="graph-api"><strong><strong>Graph API</strong></strong></h2>
+<figure data-type="image" tabindex="164"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.40.20.png" alt="实现用BFS/DFS实现图需要的东西" loading="lazy"></figure>
+<p>实现用BFS/DFS实现图需要的东西</p>
+<hr>
+<p>一般情况会给节点加上label而不是实际的值,可以通过map来对应</p>
+<figure data-type="image" tabindex="165"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.41.58.png" alt="截屏2022-09-22 14.41.58.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="166"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.43.05.png" alt="普林斯顿教材的图API
+注意degree就是edges的意思也就是连接线" loading="lazy"></figure>
+<p>普林斯顿教材的图API<br>
+注意degree就是edges的意思也就是连接线</p>
+<figure data-type="image" tabindex="167"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.43.17.png" alt="打印整个图的code" loading="lazy"></figure>
+<p>打印整个图的code</p>
+<h3 id="使用哪种数据结构实现图图的存储">使用哪种数据结构实现图(图的存储)</h3>
+<p><strong>树:</strong></p>
+<figure data-type="image" tabindex="168"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.47.03.png" alt="1.和一些树结构类似" loading="lazy"></figure>
+<p>1.和一些树结构类似</p>
+<figure data-type="image" tabindex="169"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.47.29.png" alt="2.和只存储key的结构类似⬇️,优点是使用较少的存储和快速,但只能用在完整的tree上" loading="lazy"></figure>
+<p>2.和只存储key的结构类似⬇️,优点是使用较少的存储和快速,但只能用在完整的tree上</p>
+<p>3.由于这个树很标准,可以只存储key不存储父节点</p>
+<p><strong>矩阵:</strong></p>
+<p>![3.使用**邻接矩阵 (https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.51.30.png)</p>
+<p>3.使用**邻接矩阵 (Adjacency matrix)**表示 通过boolean表示是否连接</p>
+<p>有指向的酒只存储父节点到子节点的,无指向的就双向标注</p>
+<p>缺点是有大量冗余</p>
+<p><strong>集合:</strong></p>
+<figure data-type="image" tabindex="170"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.54.22.png" alt="4.存储连接的集合" loading="lazy"></figure>
+<p>4.存储连接的集合</p>
+<hr>
+<p>![5.使用Adjacency lists(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.55.00.png)</p>
+<p>5.使用Adjacency lists(邻接表)</p>
+<p>和哈希表类似,比较适用于连接(edges)少的稀疏的图,也是最常用于实现图的数据结构</p>
+<p>index不存hash而是节点(vertex),bucket存邻居节点</p>
+<h3 id="不同实现图的数据结构的runtime">不同实现图的数据结构的Runtime</h3>
+<p>![注意Adjacency lists的print(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-22_14.59.09.png)</p>
+<p>注意Adjacency lists的print()和hasEdge()只是极端情况,大部分情况下图都是稀疏的</p>
+<h1 id="week9">Week9</h1>
+<h2 id="最短路径">最短路径</h2>
+<figure data-type="image" tabindex="171"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-28_15.57.28.png" alt="截屏2022-09-28 15.57.28.png" loading="lazy"></figure>
+<p>之前学过两种找到路径的方法,DFS不适用于瘦长的图,而BFS不适合饱满的图</p>
+<p>但BFS有个好处就是可以找到S点到任意点的<strong>最短路径</strong></p>
+<p>但是在现实中,比如地图APP如果使用这种策略的话就会出问题,因为不是每个点之间的路径都是相同长的</p>
+<figure data-type="image" tabindex="172"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-28_15.59.41.png" alt="最短的路径却有更多edge所以使用BFS会选择edge更少的更长的路径" loading="lazy"></figure>
+<p>最短的路径却有更多edge所以使用BFS会选择edge更少的更长的路径</p>
+<h2 id="戴克斯特拉算法-dijkstras-algorithm"><strong>戴克斯特拉算法 (Dijkstra's algorithm)</strong></h2>
+<p>要点:不断更新S到顶点的最小距离,选择路径更短(priority queue可以帮助)的顶点为下一个探索的顶点,最终形成一个最短路径的tree</p>
+<p>从S到各点的最短路径最终就像是tree一样</p>
+<figure data-type="image" tabindex="173"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-28_18.29.26.png" alt="截屏2022-09-28 18.29.26.png" loading="lazy"></figure>
+<p>而我们可以靠给S到节点标记距离来找到最短路径,最开始默认所有的S到节点的距离为♾️</p>
+<p>到实际访问时再标上真实的距离,如果有更短的距离就进行覆盖这样就得到了<strong>Dijkstra's algorithm</strong></p>
+<p><a href="https://docs.google.com/presentation/d/1_bw2z1ggUkquPdhl7gwdVBoTaoJmaZdpkV6MoAgxlJc/pub?start=false&amp;loop=false&amp;delayms=3000">Dijkstra’s Algorithm Demo Link</a></p>
+<p>另外访问下一个顶点(节点)时总是选择最小的路径来继续</p>
+<figure data-type="image" tabindex="174"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-28_18.34.42.png" alt="通常使用PQ来保证路径" loading="lazy"></figure>
+<p>通常使用PQ来保证路径</p>
+<figure data-type="image" tabindex="175"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-28_18.33.44.png" alt="截屏2022-09-28 18.33.44.png" loading="lazy"></figure>
+<h2 id="a">A*</h2>
+<p><a href="http://qiao.github.io/PathFinding.js/visual/">算法可视化</a></p>
+<p>Dijkstra有个缺点就是会探索所有顶点,但我们从A地到B地并不需要探索完A周围的所有顶点,于是就引入了一个估计值,也就是说我们会尽量探索靠近B点方向的节点(也就是说Dijkstra探索下一个顶点的依据是最短距离,而A*探索的下一个顶点是我们估计与目标顶点距离更近的顶点)</p>
+<blockquote>
+<p>A*算法根据f值f=g+h来构建优先级队列(D只有g)，其中g是起始点与顶点的距离，h是顶点到结束点的距离。D算法是根据g值来构建</p>
+</blockquote>
+<figure data-type="image" tabindex="176"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-28_19.08.25.png" alt="截屏2022-09-28 19.08.25.png" loading="lazy"></figure>
+<hr>
+<p>给定一个无向图，确定它是否包含任何循环</p>
+<figure data-type="image" tabindex="177"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_14.37.14.png" alt="截屏2022-09-29 14.37.14.png" loading="lazy"></figure>
+<p>解决方法</p>
+<p>1:使用DFS只要再次遇到已经标记过的顶点就说明有循环♻️(注意要除去到这个顶点的顶点)</p>
+<p>2:使用WeightedQuickUnionUF,大概就是没连接的点union,有连接的点之间比如4,5 4,6 5,6都union了说明是循环(这个我也不太懂)</p>
+<h2 id="生成树-spanning-trees">生成树 <strong><strong>Spanning Trees</strong></strong></h2>
+<p>是无向图的一个子图,无向图 G 的生成树是具有G 的全部顶点，但边数最少的连通子图</p>
+<figure data-type="image" tabindex="178"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_14.48.48.png" alt="连接、不循环→tree、包含所有顶点→spanning" loading="lazy"></figure>
+<p>连接、不循环→tree、包含所有顶点→spanning</p>
+<h2 id="mst-最小生成树-minimum-spanning-tree">MST <strong>最小生成树 (Minimum spanning tree)</strong></h2>
+<p>就是无向图的生成树里面权值最小的生成树</p>
+<p><a href="http://www.ics.uci.edu/~eppstein/gina/mst.html">MST的现实应用</a>:比如不同城镇间建立线路最短的电网</p>
+<h3 id="mst-vs-spt"><strong><strong>MST vs. SPT</strong></strong></h3>
+<p>MST是没有S(source)的,它的目标是连接所有顶点并且路径最短,而SPT的目标是找到S到所有节点最短的路径</p>
+<p>在某些情况下他们可能长得一样</p>
+<figure data-type="image" tabindex="179"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_15.21.58.png" alt="B点为S的SPT与MST一样" loading="lazy"></figure>
+<p>B点为S的SPT与MST一样</p>
+<p>![该图找不到一个S让SPT和MST相同,因为要实现路径最短中间那个顶点总有一边使用了两条edges<br>
+(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_15.25.29.png)</p>
+<p>该图找不到一个S让SPT和MST相同,因为要实现路径最短中间那个顶点总有一边使用了两条edges<br>
+(下图为S为紫色顶点的SPT图)</p>
+<p>正因为MST和SPT并不一定一样,所以也需要新的算法来找到MST</p>
+<h2 id="切分定理-the-cut-property">切分定理 The Cut Property</h2>
+<p>首先随机把顶点分为黑白两个set,这样连接黑白的边(edge)就是横切边(Crossing Edge),这些横切边里最短的边必定是MST的一部分</p>
+<figure data-type="image" tabindex="180"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_17.42.05.png" alt="如图红线就是横切边" loading="lazy"></figure>
+<p>如图红线就是横切边</p>
+<p>证明:如图我们找到了最短的横切边</p>
+<figure data-type="image" tabindex="181"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_17.46.25.png" alt="截屏2022-09-29 17.46.25.png" loading="lazy"></figure>
+<p>如果e不是MST的一部分,把它加入MST就会形成循环</p>
+<p>这时候减去f得到的MST,必定是路径更短的MST</p>
+<figure data-type="image" tabindex="182"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_17.47.56.png" alt="截屏2022-09-29 17.47.56.png" loading="lazy"></figure>
+<h3 id="使用切分定理来找到mst">使用切分定理来找到MST</h3>
+<p>我们可以一直生成不同的set(把顶点们随机分为两部分),然后其中最小的edge就加入MST,最终就能得到完整MST了</p>
+<figure data-type="image" tabindex="183"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_17.53.26.png" alt="截屏2022-09-29 17.53.26.png" loading="lazy"></figure>
+<p>但是又有一个新问题:“Random isn’t a very good idea.”也就是依靠随机分set并不是很可靠也就引入了使用切分定理的下一个算法</p>
+<h2 id="普里姆算法-prims-algorithm"><strong>普里姆算法 Prim's algorithm</strong></h2>
+<p>随便选择一个顶点开始,然后每次都选择最小的边加入MST,直到加入了V-1条边,就得到了MST</p>
+<p>其实就是切分定理的一个应用,相当于把已经选择过的顶点和余下部分分为了两个set,再找到最短的横切边加入MST</p>
+<figure data-type="image" tabindex="184"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_18.06.53.png" alt="截屏2022-09-29 18.06.53.png" loading="lazy"></figure>
+<hr>
+<p>不过这种<strong>Prim's algorithm</strong>有个缺点就是可能最后有太多需要考虑的边了,效率不高</p>
+<figure data-type="image" tabindex="185"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_18.37.02.png" alt="截屏2022-09-29 18.37.02.png" loading="lazy"></figure>
+<p><a href="https://docs.google.com/presentation/d/1NFLbVeCuhhaZAM1z3s9zIYGGnhT4M4PWwAc-TLmCJjc/edit#slide=id.g9a60b2f52_0_0">考虑所有边的演示</a>、<a href="https://docs.google.com/presentation/d/1GPizbySYMsUhnXSXKvbqV4UhPCvrt750MiqPPgU-eCY/edit#slide=id.g9a60b2f52_0_0">引入临时边的演示</a></p>
+<p>所以我们可以学习Dijkstra的想法,把顶点们以到S距离放入PQ,并且不断移除确认了最短边的节点,这样就不用考虑所有紫线了(不是很懂,建议看演示理解)</p>
+<h3 id="prims-vs-dijkstras"><strong><strong>Prim’s vs. Dijkstra’s</strong></strong></h3>
+<p>这两种算法基本相同,只是关注的东西不一样一个在乎相邻未加入顶点edge的PQ里的最短,一个在乎S到顶点的距离最短(也就是他们选择下一个顶点的逻辑不一样)</p>
+<p>总的来说Prim关注集合(Set)和集合,而Dijkstra关注一个顶点到其他所有顶点,除此之外思想是差不多的</p>
+<figure data-type="image" tabindex="186"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-09-29_19.16.41.png" alt="截屏2022-09-29 19.16.41.png" loading="lazy"></figure>
+<p>但是Prim的实现还是比较复杂的,所以有了更简单而且也不用随机选择相同权值的新算法——<strong>克鲁斯克尔算法 (Kruskal's algorithm)</strong></p>
+<h2 id="克鲁斯克尔算法-kruskals-algorithm"><strong>克鲁斯克尔算法 Kruskal's algorithm</strong></h2>
+<p>将edge按权值由小到大排列,然后只要新加入MST的edge不构成循环就加入.最终V-1是就完成了MST了(和Prim不一样,构建时的MST不一定都相连)</p>
+<p>同样也贯彻了Cut Property,可以把已经加入MST的点和未加入的想象为2个set,总之既然MST包含全部顶点,那么不构成循环的权值低的edge势必会被考虑</p>
+<p>![真实实现演示:<a href="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-01_15.31.24.png">Link</a></p>
+<p>真实实现演示:<a href="https://docs.google.com/presentation/d/1KpNiR7aLIEG9sm7HgX29nvf3yLD8_vdQEPa0ktQfuYc/edit?usp=sharing">Link</a></p>
+<p>如图一个按edge权值排列的PQ,检查后就删除这个边<br>
+一个WQU(Weighted Quick Union)来确定是否有循环(比如想连接1和4结果有“0-2-4-1-3”说明会构成循环,就不加入MST),就是通过能不能Union来判断是否有循环<br>
+和最小生成树的MST结构</p>
+<figure data-type="image" tabindex="187"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-01_15.45.57.png" alt="截屏2022-10-01 15.45.57.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="188"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-01_15.45.46.png" alt="截屏2022-10-01 15.45.46.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="189"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-01_17.39.25.png" alt="最短路径和各种MST算法总结,实际情况E和V的差别没多大,所以想用哪个算法都可以只是Dijkstra不适用于负的权值" loading="lazy"></figure>
+<p>最短路径和各种MST算法总结,实际情况E和V的差别没多大,所以想用哪个算法都可以只是Dijkstra不适用于负的权值</p>
+<h2 id="tree的结构可以支持各种操作一维">tree的结构可以支持各种操作(一维)</h2>
+<p>假定有set:{1, 4, 5, 6, 9, 11, 14, 17, 20}</p>
+<ul>
+<li>
+<p>select(int i): 返回按从小到达排列的第i个最小的值<br>
+select(0): 1、select(3): 6</p>
+</li>
+<li>
+<p>rank(T x): 返回 set中第几个的“rank”  (与select相反).<br>
+rank(1): 0、 rank(6): 3</p>
+</li>
+<li>
+<p>subSet(T from, T to):返回from到to之间的items(类似于子集)<br>
+subSet(4, 9): Returns {4, 5, 6, 9}、subSet(3, 12): Returns {4, 5, 6, 9, 11}、subSet(12, 13): Returns {}</p>
+</li>
+<li>
+<p>nearest(T x): 返回最接近x的值<br>
+nearest(6): Returns 6、nearest(8): Returns 9、nearest(10): Returns 9 or 11</p>
+<figure data-type="image" tabindex="190"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-01_18.56.05.png" alt="截屏2022-10-01 18.56.05.png" loading="lazy"></figure>
+<p>实现这个功能只需要search这个值并且不断更新并记录一个最靠近它的值就行了,其他功能的实现也与它很类似</p>
+</li>
+</ul>
+<p>以上这些都说了tree这个结构对各种操作都很有效率</p>
+<p>但是我们这些都是一维的数据,而多维的tree和各种功能怎么设计就需要更进一步讨论了</p>
+<figure data-type="image" tabindex="191"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-01_19.08.53.png" alt="截屏2022-10-01 19.08.53.png" loading="lazy"></figure>
+<h2 id="多维数据不能使用bst">多维数据不能使用BST</h2>
+<p>比如我们有一个有x,y信息的数据,只通过X或者Y得到的BST很可能不一样,想要在以Y生成的tree里找到X小于某个值的顶点的话必须遍历全部顶点</p>
+<figure data-type="image" tabindex="192"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-02_17.47.55.png" alt="截屏2022-10-02 17.47.55.png" loading="lazy"></figure>
+<h2 id="四叉树-quadtree"><strong>四叉树 Quadtree</strong></h2>
+<p>四叉树的基本想法就是把一个顶点从拥有两个子节点变成四个,这样就可以容纳二维的数据了</p>
+<figure data-type="image" tabindex="193"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-02_18.15.10.png" alt="截屏2022-10-02 18.15.10.png" loading="lazy"></figure>
+<p>所以我们就可以按照x和y这样的二维数据来决定新的数据放到它的NW、NE、SE还是SW了,X决定东西,Y决定南北</p>
+<p>其实回忆一下二叉树就像一个只有x的轴,而四叉树就像平面直角坐标系</p>
+<p>![<a href="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-02_18.17.01.png">四叉树添加节点的演示</a></p>
+<p><a href="https://docs.google.com/presentation/d/1vqAJkvUxSh-Eq4iIJZevjpY29nagNTjx-4N3HpDi0UQ/pub?start=false&amp;loop=false&amp;delayms=3000">四叉树添加节点的演示</a></p>
+<p>另外这样之后我们就可以进行**空间分割 (Space partitioning)**了按照NW、NE、SE、SW把一个顶点的空间划为4个,这样就可以进行剪枝(pruning)从而像二叉树支持一维数据的各种操作一样,支持二维数据的各种操作了</p>
+<h3 id="range-search"><strong><strong>Range Search</strong></strong></h3>
+<p>![<a href="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-02_18.23.56.png">演示地址</a></p>
+<p><a href="https://docs.google.com/presentation/d/1ZVvh_Q15Lh2D1_NnzZ4PR_aDsLBwvAU9JYQAwlSuXSM/edit?usp=sharing">演示地址</a></p>
+<p>通过剪枝来找到绿色方块,这样就不用访问其他空间了,节省时间,就和二叉树去左/右的想法类似</p>
+<h2 id="更高的维度">更高的维度</h2>
+<p>三维的数据四叉树就不行了,因为只有四个方向,而需要八个方向才行</p>
+<p>于是可以使用八叉树</p>
+<figure data-type="image" tabindex="194"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-02_19.29.40.png" alt="截屏2022-10-02 19.29.40.png" loading="lazy"></figure>
+<p>超过3维怎么办呢,就有了一个通用的结构k-d tree</p>
+<figure data-type="image" tabindex="195"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-02_19.31.09.png" alt="截屏2022-10-02 19.31.09.png" loading="lazy"></figure>
+<h2 id="k-d-tree">k-d tree</h2>
+<p>(一下例子为二维数据时)</p>
+<p>也就是k-dimensional tree的意思,可以支持任意高的维度</p>
+<p>基本思想就是根据深度交替把空间分为左右或者上下然后插入新的值(更多维度就根据深度来切换X,Y,Z……)</p>
+<figure data-type="image" tabindex="196"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-02_19.46.55.png" alt="截屏2022-10-02 19.46.55.png" loading="lazy"></figure>
+<p>与四叉树类似,只是k-d tree的每一个顶点都分出了两个子空间</p>
+<figure data-type="image" tabindex="197"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-02_19.38.44.png" alt="截屏2022-10-02 19.38.44.png" loading="lazy"></figure>
+<p>注意新加入的节点比较的时候,是哪一层就按照哪一层的重点值来比较,如果决定放入再比较另一个值</p>
+<p>注意节点F虽然到C时该和C比较x值,但值却一样,按照规定一样的值就当作更大的值对待,所以F就放在C的R了</p>
+<h2 id="k-d-trees寻找最近点"><strong><strong>K-d Trees寻找最近点</strong></strong></h2>
+<p>因为不怎么懂,不做过多说明</p>
+<p>总之就是通过一定找Good side而有条件地看Bad side找到理想的最近点</p>
+<p>![ <a href="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_16.00.06.png">K-d tree nearest demo.</a></p>
+<p><a href="https://docs.google.com/presentation/d/1DNunK22t-4OU_9c-OBgKkMAdly9aZQkWuv_tBkDg1G4/edit?usp=sharing">K-d tree nearest demo.</a></p>
+<p>两种实现找最近点的伪代码</p>
+<figure data-type="image" tabindex="198"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_16.02.21.png" alt="截屏2022-10-03 16.02.21.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="199"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_16.02.28.png" alt="截屏2022-10-03 16.02.28.png" loading="lazy"></figure>
+<h2 id="uniform-partitioning"><strong><strong>Uniform Partitioning</strong></strong></h2>
+<p>一种不适用tree而是划分区块来存储的结构 (不了解)同样也是<strong>spatial partitioning</strong></p>
+<figure data-type="image" tabindex="200"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_17.08.40.png" alt="截屏2022-10-03 17.08.40.png" loading="lazy"></figure>
+<h1 id="week-9">Week 9</h1>
+<h2 id="字典树-trie">字典树 <strong>Trie</strong></h2>
+<p>全称是Re<strong>trie</strong>val Tree,发音类似“try”</p>
+<p>之前我们有许多方式可以实现Set和Map,而Trie又是另一种可以实现它们的方式</p>
+<figure data-type="image" tabindex="201"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_17.59.00.png" alt="截屏2022-10-03 17.59.00.png" loading="lazy"></figure>
+<p>主要想法就是使用key值本身来存储数据,比如“sad”就是root-s-a-d,然后蓝色标号表示是一个结尾(实际可以给节点改变值来实现)这样就不会出现到底存没存“sa”的疑惑了</p>
+<figure data-type="image" tabindex="202"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_18.00.31.png" alt="包含 “sam”, “sad”, “sap”, “same”, “a”, and “awls”, 不包含“aw”, “awl”, “sa”, 等" loading="lazy"></figure>
+<p>包含 “sam”, “sad”, “sap”, “same”, “a”, and “awls”, 不包含“aw”, “awl”, “sa”, 等</p>
+<p>用trie实现Map也很简单,只需要加上存储值的位置就行了比如“shore”就对应7</p>
+<figure data-type="image" tabindex="203"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_18.03.16.png" alt="截屏2022-10-03 18.03.16.png" loading="lazy"></figure>
+<hr>
+<p>实现Set的几种方法对比</p>
+<figure data-type="image" tabindex="204"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_18.26.49.png" alt="截屏2022-10-03 18.26.49.png" loading="lazy"></figure>
+<h3 id="trie的基本实现">trie的基本实现</h3>
+<figure data-type="image" tabindex="205"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_18.26.18.png" alt="截屏2022-10-03 18.26.18.png" loading="lazy"></figure>
+<p>R代表有多少个子节点(更改它可以支持不同的字符集)</p>
+<p>ch,也就是节点本身的字母可以删去,因为只有通过相应的链接才能到达该节点 这样可以减少冗余也就是“键不是直接保存在节点中，而是由节点在树中的位置决定”)</p>
+<p>DataIndexedCharMap 代表子节点们</p>
+<pre><code class="language-java">public class DataIndexedCharMap&lt;V&gt; {
+   private V[] items;
+   public DataIndexedCharMap(int R) {
+       items = (V[]) new Object[R];
+   }
+   ...
+}
+</code></pre>
+<p>isKey表示该节点是否是一个结尾(也就是标记成蓝色的节点)</p>
+<hr>
+<p>能看出来这样需要大量的内存给空的地方</p>
+<figure data-type="image" tabindex="206"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_18.29.27.png" alt="截屏2022-10-03 18.29.27.png" loading="lazy"></figure>
+<h3 id="效率和运行时间">效率和运行时间</h3>
+<p>由于不需要额外寻找其他节点,所以添加和查询都是固定的时间</p>
+<figure data-type="image" tabindex="207"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_18.31.06.png" alt="截屏2022-10-03 18.31.06.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="208"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_18.32.07.png" alt="和其他实现对比有速度优势!" loading="lazy"></figure>
+<p>和其他实现对比有速度优势!</p>
+<p>速度很快并且恒定,但缺点是会使用大量存储给用不到的节点</p>
+<h3 id="改变指向子节点的策略">改变指向子节点的策略</h3>
+<p>上面说到这种存下全部子节点的方式,虽然速度很快,但是会浪费大量内存</p>
+<figure data-type="image" tabindex="209"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_19.10.11.png" alt="截屏2022-10-03 19.10.11.png" loading="lazy"></figure>
+<p>所以可以使用Hash table或者BST来追踪子代</p>
+<figure data-type="image" tabindex="210"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_19.10.41.png" alt="截屏2022-10-03 19.10.41.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="211"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_19.10.50.png" alt="截屏2022-10-03 19.10.50.png" loading="lazy"></figure>
+<p>不过这样虽然内存使用小了很多很多,但运行时间会稍微增加</p>
+<figure data-type="image" tabindex="212"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-03_19.12.00.png" alt="截屏2022-10-03 19.12.00.png" loading="lazy"></figure>
+<h3 id="trie的操作-trie-string-operations">Trie的操作 <strong><strong>Trie String Operations</strong></strong></h3>
+<p>理论上渐进式的速度改进是不错的。但Trie的主要吸引力在于它们能够有效地支持String的特定操作，如前缀匹配(prefix matchng)</p>
+<figure data-type="image" tabindex="213"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_14.32.16.png" alt="比如找到以“sa”开头的String,或者trie中拥有的最长的“sample”的前缀" loading="lazy"></figure>
+<p>比如找到以“sa”开头的String,或者trie中拥有的最长的“sample”的前缀</p>
+<p><strong>伪代码:找到trie中的所有值:</strong></p>
+<figure data-type="image" tabindex="214"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_14.35.01.png" alt="通过递归不断向下运算,并且把符合的词加入list" loading="lazy"></figure>
+<p>通过递归不断向下运算,并且把符合的词加入list</p>
+<p><strong>找到以某个前缀开头的所有值:</strong></p>
+<figure data-type="image" tabindex="215"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_14.37.16.png" alt="与上一个类似,知识把root定在想要找的前缀上" loading="lazy"></figure>
+<p>与上一个类似,知识把root定在想要找的前缀上</p>
+<p>上面这些应用都是Trie相比以前的BST、Map等拥有的优势,可以快速进行字符串相关的操作</p>
+<h3 id="自动补全-autocomplete">自动补全 <strong><strong>Autocomplete</strong></strong></h3>
+<p>像在搜索引擎中常见的输入几个字就提示可能的结果,就是Trie的一种应用</p>
+<p>比如一个Trie形式的map拥有权值,按照AI计算出的权值向用户推荐最有可能的补全结果</p>
+<figure data-type="image" tabindex="216"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_14.52.25.png" alt="截屏2022-10-05 14.52.25.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="217"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_14.42.13.png" alt="截屏2022-10-05 14.42.13.png" loading="lazy"></figure>
+<p>但是我们可能遇到只输入如“b”的话,有数百万乃至更多结果,如果要返回最高的几个的话计算量就太大了</p>
+<figure data-type="image" tabindex="218"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_14.50.42.png" alt="截屏2022-10-05 14.50.42.png" loading="lazy"></figure>
+<p>所以我们不止加入权值,还加入子代最高的权值</p>
+<p>也就是best值,记录下面最高的权值</p>
+<p>这样就可以快速找到最高的几个权值key,并返回给用户了</p>
+<p>(可以把他们使用PQ来决定访问顺序,比如s的PQ就是p、a、m)</p>
+<figure data-type="image" tabindex="219"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_14.53.47.png" alt="截屏2022-10-05 14.53.47.png" loading="lazy"></figure>
+<p>更进一步:</p>
+<p>可以看到中间有许多不是key的节点,所以可以进行压缩节省时间和内存</p>
+<p>这种结构被称为<strong>基数树 (Radix tree)</strong></p>
+<figure data-type="image" tabindex="220"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_14.57.38.png" alt="截屏2022-10-05 14.57.38.png" loading="lazy"></figure>
+<h3 id="总结">总结</h3>
+<p>trie理论上性能比BST、Map好,真正的优势是各种String操作,比如找前缀等来支持如自动补全等功能<br>
+还有解压缩时编码到字符的过程使用trie也会很快</p>
+<p>另外各种数据结构融合也能来更好的效果比如trie和pq和之前的各种trie的子节点实现方式</p>
+<p>当然除了trie外还有<strong>后缀树</strong>Suffix Trees (<a href="https://en.wikipedia.org/wiki/Suffix_tree">Link</a>)、<strong>无环确定有限状态自动机</strong>DAWG (<a href="https://en.wikipedia.org/wiki/Deterministic_acyclic_finite_state_automaton">Link</a>)等各种不同用途的数据结构</p>
+<figure data-type="image" tabindex="221"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_15.03.31.png" alt="截屏2022-10-05 15.03.31.png" loading="lazy"></figure>
+<h2 id="软件工程-software-engineering-i">软件工程 <strong>Software Engineering I</strong></h2>
+<p>之所以有这个内容是之前大部分的编程内容都是小规模的,根据指引完成的(project2、3除外)</p>
+<p>但对于真正编程来讲并不是这样的,所以要教导怎么样面对大的项目</p>
+<h3 id="复杂度-complexity-defined">复杂度 <strong><strong>Complexity Defined</strong></strong></h3>
+<p>编程是一种几乎纯粹的创造性的行为<br>
+我们在构建系统时面临的最大限制是能够理解我们正在构建的东西！这一点与其他学科非常不同</p>
+<p>随着真实程序的维护，它们会获得更多的功能和复杂性(也就是所谓的屎山形成吧,一开始哪怕很简洁后面也会慢慢复杂,所以不可避免但可以尽量减少)<br>
+随着时间的推移，程序员在未来进行修改时，要理解所有相关的部分会变得更加困难<br>
+各种工具可以帮助我们更容易面对复杂性</p>
+<p>最重要的目标就是保持我的软件“simple”</p>
+<h3 id="管理复杂度">管理复杂度</h3>
+<ul>
+<li>保持代码简单和明显<br>
+尽量减少特殊情况(比如哨兵节点)</li>
+<li>模块化(封装)<br>
+在模块化设计中，一个 &quot;模块 &quot;的创建者可以使用其他模块而不知道它们是如何工作的</li>
+</ul>
+<h3 id="复杂度定义">复杂度定义</h3>
+<p>究竟什么是复杂度？Ousterhout这样定义它:&quot;复杂性是与软件系统的结构有关的任何东西，它使人难以理解和修改系统&quot;。</p>
+<p>比如:<br>
+理解代码如何工作。<br>
+进行小的改进所需的时间<br>
+找到需要修改的地方以进行改进。<br>
+难以修复一个错误而不引入另一个错误。</p>
+<p>&quot;如果一个软件系统很难理解和修改，那么它就很复杂。如果它很容易理解和修改，那么它就很简单&quot;。</p>
+<p>所以像魔法数字、大量重复、不清楚的命名和没有注释等都将增加复杂度</p>
+<p>在写真正的项目时,代码能够工作是不够的,必须注意增加复杂度的苗头并且及时重构,写的时候也要想象未来可能会怎么修改代码</p>
+<h2 id="拓扑排序-topological-sorting"><strong>拓扑排序 Topological sorting</strong></h2>
+<p>假设有0~7项任务,而有箭头的任务必须在指向它的节点后发生,有什么算法可以给出顺序、从哪个点开始算法</p>
+<figure data-type="image" tabindex="222"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_17.43.37.png" alt="截屏2022-10-05 17.43.37.png" loading="lazy"></figure>
+<hr>
+<p>可以使用DFS从indegree(引入次数、入度)为0的点开始,并且完成后切换到另一个indegree为0的点后不清除标记(防止重复)</p>
+<p>按Postorder的方式把DFS访问记录到list</p>
+<p>然后翻转上面的list就得到了拓扑顺序</p>
+<figure data-type="image" tabindex="223"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_17.45.11.png" alt="这种拓扑的情况下,不存在节点的循环" loading="lazy"></figure>
+<p>这种拓扑的情况下,不存在节点的循环</p>
+<p>访问顺序</p>
+<p>![使用了DFS,但并不代表使用它就要重新启动(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_17.55.54.png)</p>
+<p>使用了DFS,但并不代表使用它就要重新启动(访问其他入度0的节点)</p>
+<figure data-type="image" tabindex="224"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_17.56.10.png" alt="截屏2022-10-05 17.56.10.png" loading="lazy"></figure>
+<p>这样就得到了postorde: [7, 4, 1, 3, 0, 6, 5, 2]然后翻转就得到了Topological ordering:[2, 5, 6, 0, 3, 1, 4, 7]</p>
+<p>之所以要使用Postorder再进行翻转的操作是因为,我们使用了DFS,也就是说先访问到的节点比较“深”那么也应该放在更后面的位置所以要倒序记录并翻转</p>
+<hr>
+<p>之所以叫拓扑排序是因为相当于对节点的排序让他们以固定的顺序来指向</p>
+<blockquote>
+<p>拓扑排序(Topological Order)是指,将一个有向无环图(Directed Acyclic Graph简称DAG)进行排序进而得到一个有序的<strong>线性序列</strong></p>
+</blockquote>
+<p>![如图上面一个就是之前的那个图只是摆放成了都指向右边的位置,经过拓扑排序后就有个固定的顺序(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_18.01.15.png)</p>
+<p>如图上面一个就是之前的那个图只是摆放成了都指向右边的位置,经过拓扑排序后就有个固定的顺序(不用思考按什么顺序访问了,对接下来的DAG找最短路线有用)</p>
+<p>补充:还有个更好的拓扑算法是从任意一点(入度不一定为0)开始DFS,直到所有节点都被标记</p>
+<hr>
+<p>从DAG得到TS的顺序:</p>
+<figure data-type="image" tabindex="225"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_18.21.38.png" alt="截屏2022-10-05 18.21.38.png" loading="lazy"></figure>
+<p>拓扑排序只适用于DAG(有向无环图),而且还有大量其他算法也只适用于DAG,向下面这个有环的图就不能使用拓扑排序</p>
+<figure data-type="image" tabindex="226"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_18.22.34.png" alt="截屏2022-10-05 18.22.34.png" loading="lazy"></figure>
+<h3 id="dag的最短路径">DAG的最短路径</h3>
+<p>像下面这的DAG可以使用Dijkstra’s algorithm,但一旦有负的权值就会失效了(因为Dijkstra’s algorithm不会访问标记过了的节点)</p>
+<figure data-type="image" tabindex="227"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_18.24.08.png" alt="截屏2022-10-05 18.24.08.png" loading="lazy"></figure>
+<p>使用拓扑排序后再用类似Dijkstra’s algorithm的方式就可以做到处理带负权值的最短路径了(使用了拓扑排序后我们的走向是固定的,也就不用担心某个顶点的上游下游有没有负权值之类的了)</p>
+<p>![<a href="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_18.25.58.png">Link</a></p>
+<p><a href="https://docs.google.com/presentation/d/1CfnLS3FSXV8X2sXPTravZGXeBUUkcFQv7Uf2iGWGUfs/edit?usp=sharing">Link</a></p>
+<p>也就是下面这样的<strong><strong>DAG SPT</strong></strong> 算法:</p>
+<figure data-type="image" tabindex="228"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_18.27.12.png" alt="截屏2022-10-05 18.27.12.png" loading="lazy"></figure>
+<h3 id="最长路径">最长路径</h3>
+<p>这是个还没有很好未解决的数学问题,最好的算法也是指数级别的</p>
+<figure data-type="image" tabindex="229"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_18.33.21.png" alt="截屏2022-10-05 18.33.21.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="230"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-05_18.39.14.png" alt="DAG中的解决办法" loading="lazy"></figure>
+<p>DAG中的解决办法</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://nhuji.github.io/tag/b3U5buPEp/" class="tag">
+                    CS61b
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/cs61b-part-1-java/">
+                  <h3 class="post-title">
+                    CS61b Part 1 Java
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

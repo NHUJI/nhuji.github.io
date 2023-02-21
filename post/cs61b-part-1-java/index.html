@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>CS61b Part 1 Java | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1676959783334">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="主要讨论了Java编程语言中的一些基础概念和进阶内容。包括static和non-static的区别，以及辅助函数helper function的使用、测试的重要性、进一步创建List、继承，Java的原始类型和引用类型的区别，以及接口、覆写..." />
+    <meta name="keywords" content="CS61b" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1676959783334" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1676959783334" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1676959783334" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://twitter.com/pikanhuji" target="_blank">
+            <i class="fa-brands fa-twitter"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://space.bilibili.com/1760189" target="_blank">
+            <i class="fa-brands fa-bilibili"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">@2023 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">CS61b Part 1 Java</h2>
+            <div class="post-date">2021-11-03</div>
+            
+              <div class="feature-container" style="background-image: url('https://nhuji.github.io/post-images/cs61b-part-1-java.png')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <p>主要讨论了Java编程语言中的一些基础概念和进阶内容。包括static和non-static的区别，以及辅助函数helper function的使用、测试的重要性、进一步创建List、继承，Java的原始类型和引用类型的区别，以及接口、覆写与重载等概念的介绍还有继承的相关知识，包括extends关键词、super的作用、封装以及建立自己的比较函数等</p>
+<!-- more -->
+<p>这个博客并不是我写这篇笔记地方,所以可能出各种包括发布时间、文字、样式等错误</p>
+<h1 id="week1-java入门">Week1 Java入门</h1>
+<p>终端使用教程</p>
+<p><a href="https://sp21.datastructur.es/materials/lab/lab1setup/lab1setup#c-learn-to-use-the-terminal-optional">Lab 1 Setup: Setting Up Your Computer | CS 61B Spring 2021</a></p>
+<p><strong>增强形For循环</strong></p>
+<blockquote>
+<p>Java also supports iteration through an array using an “enhanced for loop”. The basic idea is that there are many circumstances where we don’t actually care about the index at all. In this case, we avoid creating an index variable using a special syntax involving a colon.<br>
+For example, in the code below, we do the exact thing as in <code>BreakDemo</code> above. However, in this case, we do not create an index <code>i</code>. Instead, the <code>String</code> <code>s</code> takes on the identity of each <code>String</code> in <code>a</code> exactly once, starting from <code>a[0]</code>, all the way up to <code>a[a.length - 1]</code>. You can try out this code at <a href="https://goo.gl/wmhVPM">this link</a>.</p>
+</blockquote>
+<blockquote>
+<p>总结一下就是不关心index的时候可以直接遍历数组等</p>
+</blockquote>
+<pre><code class="language-java">public class EnhancedForBreakDemo {
+    public static void main(String[] args) {
+        String[] a = {&quot;cat&quot;, &quot;dog&quot;, &quot;laser horse&quot;, &quot;ketchup&quot;, &quot;horse&quot;, &quot;horbse&quot;};
+
+        for (String s : a) {
+            for (int j = 0; j &lt; 3; j += 1) {
+                System.out.println(s);
+                if (s.contains(&quot;horse&quot;)) {
+                    break;
+                }
+            }
+        }
+    }
+}
+</code></pre>
+<hr>
+<p>在Java中所有的代码都必须在一个class中(但main不一定,可以通过其他的main调用)</p>
+<h3 id="static和non-static的区别">static和non-static的区别:</h3>
+<p>project0会详细深入这一点</p>
+<ul>
+<li>
+<p>示例代码:狗叫.java</p>
+<pre><code class="language-bash">public class DogLoop {
+   public static void main(String[] args) {
+      Dog smallDog = new Dog(5);
+      Dog mediumDog = new Dog(25);
+      Dog hugeDog = new Dog(150);
+      
+      Dog[] manyDogs = new Dog[4];
+      manyDogs[0] = smallDog;
+      manyDogs[1] = hugeDog;
+      manyDogs[2] = new Dog(130);
+      
+      int i = 0;
+      while (i &lt; manyDogs.length) {
+         Dog.maxDog(manyDogs[i], mediumDog).makeNoise();
+         i = i + 1;
+      }
+   }
+   
+   public static class Dog {
+      /* Size of the dog in standard dog size units. */
+      public int size;
+
+      /* This is a constructor. It tells us how to construct
+	 * dogs from our ideal notion of dogness. */
+
+      public Dog(int s) {
+         size = s;
+      }
+
+      public void makeNoise() {
+         if (size &lt; 10) {
+            System.out.println(&quot;hideous yapping&quot;);
+         } else if (size &lt; 30) {
+            System.out.println(&quot;bark!&quot;);
+         } else {
+            System.out.println(&quot;woof!&quot;);
+         }
+      }
+
+      /* Return the larger of dog d1 and dog d2. */
+      public static Dog maxDog(Dog d1, Dog d2) {
+         if (d1.size &gt; d2.size) {
+            return d1;
+         }
+         return d2;
+      }   
+   }
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="辅助函数-helper-function">辅助函数 helper function:</h3>
+<ul>
+<li>将代码里许多功能变为一个个的辅助函数,不仅可以降低复杂度</li>
+<li>而且有利于将大任务变成小任务集中精力解决并且不容易出错</li>
+<li>出现问题时容易 🔧debug</li>
+</ul>
+<hr>
+<p>第一个大的project,据说有点难度<br>
+但目的是为了让我们熟悉突然接受一个大项目,并且不用搞懂所有东西并完成的感觉</p>
+<hr>
+<h1 id="week2-测试的重要性">Week2 测试的重要性</h1>
+<p>前面的课程中讲了Java的一些语法和怎么用辅助函数来管理复杂性<br>
+这一节将focus怎么测试写的代码和进行debug</p>
+<h3 id="以对sort编写测试为例">以对sort编写测试为例:</h3>
+<ul>
+<li>首先不能滥用“! =”因为数组比较要通过<code>Arrays.equals( , )</code>,<br>
+说明测试本身也可能编写出错</li>
+<li>详细的output指出错误的原因 信息等很重要</li>
+<li>怎么使用JUnit写出更好的测试代码</li>
+</ul>
+<p>比如原本要写出这样的代码来找到具体错误的信息:</p>
+<pre><code class="language-java">
+for (int i = 0; i &lt; input.length; i += 1) {
+    if (!input[i].equals(expected[i])) {
+        System.out.println(&quot;Mismatch at position &quot; + i + &quot;, expected: '&quot; 
+				+ expected[i] +  &quot;', but got '&quot; + input[i] + &quot;'&quot;);
+        return;
+  }
+}
+</code></pre>
+<p>使用JUnit可以只用一行<code>org.junit.Assert.assertArrayEquals(expected, input);</code> 替代</p>
+<ul>
+<li>
+<p>编写Sort的过程</p>
+<p>按照测试驱动开发Test-Driven Development (TDD)的思想,先写测试程序再完成功能</p>
+<blockquote>
+<p>编写测试程序</p>
+<p>首先遇到了不能直接用<code>&lt;</code> 比较String的问题,这时候要善用Google,可以找到使用<code>“a”.compareTo(”b”)</code> 这样的比较String的方法</p>
+<p>最终完成了测试程序,这时候就不再需要手动改值而是有个测试程序帮你了 感觉不错😊</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/%E6%88%AA%E5%B1%8F2022-07-19_17.04.21.png" alt="截屏2022-07-19 17.04.21.png" loading="lazy"></figure>
+</blockquote>
+<p>分为三个步骤,用三个helper functions来实现</p>
+<ol>
+<li>
+<p>找到最小的数</p>
+<pre><code class="language-java">/** Test the Sort.findSmallest method. */
+    @Test
+    public void testFindSmallest() {
+        String[] input = {&quot;i&quot;, &quot;have&quot;, &quot;an&quot;, &quot;egg&quot;};
+        int expected = 2;
+
+        int actual = Sort.findSmallest(input, 0);
+        assertEquals(expected, actual);
+
+        String[] input2 = {&quot;there&quot;, &quot;are&quot;, &quot;many&quot;, &quot;pigs&quot;};
+        int expected2 = 2;
+
+        int actual2 = Sort.findSmallest(input2, 2);
+        assertEquals(expected2, actual2);
+    }
+</code></pre>
+<pre><code class="language-java">public static int findSmallest(String[] x, int start) {
+        int smallestIndex = start;
+        for (int i = start; i &lt; x.length; i += 1) {
+            int cmp = x[i].compareTo(x[smallestIndex]);
+            // from the internet, if x[i] &lt; x[smallestIndex], cmp will be -1.
+            if (cmp &lt; 0) {
+                smallestIndex = i;
+            }
+        }
+        return smallestIndex;
+    }
+</code></pre>
+</li>
+<li>
+<p>移动到数组最前面</p>
+</li>
+</ol>
+<p>通过一个temp变量就可以交换a b的位置了</p>
+<pre><code class="language-java">/** Swap item a with b. */
+	public static void swap(String[] x, int a, int b) {
+	    String temp = x[a];
+	    x[a] = x[b];
+	    x[b] = temp;
+    }
+</code></pre>
+<ol>
+<li>在其余的数中继续(迭代)</li>
+</ol>
+<p>完成前两个helper functions就可以汇总了</p>
+<pre><code class="language-java">public static void sort(String[] x) {
+	/* 对下面的辅助函数起始的调用 */
+        sort(x, 0);
+	}
+
+	/** Sorts x starting at position start. */
+	private static void sort(String[] x, int start) {
+	    if (start == x.length) {
+	        return;
+        }
+	    int smallestIndex = findSmallest(x, start);
+	    swap(x, start, smallestIndex);
+	    sort(x, start + 1);
+    }
+</code></pre>
+<p>有时会遇到编写的helper functions 配合不好API不同之类的,很正常 修改一下下就好了</p>
+<p>调用好两个辅助方法就需要思考怎么完成第三部分的<em>在其余的数中继续</em> 的问题<br>
+Java不像python那样支持子索引 x[1:],<br>
+于是也许可以写个辅助函数来帮助我们完成从<code>x的某个位置开始进行</code><br>
+总之就是公共的方法让别人可以使用,private的提供特殊的切片服务</p>
+<blockquote>
+<p>断点可以提供条件,帮助定位问题</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/%E6%88%AA%E5%B1%8F2022-07-19_16.21.41.png" alt="截屏2022-07-19 16.21.41.png" loading="lazy"></figure>
+</blockquote>
+<p>最后发现是第一步<code>findSmallest(String[] x)</code> 始终在整个x数组里找最小的,于是修改为<code>findSmallest(String[] x, int start)</code> 问题解决 (善用debugger在出错的位置思考为什么会出错),而测试和辅助函数可以让我在一堆复杂流程中,只关心修改后的<code>findSmallest</code> 到底对没对,这样就很轻松了</p>
+<p>最后整个Sort完成!🎉</p>
+<ul>
+<li>
+<p>完整的测试代码:</p>
+<pre><code class="language-java">import org.junit.Test;
+import static org.junit.Assert.*;
+
+/** Tests the the Sort class. */
+public class TestSort {
+    /** Test the Sort.sort method. */
+    @Test
+    public void testSort() {
+        String[] input = {&quot;i&quot;, &quot;have&quot;, &quot;an&quot;, &quot;egg&quot;};
+        String[] expected = {&quot;an&quot;, &quot;egg&quot;, &quot;have&quot;, &quot;i&quot;};
+
+        Sort.sort(input);
+
+        assertArrayEquals(expected, input);
+    }
+
+    /** Test the Sort.findSmallest method. */
+    @Test
+    public void testFindSmallest() {
+        String[] input = {&quot;i&quot;, &quot;have&quot;, &quot;an&quot;, &quot;egg&quot;};
+        int expected = 2;
+
+        int actual = Sort.findSmallest(input, 0);
+        assertEquals(expected, actual);
+
+        String[] input2 = {&quot;there&quot;, &quot;are&quot;, &quot;many&quot;, &quot;pigs&quot;};
+        int expected2 = 2;
+
+        int actual2 = Sort.findSmallest(input2, 2);
+        assertEquals(expected2, actual2);
+    }
+
+    /** Test the Sort.swap method. */
+    @Test
+    public void testSwap() {
+        String[] input = {&quot;i&quot;, &quot;have&quot;, &quot;an&quot;, &quot;egg&quot;};
+        int a = 0;
+        int b = 2;
+        String[] expected = {&quot;an&quot;, &quot;have&quot;, &quot;i&quot;, &quot;egg&quot;};
+
+        Sort.swap(input, a, b);
+        assertArrayEquals(expected, input);
+    }
+}
+</code></pre>
+</li>
+</ul>
+<p><a href="https://github.com/Berkeley-CS61B/lectureCode-fa20/tree/master/testing">lectureCode-fa20/testing at master · Berkeley-CS61B/lectureCode-fa20</a></p>
+<p>整个Sort和测试Sort代码</p>
+</li>
+</ul>
+<p><strong>总结</strong></p>
+<p>在现实的开发时个循序渐进的过程,涉及大量的修改,<br>
+而测试可以帮助我们对基本单位的正确性有信心,<br>
+也可以让我们的大脑更专注于具体的一个任务,<br>
+重构代码时也能更方便知道这块代码还是没问题的~</p>
+<blockquote>
+<p>在测试里删掉main,并且在每个测试函数前加上<code>@org.junit.Test</code> 最后run的时候选择有测试的<br>
+就可以很方便的进行测试<br>
+如果进行了import 直接写Test  就可以了 ,可以让代码更简洁</p>
+</blockquote>
+<p>但把握测试和效率的平衡也很重要</p>
+<hr>
+<h3 id="discussion-02-static和-instance区别"><strong><strong>Discussion 02 S</strong></strong>tatic和 Instance区别</h3>
+<ul>
+<li>声明各种变量注意类型比如<code>name = “huhu”</code> ❌,<code>String name = “huhu”</code> ✔️</li>
+<li>Java中数组一旦声明就不能扩张了</li>
+<li>static是什么</li>
+</ul>
+<pre><code class="language-java">class Book {
+public Library library;
+public static Book last = null;
+}
+</code></pre>
+<p>区别在于没有static的会在每个实例中独自存在,一个类的实例都共享static的值</p>
+<p>对于方法来说,Static method 属于class而不是具体的实例,所以static就像一个公共区域</p>
+<p>把61b的教师看成static而每个学生的都有同一个教授,而学生的ID就像Instance,教授改变每个学生的都会变,而一个学生的ID变化不影响其他学生的ID</p>
+<h3 id="lecture-45-构建list-迭代和递归">Lecture 4,5 构建List、迭代和递归</h3>
+<p>“=”只是复制比特,所以这就是为什么对于<code>int a = int b</code> 再修改b的话 a不变,对于对象 <code>a = new Some(),b = a</code> 修改b会让a也变化,因为a本质是对新的Some位置的引用<br>
+更为正式的说法就是值类型与引用类型的区别</p>
+<ul>
+<li>构建一个list</li>
+</ul>
+<p>在Java中构建一个可以扩大的list对象(Java数组一旦声明就不能改变大小了)</p>
+<p>可以注意到对IntList大小的实现方法有两种一种是使用迭代<code>.size()</code> 另一种是不使用迭代的<code>.iterativeSize()</code></p>
+<ul>
+<li>
+<p>迭代和递归的区别</p>
+<p><strong>递归</strong>（recursion）：递归常被用来描述以自相似方法重复事物的过程，在数学和计算机科学中，指的是在函数定义中使用函数自身的方法。（A调用A）</p>
+<p><strong>迭代</strong>（iteration）：重复反馈过程的活动，每一次迭代的结果会作为下一次迭代的初始值。（A重复调用B）</p>
+</li>
+</ul>
+<pre><code class="language-java">public class IntList {
+	public int first;
+	public IntList rest;
+
+	public IntList(int f, IntList r) {
+		first = f;
+		rest = r;
+	}
+
+	/** Return the size of the list using... recursion! */
+	public int size() {
+		if (rest == null) {
+			return 1;
+		}
+		return 1 + this.rest.size();
+	}
+
+	/** Return the size of the list using no recursion! */
+	public int iterativeSize() {
+		IntList p = this;
+		int totalSize = 0;
+		while (p != null) {
+			totalSize += 1;
+			p = p.rest;
+		}
+		return totalSize;
+	}
+
+	/** Returns the ith item of this IntList. */
+	public int get(int i) {
+		if (i == 0) {
+			return first;
+		}
+		return rest.get(i - 1);
+	}
+
+	public static void main(String[] args) {
+		IntList L = new IntList(15, null);
+		L = new IntList(10, L);
+		L = new IntList(5, L);
+
+		System.out.println(L.get(100));
+	}
+}
+</code></pre>
+<p>在完成了IntList后我们还能更进一步,因为现在直接把public迭代展现给用户,并且需要用户手动了解和指定数字的位置比如<code>L = new IntList(5, L);</code> 同时这样使用方法也并不规范,<br>
+所以新建了SLList,这样我们添加数字到List就变为了更简单和规范的<code>L.addLast(20);</code>,此外很多东西也变成了<code>private</code> 防止用户使用设计以外的方法</p>
+<p>另外可以注意到<code>Size()</code> 的实现有点棘手,但通过private做迭代逻辑和public提供外部访问这种常见模式可以解决,当然更好的解决办法是在添加时就记录List大小的改变,这样效率更高 不用每次使用时重新计算大小</p>
+<h3 id="头节点-哨兵节点-sentinel-nodes">头节点 哨兵节点 <strong><strong>Sentinel Nodes</strong></strong></h3>
+<blockquote>
+<p>头结点是链表里面第一个结点，他的数据域可以不存放任何信息（有时候也会存放链表的长度等等信息），他的指针区域存放的是链表中第一个数据元素的结点（就是传说中的首元结点）存放的地址。</p>
+<p>1、防止单链表是空的而设的.当链表为空的时候,带头结点的头指针就指向头结点.如果当链表为空的时候,头结点的指针域的数值为NULL.</p>
+<p>2、是为了方便单链表的特殊操作,插入在表头或者删除第一个结点.这样就保持了单链表操作的统一性!</p>
+<p>3、单链表加上头结点之后，无论单链表是否为空，头指针始终指向头结点，因此空表和非空表的处理也统一了，方便了单链表的操作，也减少了程序的复杂性和出现bug的机会 [1]  。</p>
+<p>4、对单链表的多数操作应明确对哪个结点以及该结点的前驱。不带头结点的链表对首元结点、中间结点分别处理等；而带头结点的链表因为有头结点，首元结点、中间结点的操作相同,从而减少分支，使算法变得简单，流程清晰。对单链表进行插入、删除操作时，如果在首元结点之前插入或删除的是首元结点，不带头结点的单链表需改变头指针的值，在TurboC算法的函数形参表中头指针一般使用指针的指针(在C++中使用引用&amp;)；而带头结点的单链表不需改变头指针的值，函数参数表中头结点使用指针变量即可，对初学者更易接受。</p>
+</blockquote>
+<p>为了避免空list出现的问题我们使用了<strong><strong>Sentinel Nodes作为默认值,而实际的第一项放在了它的next,这样list就永远不为null了</strong></strong></p>
+<pre><code class="language-java">/** An SLList is a list of integers, which hides the terrible truth
+   * of the nakedness within. */
+public class SLList {	
+	//IntNode就是上面IntList的改名,
+//另外因为IntNode不看使用SLList的方法之类的设置为static可以节约内存
+	private static class IntNode {
+		public int item;
+		public IntNode next;
+
+		public IntNode(int i, IntNode n) {
+			item = i;
+			next = n;
+			System.out.println(size);
+		}
+	} 
+
+	/* The first item (if it exists) is at sentinel.next. */
+	private IntNode sentinel;
+	private int size;
+
+	private static void lectureQuestion() {
+		SLList L = new SLList();
+		IntNode n = IntNode(5, null);
+	}
+
+	/** Creates an empty SLList. */
+	public SLList() {
+		sentinel = new IntNode(63, null);
+		size = 0;
+	}
+
+	public SLList(int x) {
+		sentinel = new IntNode(63, null);
+		sentinel.next = new IntNode(x, null);
+		size = 1;
+	}
+
+ 	/** Adds x to the front of the list. */
+ 	public void addFirst(int x) {
+ 		sentinel.next = new IntNode(x, sentinel.next);
+ 		size = size + 1;
+ 	}
+
+ 	/** Returns the first item in the list. */
+ 	public int getFirst() {
+ 		return sentinel.next.item;
+ 	}
+
+ 	/** Adds x to the end of the list. */
+ 	public void addLast(int x) {
+ 		size = size + 1; 		
+
+ 		IntNode p = sentinel;
+
+ 		/* Advance p to the end of the list. */
+ 		while (p.next != null) {
+ 			p = p.next;
+ 		}
+
+ 		p.next = new IntNode(x, null);
+ 	}
+ 	
+ 	/** Returns the size of the list. */
+ 	public int size() {
+ 		return size;
+ 	}
+
+	public static void main(String[] args) {
+ 		/* Creates a list of one integer, namely 10 */
+ 		SLList L = new SLList();
+ 		L.addLast(20);
+ 		System.out.println(L.size());
+ 	}
+}
+</code></pre>
+<hr>
+<h1 id="week3-进一步创建list-继承">Week3 进一步创建List、继承</h1>
+<p>在上周完成了SLList后仍然存在一些效率问题,比如想在末尾添加需要使用<code>while (p.next != null) {p = p.next;}</code> 来遍历整个List<br>
+删除的效率也很低,因为只存了指向下一个的指针(删除b时a的next也需要修改)<br>
+于是需要使用双向链表(Doubly Linked Lists),增加一个指向上一个的指针<br>
+这样我们的List就从<code>SLList</code>→<code>DLList</code>了<br>
+另外为了避免sentinel的next指向自己,所以在末尾也添加了一个<br>
+并且按照要求最末尾的next指向第一个sentinel(据说在完成project1时很有用)</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-22_10.54.01.png" alt="截屏2022-07-22 10.54.01.png" loading="lazy"></figure>
+<ul>
+<li>
+<p>完成DLList的改动总结</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-22_11.08.58.png" alt="截屏2022-07-22 11.08.58.png" loading="lazy"></figure>
+</li>
+</ul>
+<hr>
+<p>现在还有个问题就是由于使用了 <code>IntNode</code> 我们的List只能储存int类型<br>
+可以制作多个不同类型的SLList,但太不优雅了 于是我们可以将它参数化:</p>
+<pre><code class="language-java">public class SLList {	
+	private  class IntNode {
+		public int item;
+		public IntNode next;
+
+		public IntNode(int i, IntNode n) {
+			item = i;
+			next = n;
+		}
+	} 
+//……省略接下来的代码
+}
+//创建也会有变化 以前:
+SLList s1 = new SLList(“123”)
+</code></pre>
+<pre><code class="language-java">public class SLList&lt;LochNess&gt; {	
+	private class StuffNode {
+		public LochNess item;
+		public StuffNode next;
+
+		public StuffNode(LochNess i, StuffNode n) {
+			item = i;
+			next = n;
+		}
+	}
+//……省略接下来的代码
+}
+//创建也会有变化 参数化后加入类型:
+SLList&lt;String&gt; s1 = new SLList(“123”)
+</code></pre>
+<p>注意以前int相关的都被placeholder<code>LochNess</code> 替代了</p>
+<hr>
+<p>创建Arrays的三种方法,注意第三种只能在声明变量时才能使用</p>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-22_11.57.30.png" alt="截屏2022-07-22 11.57.30.png" loading="lazy"></figure>
+<hr>
+<h3 id="java的原始类型和引用类型区别">Java的原始类型和引用类型区别:</h3>
+<p>原始类型(<a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">Primitive Data Types</a>):比如double、float、byte、short、int、long、char、boolean等的值是直接存储在内存中的<br>
+引用类型(<a href="https://www.javatpoint.com/reference-data-types-in-java">Reference Data Types</a>):则在内存中存储实际对象的内存地址(指针),同时它需要使用new来创建比如Array、String</p>
+<p>对于引用类型使用<code>=</code> 进行比较时只会比较内存地址而不是对象的值,同样地引用类型传递值的时候也只是传递内存地址的copy</p>
+<hr>
+<p>觉得有意思的练习:将两个数组放入二维数组的两个对角三角形: <a href="https://sp21.datastructur.es/materials/discussion/examprep03sol.pdf">disc3exam</a></p>
+<hr>
+<p>改变数组大小Resizing Arrays:Java中不能改变数组的大小,但是我们可以通过将a数组放入更大的b数组,并将引用更改来达到这个目的</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-22_17.31.49.png" alt="截屏2022-07-22 17.31.49.png" loading="lazy"></figure>
+<p>但通过每次+1创建新数组的方式在比如把a[100]→a[100000]时就要接近10万次创建新数组和copy到新数组,也许我们能通过将每次新生成的数组+10、+100,速度是会提高,但在更高的数量级时依然存在问题,所以我们可以通过*2(或者其他数字)的形式,每次数组大小不够时给新数组翻倍,这样减少了大量创建和copy并且能保证在更大的数量级时依然很快</p>
+<h3 id="interface-接口">Interface <strong>接口</strong></h3>
+<p>接口（英文：Interface），在JAVA编程语言中是一个抽象类型，是抽象方法的集合，接口通常以interface来声明。一个类通过继承接口的方式，从而来继承接口的抽象方法。</p>
+<p>接口是一种“规范”和约束,可以有多个接口</p>
+<p>我的理解:<code>Interface</code> 可以让我们在有大量相同功能的不同方法之上创建一个抽象比如给大型犬和小猫咪洗澡可能都要冲水、擦干,但大型犬听话但要吃个骨头,小型犬需要另一个人按着洗澡不然抓你就洗不成了,如果为给洗澡写说明的话,那么<code>洗澡</code>就是接口,<code>大型犬</code>、<code>小猫咪</code>就是<code>洗澡</code>的<strong>implements</strong>,他们可以继承<code>洗澡</code> 的大部分规则(比如冲水、沐浴、吹干这个流程,但具体的操作要我们自己实现),而只需要加上自己的吃骨头,按着洗等等.如果对<code>洗澡</code> 里的水流大小不满意可以<code>@Override</code> 新的水流大小,如果他们需要不同的沐浴露可以<strong>Overloading</strong>来指定不同的沐浴露(注意java8后才能在接口里就实现功能,所以也可以说这个<code>洗澡</code>只是给你了流程(规则)没给你具体的步骤(实现))</p>
+<p>使用<code>Interface</code>替代<code>Class</code> 就可以做出一个接口了,在JAVA编程语言中是一个抽象类型，是抽象方法的集合，接口通常以interface来声明。一个类通过继承接口的方式，从而来继承接口的抽象方法。</p>
+<h3 id="覆写-overriding与重载-overloading"><strong>覆写 (Overriding)与重载 (Overloading)</strong></h3>
+<p><strong>覆写</strong>会覆盖之前的实现,<strong>重载</strong> 在Java中可以允许有不同实现的同名函数</p>
+<p>比如你不满意继承的实现就可以重写一个实现<br>
+而在求和时如果你有int和string两种如果没有重载用户就需要有<code>sumInt()</code>和<code>sumString()</code>两种,而重载可以让我们写<code>sum(int)</code>和<code>sum(string)</code> 来自动识别用户想要使用哪个方法</p>
+<p>Java中子类必须overriding全部方法,不然会报错</p>
+<p>Overriding的函数前需要加上<code>@Override</code>的标签,这样在并非Overriding的函数前加上的话就会有提示,另外这个并不是必须加的 只是个提示</p>
+<p>如果要在Interface加上代码,需要在方法前加上default <code>default public void print() {}</code></p>
+<blockquote>
+<p>接口中所有的方法必须是抽象方法，Java 8 之后 接口中可以使用 default 关键字修饰的非抽象方法</p>
+</blockquote>
+<hr>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-23_18.53.51.png" alt="截屏2022-07-23 18.53.51.png" loading="lazy"></figure>
+<p>以上图为例就可以看到,<code>Animal a = **new** Dog();</code> 是可行的,因为Dog是Animal的子类,<br>
+同时Dog中<code>sniff()</code> 是@Override(标识本身没作用,是sniff的结构和父类一样),的所以<code>a.sniff(d)</code> 使用的Dog的方法<br>
+而注意<code>praise(**Dog a**)</code> 是Overloading,他的参数(<strong>signature</strong>)和和Animal中的<code>praise(**Animal a**)</code> 不一样了</p>
+<figure data-type="image" tabindex="8"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-23_19.07.00.png" alt="截屏2022-07-23 19.07.00.png" loading="lazy"></figure>
+<p>最后两项<code>d.praise(d); // praise(Dog a)</code>和<code>a.praise(d); **// praise(Animal a)**</code></p>
+<p>由于编译时会选择Overloading的方法是哪个所以:<br>
+<code>Dog d =new Dog();</code> 那么找<code>praise()</code> 的时候会优先在Dog类里找,由于<code>praise()</code> 是Overloading的所以就选择了<code>void praise(Dog a)</code><br>
+<code>Animal a = new Dog();</code> 那么找<code>praise()</code> 的时候会优先在Animal类里找,由于<code>praise()</code> 是Overloading的所以就选择了<code>void praise(Animal a)</code><br>
+new Dog()放入什么就很重要,new放入Animal类的编译时的选择就只有Animal类,而放入Dog则是两者包含</p>
+<h3 id="变量的static-type-dynamic-type">变量的static type &amp; dynamic type</h3>
+<p>上面的重点就是每个Java变量都拥有两种类型:</p>
+<p><strong>编译时的“compile-time type”→“static type”,永远不会改变<br>
+运行时的“run-time type”→ “dynamic type”和对象的类型有关,实例化时指定</strong></p>
+<p>拿上面的a举例他的static type: Animal、dynamic type: Dog<br>
+而b的static type: Dog、dynamic type: Dog</p>
+<p>当我们说<code>Animal c;</code>他的static type: Animal、dynamic type: null<br>
+再继续说<code>c= new Dog();</code>他的static type: Animal、dynamic type: Dog<br>
+再继续说<code>Dog d = c;</code>他的static type: Dog、dynamic type: Dog<br>
+或者说<code>c= new Cat();</code>他的static type: Animal、dynamic type: Cat</p>
+<p>在编译时会优先选择dynamic type中override的方法,也就是<strong><strong>Dynamic Method Selection</strong></strong><br>
+而有多个Overloading的方法时,会选择static type的方法,也就是上面选<code>praise(Animal a)</code>还是<code>praise(Dog a)</code>的关键点</p>
+<figure data-type="image" tabindex="9"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-24_18.45.48.png" alt="截屏2022-07-24 18.45.48.png" loading="lazy"></figure>
+<p>注意当<strong>编译时编译器会检查右边的是否属于左边的</strong>,也就是看他们的static type,所以不能把SLList的放入VengefulSLList,哪怕它是SLList的子类<br>
+另外<strong>编译器编译时调用方法也只看static type</strong>,如果这个类型里没有那么就会报错<br>
+(比如Dog有bark(),但Object o=((Dog)someDog)是不能使用o.bark()的,哪怕Dog本身有这个方法)</p>
+<figure data-type="image" tabindex="10"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-24_18.51.54.png" alt="截屏2022-07-24 18.51.54.png" loading="lazy"></figure>
+<p>方法调用同样也有static type 而<code>maxDog</code>就是Dog,所以不能把Dog类型放入Poodle,毕竟狗有时可以是贵宾犬有时可以不是贵宾犬,这个时候如果想成功放入就需要<strong><strong>Casting</strong></strong></p>
+<blockquote>
+<p><strong>Overridden non-static methods are selected at run time based on dynamic type</strong>.</p>
+<ul>
+<li><strong>Everything else is based on static type</strong>, including <a href="https://docs.google.com/presentation/d/128PmKI2zpI4pi21_sQxAgeLj7eF3dJzoLciJea4W37A/edit#slide=id.g6292bcebc_9247">overloaded methods</a>. Note: No overloaded methods for problem at left.</li>
+</ul>
+</blockquote>
+<h3 id="casting-对象转型"><strong><strong>Casting 对象转型</strong></strong></h3>
+<p>通过<strong><strong>Casting</strong></strong>可以告诉编译器把maxDog的static type看成Poodle,这样就能成功编译啦</p>
+<p>这样做编译器就不会检查类型是否一致了,所以是个有用但是危险的工具 应该谨慎使用</p>
+<p>另外注意Casting是非持久性效果,并不会永久改变对象的static type,只是临时把这个对象当成Casting的类型</p>
+<figure data-type="image" tabindex="11"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-24_18.55.04.png" alt="截屏2022-07-24 18.55.04.png" loading="lazy"></figure>
+<h3 id="java-包-package"><strong>Java 包 (package)</strong></h3>
+<p>(在 Project1:<strong>Data Structures</strong>中开始使用)</p>
+<p>包把功能相似或相关的类或接口组织在同一个包中，方便类的查找和使用。</p>
+<p>通过在顶部使用package关键字来指定包如<code>package deque;</code><br>
+然后就可以通过如<code>deque.ArrayDeque</code>来使用包里的类和方法<br>
+如果在使用时<code>import deque.ArrayDeque</code>就可以直接用<code>ArrayDeque</code>来使用包里的类和方法</p>
+<h1 id="week4-进一步讨论继承">Week4 进一步讨论继承</h1>
+<h3 id="extends关键词"><strong><strong>extends关键词</strong></strong></h3>
+<p>如**<code>public class** RotatingSLList&lt;Blorp&gt; **extends** SLList&lt;Blorp&gt;</code>使用extends会继承<code>SLList</code>全部的成员(实例、变量、方法、嵌套的类…)</p>
+<p>Java中所有的type都会隐式的extends Object</p>
+<h3 id="super的作用">super的作用</h3>
+<p>Java的private声明很严格,即使子类也不能访问,所以可以使用<code>super</code> 关键词来使用父类的成员如下:</p>
+<figure data-type="image" tabindex="12"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-24_17.36.26.png" alt="这样就不用在removeLast()里重复父类的代码了
+Ps:这里想做的是在SLList的基础上实现一个可以记住删除了的元素的SSList" loading="lazy"></figure>
+<p>这样就不用在removeLast()里重复父类的代码了<br>
+Ps:这里想做的是在SLList的基础上实现一个可以记住删除了的元素的SSList</p>
+<p>在构造函数里哪怕没写<code>super();</code>也会自动call,但是如果父类有两个构造函数,不写<code>super(x);</code>的话还是会自动call<code>super();</code></p>
+<figure data-type="image" tabindex="13"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-24_17.51.44.png" alt="截屏2022-07-24 17.51.44.png" loading="lazy"></figure>
+<h3 id="encapsulation-封装"><strong><strong>Encapsulation 封装</strong></strong></h3>
+<p>能否管理复杂性是能不能成为一个好的programmer的关键</p>
+<figure data-type="image" tabindex="14"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-24_18.12.22.png" alt="抽象、模块方便更改、隐藏不需要的信息" loading="lazy"></figure>
+<p>抽象、模块方便更改、隐藏不需要的信息</p>
+<h3 id="继承对封装的破坏">继承对封装的破坏</h3>
+<figure data-type="image" tabindex="15"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-24_18.31.57.png" alt="截屏2022-07-24 18.31.57.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="16"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-24_18.32.09.png" alt="截屏2022-07-24 18.32.09.png" loading="lazy"></figure>
+<p>上面两个图“我”的代码没有变化,但写Dog的人对Dog方法实现进行了改变,<br>
+所以在第二张图里<code>VerboseDog.barkMany()</code>-&gt;<code>Dog.bark()</code>(由于他的dynamic type是VerboseDog接下来会调用this.barkMany(1) )-&gt;<code>VerboseDog.barkMany()</code>这样下去就变了无限循环</p>
+<h3 id="higher-order-functions"><strong><strong>Higher Order Functions</strong></strong></h3>
+<p>把其他函数作为参数的函数</p>
+<figure data-type="image" tabindex="17"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-07-24_19.06.26.png" alt="截屏2022-07-24 19.06.26.png" loading="lazy"></figure>
+<p>在Java8前不能直接做到,所以需要上图中把函数接口当作参数放进去的操作</p>
+<p><a href="https://www.youtube.com/playlist?list=PL8FaHk7qbOD56r1sGUGifsfC0KRDAsuZ3">~~Subtype Polymorphism vs. HoFs</a>介绍了多态性和**<a href="https://www.youtube.com/watch?v=1oow3NGoExg&amp;list=PL8FaHk7qbOD56r1sGUGifsfC0KRDAsuZ3&amp;index=7">[Inheritance3, Video 6] Comparator</a>等**~~</p>
+<h3 id="set-in-java">Set (in Java)</h3>
+<p>不允许重复,没有顺序(不能说要第几个,但可以说某个东西存不存在在set里)</p>
+<p>和List一样也是集合的一种</p>
+<h3 id="迭代-iterable"><strong><strong>迭代 Iterable</strong></strong></h3>
+<p>如果要支持for循环:<br>
+如**<code>for** **(int** x **:** javaset**) {**System**.**out**.**println**(**x**);}**</code></p>
+<ul>
+<li>在class里添加一个iterator() 返回Iterator<T>的方法.</li>
+<li>Iterator<T> 拥有hasNext()和next()方法.</li>
+<li>在定义class的行里添加 <code>implements Iterable&lt;T&gt;</code></li>
+</ul>
+<blockquote>
+<p>当在Java中使用print时会隐式的call <code>toString()</code>如<code>System**.**out**.**println**(**javaset**);**</code></p>
+<p>![Java<a href="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-05_14.16.55.png">源代码</a></p>
+<p>Java<a href="https://github.com/AdoptOpenJDK/openjdk-jdk11/blob/999dbd4192d0f819cb5224f26e9e7fa75ca6f289/src/java.base/share/classes/java/io/PrintStream.java#L896">源代码</a></p>
+<p>另外如果把String和不是String的相加(结合),也会隐式的call <code>toString()</code></p>
+</blockquote>
+<p><code>toString()</code>的两种实现方式(效率/简洁):</p>
+<pre><code class="language-java">@Override
+    public String toString() {
+        StringBuilder returnSB = new StringBuilder(&quot;{&quot;);
+        for (int i = 0; i &lt; size - 1; i += 1) {
+            returnSB.append(items[i].toString());
+            returnSB.append(&quot;, &quot;);
+        }
+        returnSB.append(items[size - 1]);
+        returnSB.append(&quot;}&quot;);
+        return returnSB.toString();
+    }
+</code></pre>
+<pre><code class="language-java">		@Override
+    public String toString() {
+        List&lt;String&gt; listOfItems = new ArrayList&lt;&gt;();
+        for (T x : this) {
+            listOfItems.add(x.toString());
+        }
+        return &quot;{&quot; + String.join(&quot;, &quot;, listOfItems) + &quot;}&quot;;
+    } 
+</code></pre>
+<h2 id="子类多态性-subtype-polymorphism">子类多态性 <strong>Subtype Polymorphism</strong></h2>
+<p>子类多态性:子类可以利用父类的性质,比如animal都可以叫,而cat是一种animal,那cat.bark()就是继承了父类</p>
+<p>实践:</p>
+<h3 id="建立自己的比较函数">建立自己的比较函数</h3>
+<p>由于对象不能比较(java不知道比较string、size还是别的什么东西)</p>
+<figure data-type="image" tabindex="18"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-10_16.26.57.png" alt="截屏2022-08-10 16.26.57.png" loading="lazy"></figure>
+<p>为了让我们的对象可以比较,我们可以写一个函数来比较</p>
+<figure data-type="image" tabindex="19"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-10_16.28.11.png" alt="截屏2022-08-10 16.28.11.png" loading="lazy"></figure>
+<p>但是这就引入了新的问题,我们要为每一个类型都写一个max吗?<br>
+这样非常冗余比如要写maxDog()、maxCat()、maxBee()……<br>
+于是这时候就可以引入interface来保证我们的dog、cat等类型是可以比较的</p>
+<h3 id="建立ourcomparable接口保证对象可以比较">建立OurComparable接口保证对象可以比较</h3>
+<figure data-type="image" tabindex="20"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-10_16.43.41.png" alt="这里Dog继承了max的要求,所以保证了dog是可以进行比较的并且这里的dog就表现了出了子类多态性" loading="lazy"></figure>
+<p>这里Dog继承了max的要求,所以保证了dog是可以进行比较的并且这里的dog就表现了出了子类多态性</p>
+<figure data-type="image" tabindex="21"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-10_16.49.39.png" alt="注意compareTo的return数字正负和0就表示了大小
+第一个是接口、第二个是类型、第三个是返回大的对象的函数
+然后是我们使用的代码" loading="lazy"></figure>
+<p>注意compareTo的return数字正负和0就表示了大小<br>
+第一个是接口、第二个是类型、第三个是返回大的对象的函数<br>
+然后是我们使用的代码</p>
+<figure data-type="image" tabindex="22"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-10_16.57.47.png" alt="截屏2022-08-10 16.57.47.png" loading="lazy"></figure>
+<p>另外可以看到把这么一长串优化成一行的解决方式</p>
+<p>当然上面还有点小问题比如把Dog和Cat比的话,上面被强制转换为了<code>Dog uddaDog = (Dog) obj;</code><br>
+为了解决这个问题我们其实可以使用官方的<strong><strong>Comparables</strong></strong></p>
+<h3 id="使用内建的comparable">使用内建的Comparable</h3>
+<figure data-type="image" tabindex="23"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-10_17.23.48.png" alt="使用内建的Comparable" loading="lazy"></figure>
+<p>使用内建的Comparable</p>
+<figure data-type="image" tabindex="24"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-10_17.27.31.png" alt="截屏2022-08-10 17.27.31.png" loading="lazy"></figure>
+<h3 id="comparator"><strong><strong>Comparator</strong></strong></h3>
+<p>我们想要多种比较的办法,这个时候Comparator就派上用场了<br>
+如何做一个comparator参考<a href="https://www.youtube.com/watch?v=1oow3NGoExg&amp;list=PL8FaHk7qbOD56r1sGUGifsfC0KRDAsuZ3&amp;index=7&amp;ab_channel=JoshHug">这里</a></p>
+<p>其他语言可能是传入一个比较函数,但java中我们传入不同的comparator</p>
+<blockquote>
+<p>Comparable表示“我这个对象”是可以被比较的,而Comparator是比较其他两个对象</p>
+</blockquote>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://nhuji.github.io/tag/b3U5buPEp/" class="tag">
+                    CS61b
+                  </a>
+                
+              </div>
+            
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

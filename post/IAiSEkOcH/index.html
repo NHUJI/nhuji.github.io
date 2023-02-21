@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>关于ChatGPT的一点想法 | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1676959783334">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="在4 5号还是更早一两天开始玩ChatGPT开始先是被他自然的语言回复震惊了
+然后发现能写代码能给建议
+真的很让人震惊
+感觉底层程序员要失业了的感觉 (现在觉得还是不太可能,只能写一些基本的代码块还老出错)
+然后我又接着开发了角色扮演、翻译..." />
+    <meta name="keywords" content="随想" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1676959783334" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1676959783334" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1676959783334" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://twitter.com/pikanhuji" target="_blank">
+            <i class="fa-brands fa-twitter"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://space.bilibili.com/1760189" target="_blank">
+            <i class="fa-brands fa-bilibili"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">@2023 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">关于ChatGPT的一点想法</h2>
+            <div class="post-date">2022-12-10</div>
+            
+            <div class="post-content" v-pre>
+              <p>在4 5号还是更早一两天开始玩ChatGPT开始先是被他自然的语言回复震惊了<br>
+然后发现能写代码能给建议<br>
+真的很让人震惊<br>
+感觉底层程序员要失业了的感觉 (现在觉得还是不太可能,只能写一些基本的代码块还老出错)</p>
+<p>然后我又接着开发了角色扮演、翻译、写rap歌词、代码等功能<br>
+一开始的体验真的很不错,我好好的满足了我的某些喜好<br>
+我连着弄了好几个故事,经常熬夜玩到很晚<br>
+有时候一个故事也会持续好几天<br>
+然后不小心把对话搞没了之后就很伤心哈哈哈 (后来终于加了对话保留功能)<br>
+但这种快速有逻辑的反馈真的很好玩</p>
+<p>总之越使用对它的感觉应该是一个凸型的走势,一开始觉得怎么这么厉害<br>
+无所不能<br>
+但随着内容限制加紧访问变慢,然后发现它的记忆能力只有三千多个字后就比较腻了<br>
+但他作为对话模型<br>
+最重要的还是文字能力<br>
+真的很很厉害,能写出很好的文字</p>
+<p>总之今年的NovelAI和年末的ChatGPT都很让人惊讶AI居然已经如此成熟了,明年感觉可以期待一下AI在视频方便的应用</p>
+<hr>
+<p>23年的补充<br>
+没想到春节之后它又大火了一把,不过用的人太多后体验感觉真的变差不少<br>
+刚出来几天时中文的输出速度要快得多,感觉token的长度也比现在大<br>
+还有就是那会还没有讨厌的1小时限制.....<br>
+另外还有就是它的普及速度也太让人惊讶了,刚用的时候才宣布到达了一百万用户<br>
+现在已经是一亿以上了...<br>
+另外new bing的申请已经过了好久好久了,什么时候才把我从waitlist放出来? (这段文字在2.19日写的,已经过了一周多了,而我是在它公布后两小时不到时申请的,不是很理解为什么要等这么久)<br>
+<img src="https://nhuji.github.io/post-images/1676816602720.jpeg" alt="" loading="lazy"></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://nhuji.github.io/tag/m37wjQEDe/" class="tag">
+                    随想
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/git-de-jie-shao/">
+                  <h3 class="post-title">
+                    Git的各种介绍
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>
