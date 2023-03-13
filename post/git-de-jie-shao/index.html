@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Git的各种介绍 | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1678698993601">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="Git的一些简介、各种命令、Git本身的实现原理以及一些问题的解决方法
+
+资源:
+如何写好commit
+在线模拟Git
+CS50W的Git介绍
+ohshitgit (git中可能遇到的各种问题补救)
+Git for Professional..." />
+    <meta name="keywords" content="" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1678698993601" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1678698993601" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1678698993601" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://twitter.com/pikanhuji" target="_blank">
+            <i class="fa-brands fa-twitter"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://space.bilibili.com/1760189" target="_blank">
+            <i class="fa-brands fa-bilibili"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">@2023 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Git的各种介绍</h2>
+            <div class="post-date">2022-08-11</div>
+            
+              <div class="feature-container" style="background-image: url('https://nhuji.github.io/post-images/git-de-jie-shao.png')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <p>Git的一些简介、各种命令、Git本身的实现原理以及一些问题的解决方法</p>
+<!-- more -->
+<h1 id="资源">资源:</h1>
+<p><a href="https://cbea.ms/git-commit/">如何写好commit</a></p>
+<p><a href="https://learngitbranching.js.org/?locale=zh_CN">在线模拟Git</a></p>
+<p><a href="https://cs50.harvard.edu/web/2020/weeks/1/">CS50W的Git介绍</a></p>
+<p><a href="https://ohshitgit.com/zh">ohshitgit</a> (git中可能遇到的各种问题补救)</p>
+<p><strong><strong><a href="https://www.youtube.com/watch?v=Uszj_k0DGsg&amp;ab_channel=freeCodeCamp.org">Git for Professionals Tutorial - Tools &amp; Concepts for Mastering Version Control with Git</a></strong></strong></p>
+<p>下面的各种图片均来自于cs61b、cs50w等课程和网络</p>
+<h1 id="git的一些简介">Git的一些简介</h1>
+<h3 id="git的用处">Git的用处</h3>
+<p>因为编程本身是一个循序渐进的过程,会有大量的改变,而在多人乃至个人管理这些改变是可能有hello.java、hello2.java……hello最终版.java、hello最最最终不再修改版.java 的情况出现<br>
+而Git可以让我们更方便地管理这些过程,而不是弄一堆文件</p>
+<p>如果对git存储的文件感兴趣可以cmd+shift+.查看隐藏文件</p>
+<h3 id="git是怎么运作的">Git是怎么运作的</h3>
+<p>实现方法由简单到复杂<br>
+<img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_15.51.33.png" alt="假设我们有v1 v2 v3 三个版本" loading="lazy"></p>
+<p>假设我们有v1 v2 v3 三个版本</p>
+<ol>
+<li>
+<p>单纯地给V1 V2 V3存储在不同的文件夹</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_15.53.21.png" alt="截屏2022-08-07 15.53.21.png" loading="lazy"></figure>
+</li>
+</ol>
+<p>优点是修改很方便,只需要操作1个文件夹就行了,但会有大量的冗余也就是相同文件重复存储</p>
+<ol>
+<li>
+<p>只存储修改了文件</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_15.55.38.png" alt="不存储相同的文件" loading="lazy"></figure>
+<p>不存储相同的文件</p>
+</li>
+</ol>
+<p>这样做的好处是相同的文件我们只需要处理一份,<br>
+但修改需要跨文件夹,而且有哪份作为最新的文件需要花时间判定</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_15.56.39.png" alt="截屏2022-08-07 15.56.39.png" loading="lazy"></figure>
+<ol>
+<li>
+<p>就像实现LLD时存储了size大小,我们引入一个数据结构告诉我们最新的文件是什么</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_15.58.17.png" alt="截屏2022-08-07 15.58.17.png" loading="lazy"></figure>
+</li>
+</ol>
+<p>但是如果多人协作时我们怎么确定谁是最新的版本呢</p>
+<p>可以通过命令行<code>git hash-object 文件名</code>获得一个文件的git-SHA1 hash值</p>
+<ol>
+<li>
+<p>引入时间作为版本依据替代以前的V1 V2 etc.</p>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_15.59.59.png" alt="截屏2022-08-07 15.59.59.png" loading="lazy"></figure>
+</li>
+</ol>
+<p>但如果有人再同一时间提交的话又怎么区分呢</p>
+<ol>
+<li>
+<p>引入git-SHA1 hash值</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_16.02.20.png" alt="截屏2022-08-07 16.02.20.png" loading="lazy"></figure>
+</li>
+</ol>
+<p>拥有各种好处,比如可以判断文件是否被修改过</p>
+<p>总结:</p>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_16.04.00.png" alt="对于“???”我们有无限的文件,但hash值只有160位,所以可能遇到不同文件hash值相同的情况,不过出现这样的情况的几率无限低" loading="lazy"></figure>
+<p>对于“???”我们有无限的文件,但hash值只有160位,所以可能遇到不同文件hash值相同的情况,不过出现这样的情况的几率无限低</p>
+<h3 id="git-commits"><strong><strong>Git Commits</strong></strong></h3>
+<p>存储的内容:</p>
+<figure data-type="image" tabindex="8"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_16.07.33.png" alt="截屏2022-08-07 16.07.33.png" loading="lazy"></figure>
+<p>还包括使用git-SHA1 hash值作为ID、使用<strong><strong>Serializable</strong></strong>储存Commit</p>
+<h3 id="分支-branching">分支 <strong><strong>Branching</strong></strong></h3>
+<p>暂时不解释,大概就是可以有人负责不同的工作,最后还可以合并这些东西,后面会有更详细的介绍</p>
+<figure data-type="image" tabindex="9"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-07_16.10.12.png" alt="截屏2022-08-07 16.10.12.png" loading="lazy"></figure>
+<hr>
+<h1 id="git入门-by-itai的讲解">Git入门-by Itai的讲解</h1>
+<h2 id="git-init"><code>git init</code></h2>
+<p>使用它就表示你要对当前的文件夹进行版本控制,同时这里就变成了存储库(repository)</p>
+<figure data-type="image" tabindex="10"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-08_17.16.09.png" alt="截屏2022-08-08 17.16.09.png" loading="lazy"></figure>
+<h2 id="git-status"><code>git status</code></h2>
+<p>告诉我们这个存储库的状态</p>
+<p>可以看到现在还没有commits(相当于快照)</p>
+<figure data-type="image" tabindex="11"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-08_17.20.10.png" alt="告诉我们pbj.txt没有被跟踪" loading="lazy"></figure>
+<p>告诉我们pbj.txt没有被跟踪</p>
+<hr>
+<h2 id="创建一个commits">创建一个commits</h2>
+<h3 id="git-add-文件名"><code>**git add 文件名**</code></h3>
+<p>成功后就记录了改变,但还没提交如果使用<code>**git add *</code>(git add .)**就表示记录当前目录所有文件</p>
+<h3 id="git-commit-m-快照的内容"><code>**git commit -m “快照的内容”**</code></h3>
+<p>就完成了commit,提交了改变</p>
+<p>不添加<code>-m</code>的话就会打开vim以让你输入更多内容 :q 退出</p>
+<h3 id="git-commit-am-快照的内容"><code>**git commit -am “快照的内容”**</code></h3>
+<p>结合git add和commit ,这样就commit了所以改变</p>
+<h3 id="git-commit-amend"><code>**git commit -amend**</code></h3>
+<p>可以修改上次commit的描述</p>
+<h3 id="git-commit-amend-no-edit"><code>**git commit -amend -no-edit**</code></h3>
+<p>将新的改变一起覆盖到上次的commit,不改变描述, 如果您已经将commit推送到远程存储库，则需要使用强制推送将更改推送到远程存储库。使用以下命令：<code>git push --force</code></p>
+<hr>
+<h2 id="git-log"><code>git log</code></h2>
+<p>告诉我们所有的commit</p>
+<blockquote>
+<p><code>cat 文件名</code>可以看到文件内容<br>
+<code>cp 文件名 ./另一个文件名</code>复制命令在当前文件夹复制了一份文件<br>
+<code>nano 文件名</code> 终端内置的一个类似vim的编辑器<br>
+<code>subl 文件名</code>用sublime打开</p>
+</blockquote>
+<figure data-type="image" tabindex="12"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-08_17.25.20.png" alt="截屏2022-08-08 17.25.20.png" loading="lazy"></figure>
+<h2 id="git-show"><code>git show</code></h2>
+<p>和log差不多只是可以显示某次commit的更多内容,不常用</p>
+<h2 id="git-checkout"><code>git checkout</code></h2>
+<p>ps现在有G<a href="https://git-scm.com/docs/git-switch">it switch</a>可以作为替代品</p>
+<p><code>git checkout &quot;commit id&quot;</code><br>
+粘贴commit id然后粘贴到后面就能恢复那个commit时的文件</p>
+<p><code>git checkout master/main</code>就可以回到最新的commit</p>
+<figure data-type="image" tabindex="13"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-08_17.41.53.png" alt="截屏2022-08-08 17.41.53.png" loading="lazy"></figure>
+<p>本质上就是掌控HEAD指针在什么位置,如果有没有commit的内容就不能进行这个操作</p>
+<p>如果在<code>git cheakout &quot;commit id&quot; “文件地址”</code>可以返回具体文件,如果要保存这个状态记得再次<code>**git commit -m “快照的内容”**</code></p>
+<h2 id="gitk"><code>gitk</code></h2>
+<p>Git 存储库浏览器 (Monterey似乎不能使用)</p>
+<h2 id="git-reset"><code>git reset</code></h2>
+<p>恢复到之前某个快照</p>
+<p>比如强制恢复到一个commit/分支<br>
+<code>git reset --hard &lt;commit&gt;</code></p>
+<p><code>git reset --hard origin/mater</code></p>
+<h2 id="git-reset-head-file"><code>git reset HEAD [file]</code></h2>
+<p>取消暂存(add)的文件<br>
+比如在不小心跟踪了不想要的文件时使用</p>
+<h1 id="git-分支"><strong>Git 分支</strong></h1>
+<p>分支允许您同时跟踪工作的多个不同版本。将分支视为替代维度的一种方式。也许一个分支是选择使用链表的结果，而另一个分支是选择使用数组的结果。</p>
+<p>默认分支通常称为<code>master/mian</code>分支</p>
+<figure data-type="image" tabindex="14"><img src="https://sp19.datastructur.es/materials/guides/img/graph2.svg" alt="https://sp19.datastructur.es/materials/guides/img/graph2.svg" loading="lazy"></figure>
+<p>创建一个分支可以让你跟踪代码的多个不同版本，一旦你完成了一个部分并希望它加入你的代码的其余部分，你就可以轻松地在版本之间切换并将分支合并在一起。</p>
+<p>在有重大更改、不确定是否并入(尝试)、分开工作等时很有用</p>
+<ul>
+<li>
+<p>例子</p>
+<p>例如，假设到目前为止您已经完成了一半的项目。还有一个困难的部分要做，你不知道该怎么做。也许你对如何做有三种不同的想法，但你不确定哪个会奏效。此时，创建一个分支<code>master</code> 并尝试您的第一个想法可能是一个好主意。</p>
+<ul>
+<li>如果您的代码有效，您可以将分支合并回您的主代码（在 <code>master</code>分支上）并提交您的项目。</li>
+<li>如果您的代码不起作用，请不要担心还原您的代码并不得不操作 Git 历史记录。您可以简单地切换回<code>master</code>不会有任何更改的 ，创建另一个分支，然后尝试您的第二个想法。</li>
+</ul>
+<p>这可以一直持续到您找到编写代码的最佳方式，并且您只需将最终工作的分支合并到<code>master</code>最后。</p>
+</li>
+</ul>
+<p>比如我想尝试修改一些css代码看看效果就可以创建一个branch来修改,到时候出问题了可以丢掉这些修改,如果修改还不错就可以merge回主线</p>
+<hr>
+<p>比如开发某个新功能时搞一个分支,这样就可以放心地尝试,然后原本的代码发现了个bug就在原有的代码上修改</p>
+<figure data-type="image" tabindex="15"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_13.45.44.png" alt="HEAD指针指向的就是你当前的分支" loading="lazy"></figure>
+<p>HEAD指针指向的就是你当前的分支</p>
+<p>等新功能写完了就可以合并新功能和修改了bug的代码</p>
+<figure data-type="image" tabindex="16"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_13.46.33.png" alt="截屏2022-12-08 13.46.33.png" loading="lazy"></figure>
+<h2 id="git-branch"><code>git branch</code></h2>
+<p>会告诉你你目前所在的分支和其他分支</p>
+<h2 id="git-branch-new-branch-name"><code>git branch [new-branch-name]</code></h2>
+<p>从当前分支创建一个分支</p>
+<h2 id="git-checkout-destination-branch"><code>git checkout [destination-branch]</code></h2>
+<p>更改<code>HEAD</code>指针引用的分支从一个分支切换到另一个分支。</p>
+<h2 id="git-checkout-b-new-branch-name"><code>git checkout -b [new-branch-name]</code></h2>
+<p>将前两个命令组合起来创建一个新分支，然后使用这个命令检查它<br>
+也就是<strong>创建一个新的分支同时切换到新创建的分支</strong></p>
+<h2 id="git-branch-d-branch-to-delete"><code>git branch -d [branch-to-delete]</code></h2>
+<p>删除分支</p>
+<h2 id="git-branch-v"><code>git branch -v</code></h2>
+<p>确定所在的分支 (-v还将列出每个分支上的最后一次提交)</p>
+<h2 id="合并分支">合并分支</h2>
+<h2 id="git-merge-branch-name"><code>git merge [branch-name]</code></h2>
+<p>将这个分支合并到我当前的分支,</p>
+<h2 id="合并示例">合并示例</h2>
+<figure data-type="image" tabindex="17"><img src="https://sp19.datastructur.es/materials/guides/img/graph3.svg" alt="https://sp19.datastructur.es/materials/guides/img/graph3.svg" loading="lazy"></figure>
+<p>将<code>fixing-ai-heuristics</code>合并到<code>master</code></p>
+<pre><code>git checkout master
+git merge fixing-ai-heuristics
+</code></pre>
+<p>在这之后新的分支就拥有了两个父级</p>
+<figure data-type="image" tabindex="18"><img src="https://sp19.datastructur.es/materials/guides/img/graph4.svg" alt="https://sp19.datastructur.es/materials/guides/img/graph4.svg" loading="lazy"></figure>
+<h2 id="合并冲突">合并冲突</h2>
+<h3 id="解除合并冲突">解除合并冲突</h3>
+<pre><code class="language-java">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+for (int i = 0; i &lt; results.length; i++) {
+    println(results[i]);
+    println(&quot;FIX ME!&quot;);
+}
+=======
+int[] final = int[results.length];
+for (int i = 0; i &lt; results.length - 1; i++) {
+    final[i] = results[i] + 1;
+    println(final[i]);
+}
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; fixing-ai-heuristics
+</code></pre>
+<p>比如有以上冲突,删除不想要的就可以提交了</p>
+<h2 id="git-rebase"><code>git rebase</code></h2>
+<p>第二种合并分支的方法是 <code>git rebase</code>。Rebase 实际上就是取出一系列的提交记录，“复制”它们，然后在另外一个地方逐个的放下去。Rebase 的优势就是可以创造更线性的提交历史，这听上去有些难以理解。如果只允许使用 Rebase 的话，代码库的提交历史将会变得异常清晰。</p>
+<p>使用<code>git rebase main</code> 将C3的bugFix*移动到了main上</p>
+<p>提交记录 C3 依然存在（树上那个半透明的节点），而 C3' 是我们 Rebase 到 main 分支上的 C3 的副本</p>
+<figure data-type="image" tabindex="19"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_14.54.46.png" alt="截屏2022-12-08 14.54.46.png" loading="lazy"></figure>
+<p>现在我们切换到了 <code>main</code> 上。把它 rebase 到 <code>bugFix</code> 分支上……</p>
+<p>用<code>git rebase bugFix</code> 后如图</p>
+<p>由于 <code>bugFix</code>继承自 <code>main</code>，所以 Git 只是简单的把 <code>main</code>分支的引用向前移动了一下而已。</p>
+<figure data-type="image" tabindex="20"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_14.57.23.png" alt="截屏2022-12-08 14.57.23.png" loading="lazy"></figure>
+<p>rebase还可以用于合并commit,比如<code>git rebase -i HEAD~2</code></p>
+<h3 id="git三种合并方式的区别">git三种合并方式的区别</h3>
+<p>(来自ChatGPT)</p>
+<p>Git 的 <strong><code>merge</code></strong> 和 <strong><code>rebase</code></strong> 命令都可以用来合并多个分支，但是它们与 <strong><code>cherry-pick</code></strong> 命令有着很大的不同。</p>
+<p>首先，<strong><code>merge</code></strong> 命令是将两个分支合并为一个分支。例如，假设你在分支 <strong><code>new-branch</code></strong> 上做出了一些改变，然后想要将这些改变合并到 <strong><code>master</code></strong> 分支上，可以使用如下命令：</p>
+<pre><code>$ git checkout master
+$ git merge new-branch
+</code></pre>
+<p>在这段代码中，首先使用 <strong><code>git checkout</code></strong> 命令切换到了 <strong><code>master</code></strong> 分支上，然后使用 <strong><code>git merge</code></strong> 命令将 <strong><code>new-branch</code></strong> 分支合并到了 <strong><code>master</code></strong> 分支上。</p>
+<p>注意，在使用 <strong><code>merge</code></strong> 命令合并分支时，Git 会自动创建一个新的提交，用来记录合并的信息。这个提交称为合并提交，其中会包含所有合并前两个分支的提交。</p>
+<p>相比之下，<strong><code>cherry-pick</code></strong> 命令是将单个提交从一个分支弄到另一个分支上。</p>
+<p>Git 的 <strong><code>rebase</code></strong> 命令是将一个分支的提交“剪切”并粘贴到另一个分支上。例如，假设你在分支 <strong><code>new-branch</code></strong> 上做出了一些改变，然后想要将这些改变“剪切”并粘贴到 <strong><code>master</code></strong> 分支上，可以使用如下命令：</p>
+<pre><code>$ git checkout new-branch
+$ git rebase master
+</code></pre>
+<p>在这段代码中，首先使用 <strong><code>git checkout</code></strong> 命令切换到了 <strong><code>new-branch</code></strong> 分支上，然后使用 <strong><code>git rebase</code></strong> 命令将 <strong><code>new-branch</code></strong> 分支的提交“剪切”并粘贴到了 <strong><code>master</code></strong> 分支上。</p>
+<p>注意，在使用 <strong><code>rebase</code></strong> 命令时，Git 会将每个提交的内容拆开，然后逐个提交。这意味着，你每次都需要手动提交。这也意味着，在使用 <strong><code>rebase</code></strong> 命令时，你可以选择只提交你想要的提交。</p>
+<p>总的来说，<strong><code>merge</code></strong> 命令是将两个分支合并为一个分支，并创建一个合并提交；<strong><code>rebase</code></strong> 命令是将一个分支的提交“剪切”并粘贴到另一个分支上，并逐个提交。而 <strong><code>cherry-pick</code></strong> 命令是将单个提交从一个分支弄到另一个分支上。</p>
+<h2 id="其他炫酷的git功能仅了解">其他炫酷的Git功能(仅了解)</h2>
+<p>There are tons of other cool Git commands. Unfortunately, we need to continue on to discuss remote repositories. Thus, this segment will just list some other interesting features that you are encouraged to explore in your own time:</p>
+<ul>
+<li>
+<p><a href="http://git-scm.com/book/en/Git-Tools-Stashing">Stashing</a></p>
+<p>Stashing allows you to save your changes onto a stack without making a more permanent commit. It is equivalent to picking up your work-in-progress and placing it in a box to get back to later. In the meantime, your desk is now clean.</p>
+<p>Why might you want to use this?</p>
+<ul>
+<li>Your files may be in a disorganized state, and you don’t want to commit yet, but you also don’t want to get rid of your changes.</li>
+<li>You modified multiple files, but you dislike your changes and you would just like to get things back to how they were after your most recent commit. Then you can <code>stash</code> your code and then drop that stash rather than having to manually revert multiple files. (Be careful with this usage!)</li>
+<li>You modified files but accidentally modified them on the wrong branch. Then you can <code>stash</code> your changes, switch branches, and unstash your changes so that they are all in the new branch.</li>
+</ul>
+</li>
+<li>
+<p><a href="http://git-scm.com/book/en/Git-Tools-Rewriting-History">Rewriting History</a></p>
+<p>Let’s say you want to do more than change your last commit or drop changes to your files before your most recent commit. What if you want to do something crazy like rewrite history? You can change multiple commit messages, splits one commits into two, and reorder commits.</p>
+</li>
+<li>
+<p><a href="http://git-scm.com/book/en/Git-Branching-Rebasing">Rebasing</a></p>
+<p>Rebasing changes the parent commit of a specific commit. In doing this, it changes the commits so that it is no longer the same.</p>
+<p><code>Rebase</code> can be used as an alternative to <code>merge</code> for integrating changes from one branch to another. It is quite different from <code>merge</code> in that <code>merge</code> creates a new commit that has both parent branch commits as parents. Rebasing takes one set of commits from a branch and places them all at the end of the other branch.</p>
+<p>There are different reasons why you would want to use <code>merge</code> versus <code>rebase</code>. One of these reasons is that <code>rebase</code> leads to a cleaner history when working with many different branches and team members.</p>
+</li>
+<li>
+<p><a href="http://git-scm.com/docs/git-reset.html">Reset</a></p>
+<p>Perhaps you decide that you want things to be how they were a certain number of commits ago. You can use <code>reset</code> if you are absolutely sure that you don’t want the last few commits. <code>Reset</code> is quite a nuanced command, so read carefully before attempting use.</p>
+<ul>
+<li><a href="http://stackoverflow.com/questions/2530060/can-you-explain-what-git-reset-does-in-plain-english">Stack Overflow on git reset</a></li>
+<li><a href="http://git-scm.com/blog/2011/07/11/reset.html">Reset Demystified</a></li>
+</ul>
+</li>
+<li>
+<p><a href="http://git-scm.com/docs/git-revert.html">Revert</a></p>
+<p><code>Revert</code> allows you to reverse the changes introduced by certain commits by recording new commits to undo the changes. This is a safer option that simply throwing away past commits. But again, use this with caution.</p>
+</li>
+<li>
+<p><a href="http://git-scm.com/docs/git-cherry-pick.html">Cherry Pick</a></p>
+<p><code>Cherry pick</code> allows you to apply the changes introduced by some existing commits. For example, if you have two different branches, and your current branch lacks one or two commits that would be helpful but are only in the other branch, then you can <code>cherry pick</code> to grab those commits without merging or rebasing to get all the commits.</p>
+</li>
+</ul>
+<p>There are far more features and commands not mentioned here. Feel free to explore more and search for answers. There most likely exists a Git command for nearly everything you would want to do.</p>
+<h2 id="git-head-在提交树上前后移动的方法">Git Head 在提交树上前后移动的方法</h2>
+<p><code>cat .git/HEAD</code>可以看到HEAD的指向,如果是指向的引用还可以用<code>git symbolic-ref HEAD</code>查看它的指向</p>
+<h3 id="分离的-head也就是分离头指针detached-head">分离的 HEAD(也就是分离头指针/detached HEAD)</h3>
+<p>分离的 HEAD 就是让其指向了某个具体的提交记录而不是分支名</p>
+<p>现在是这样的</p>
+<p>HEAD -&gt; main -&gt; C1</p>
+<p>HEAD 指向 main， main 指向 C1</p>
+<figure data-type="image" tabindex="21"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_15.27.51.png" alt="截屏2022-12-08 15.27.51.png" loading="lazy"></figure>
+<p>然后执行git checkout C1,变成了</p>
+<p>HEAD -&gt; C1</p>
+<figure data-type="image" tabindex="22"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_15.30.30.png" alt="截屏2022-12-08 15.30.30.png" loading="lazy"></figure>
+<blockquote>
+<p>通过指定提交记录哈希值的方式在 Git 中移动不太方便。在实际应用时，并没有像本程序中这么漂亮的可视化提交树供你参考，所以你就不得不用 <code>git log</code> 来查查看提交记录的哈希值。</p>
+<p>并且哈希值在真实的 Git 世界中也会更长（译者注：基于 SHA-1，共 40 位）。例如前一关的介绍中的提交记录的哈希值可能是 <code>fed2da64c0efc5293610bdd892f82a58e8cbc5d8</code>。舌头都快打结了吧...</p>
+<p>比较令人欣慰的是，Git 对哈希的处理很智能。你只需要提供能够唯一标识提交记录的前几个字符即可。因此我可以仅输入<code>fed2</code> 而不是上面的一长串字符</p>
+</blockquote>
+<h3 id="相对引用">相对引用</h3>
+<p><strong>移动HEAD</strong></p>
+<p>这样就可以返回到前第x个的commit而不用记他们的哈希值了所以 <code>main^</code> 相当于“<code>main</code> 的父节点”。<code>main^^</code> 是 <code>main</code> 的第二个父节点.也可以可以一直使用 <code>HEAD^</code> 向上移动,(<code>git checkout HEAD^</code>)</p>
+<p>当然一直这样也很烦可以用<code>HEAD~数字</code>的方式指定向上几次(<code>git checkout HEAD~4</code>)</p>
+<figure data-type="image" tabindex="23"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_15.35.40.png" alt="截屏2022-12-08 15.35.40.png" loading="lazy"></figure>
+<p><strong>移动分支</strong></p>
+<p>可以直接使用 <code>-f</code>选项让分支指向另一个提交</p>
+<p><code>git branch -f main HEAD~3</code></p>
+<p>上面的命令会将 main 分支强制指向 HEAD 的第 3 级父提交。</p>
+<p>相对引用为我们提供了一种简洁的引用提交记录 <code>C1</code>的方式， 而 <code>-f</code>则容许我们将分支强制移动到那个位置。</p>
+<figure data-type="image" tabindex="24"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_15.40.32.png" alt="截屏2022-12-08 15.40.32.png" loading="lazy"></figure>
+<p>或者使用<code>git branch -f 要移动的分支 指定的位置</code>可以把一个分支指向的位置随意移动(移动HEAD的话就直接<code>git checkout 制定的位置</code> 就行了)</p>
+<blockquote>
+<p>正如我前面所说，通过哈希值指定提交记录很不方便，所以 Git 引入了相对引用。这个就很厉害了!</p>
+<p>使用相对引用的话，你就可以从一个易于记忆的地方（比如 <code>bugFix</code> 分支或 <code>HEAD</code>）开始计算。</p>
+<p>相对引用非常给力，这里我介绍两个简单的用法：</p>
+<ul>
+<li>使用 <code>^</code> 向上移动 1 个提交记录</li>
+<li>使用 <code>~&lt;num&gt;</code> 向上移动多个提交记录，如 <code>~3</code></li>
+</ul>
+</blockquote>
+<p>另外**<code>origin/master**, **origin/HEAD**</code>指针是GitHub远程的状态</p>
+<h1 id="撤销变更">撤销变更</h1>
+<h2 id="git-reset-2"><code>git reset</code></h2>
+<p>通过把分支记录回退几个提交记录来实现撤销改动。你可以将这想象成“改写历史”。<code>git reset</code><br>
+ 向上移动分支，原来指向的提交记录就跟从来没有提交过一样。</p>
+<p>使用<code>git reset HEAD~1</code> Git 把 main 分支移回到 <code>C1</code>；现在我们的本地代码库根本就不知道有 <code>C2</code> 这个提交了。</p>
+<p>（注：在reset后， <code>C2</code> 所做的变更还在，但是处于未加入暂存区状态。）</p>
+<figure data-type="image" tabindex="25"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_15.55.25.png" alt="截屏2022-12-08 15.55.25.png" loading="lazy"></figure>
+<h2 id="git-revert"><code>git revert</code></h2>
+<p>虽然在你的本地分支中使用 <code>git reset</code> 很方便，但是这种“改写历史”的方法对大家一起使用的远程分支是无效的哦！</p>
+<p>为了撤销更改并<strong>分享</strong>给别人，我们需要使用 <code>git revert</code>。</p>
+<p>使用了<code>git revert HEAD</code></p>
+<p>在我们要撤销的提交记录后面多了一个新提交！这是因为新提交录 <code>C2'</code> 引入了<strong>更改</strong> —— 这些更改刚好是用来撤销 <code>C2</code> 这个提交的。也就是说 <code>C2'</code> 的状态与 <code>C1</code> 是相同的。</p>
+<p>revert 之后就可以把你的更改推送到远程仓库与别人分享啦。</p>
+<figure data-type="image" tabindex="26"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_15.57.16.png" alt="C1 = C2’" loading="lazy"></figure>
+<p>C1 = C2’</p>
+<h1 id="github-远程仓库">Github 远程仓库</h1>
+<blockquote>
+<p>术语:储存库/仓库:Repositories,也会简称为repo</p>
+</blockquote>
+<ul>
+<li>
+<p><code>git remote</code></p>
+<p>显示现有的远程仓库</p>
+<p>如果想查看你已经配置的远程仓库服务器，可以运行 <code>git remote</code><br>
+命令。 它会列出你指定的每一个远程服务器的简写<br>
+所有其他命令都使用其关联的简写</p>
+</li>
+<li>
+<p><code>git remote -v</code></p>
+<p>显示现有的远程仓库详细信息</p>
+</li>
+<li>
+<p><code>git remote add [short-name] [remote-url]</code></p>
+<p>添加远程仓库with简写和远程地址,这只是相当于一个指针没有添加文件,需要有个仓库来使用它,而git clone则是把远程上所有的东西下载到本地</p>
+</li>
+<li>
+<p><code>git remote rename [old-name] [new-name]</code></p>
+<p>重命名简写</p>
+</li>
+<li>
+<p><code>git remote rm [remote-name]</code></p>
+<p>删除远程仓库</p>
+</li>
+<li>
+<p><code>git clone [remote-url]</code></p>
+<p><code>git clone [remote-url] [directory-name]</code>//允许为仓库设定不同的名称<br>
+拷贝一个 Git 仓库到本地，让自己能够查看该项目，或者进行修改。<br>
+(相当于把远程仓库的东西拿来并<code>git init</code>)<br>
+在您的本地计算机上制作指定存储库的副本。还会创建一个工作目录，其中的文件排列方式与下载存储库中的最新快照完全相同。还记录远程存储库的 URL，以供后续网络数据传输，并为其指定特殊的远程存储库名称“origin”。</p>
+</li>
+<li>
+<p><code>git push [remote-name] [remote-branch]</code></p>
+<p>将本地的修改推送到远程仓库(HEAD指针的commit)</p>
+</li>
+<li>
+<p><code>git push [remote-repo-name] master</code></p>
+<p>将文件的最新副本推送到远程存储库名称</p>
+<p><code>git push -u origin master -f</code> 可以在本地版本低于远程时强制推送</p>
+</li>
+<li>
+<p><code>git fetch [remote-name]</code></p>
+<p>类似下载commit,不会合并</p>
+<p>比如别人创建了一个新分支</p>
+<pre><code class="language-bash">$ git fetch origin
+//拉取
+$ git branch review-ai-fix origin/fixing-ai-heuristics
+//命令创建一个名为review-ai-fix的分支
+//来查看远程仓库origin的fixing-ai-heuristics分支
+$ git checkout review-ai-fix
+</code></pre>
+</li>
+<li>
+<p><code>git pull [remote-name] [remote-branch-name]</code></p>
+<p>相当于fetch+merge操作,会获得最新的更改并且合并到我的HEAD中</p>
+<p>获取文件的最新副本，如 remote-repo-name 中所示</p>
+</li>
+<li>
+<p><code>git rebase</code></p>
+<p>似乎是合并branch的操作,暂时不考虑学习</p>
+</li>
+<li>
+<p>删除Git仓库</p>
+<p>只需要删除文件夹隐藏的.git就行了</p>
+<pre><code class="language-bash">$ git branch #显示本地所有分支 
+* master
+
+$ git init #初始化仓库 
+$ ls -a #查看内部文件 
+$ rm -rf .git #强删.git
+</code></pre>
+</li>
+</ul>
+<p>更多课程操作相关内容可以看<a href="https://www.notion.so/Git-1d986c2b05244f3197bfdfbb32d5bed4">课程Git使用帮助</a></p>
+<h1 id="git的结构">git的结构</h1>
+<figure data-type="image" tabindex="27"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-08-08_18.05.39.png" alt="add后就在Staging Area,commit后就进入Commits" loading="lazy"></figure>
+<p>add后就在Staging Area,commit后就进入Commits</p>
+<p>首先使用add后就会进入staging area,<br>
+然后我们commit就会创建一个commit,<br>
+同时注意我们有两个指针<br>
+HEAD:当前的文件内容<br>
+master:最近一个commit<br>
+如果两个不一样就会提示进去了HEAD和master分离</p>
+<aside>
+📌 由于part3~6的视频不可用,所以阅读[使用git](https://sp19.datastructur.es/materials/guides/using-git)作为替代,也许在[今年秋天](https://fa22.datastructur.es/)的课程里会再次可用,后面可以关注一下 October 1, 2022 
+果然现在 October 1, 2022 5:27 PM Git介绍视频的4~6视频又可以用了,明天有空还是看完吧~[链接](https://fa22.datastructur.es/materials/lab/lab04/)
+</aside>
+<p><a href="https://www.youtube.com/watch?v=ca1oCEMQGRQ">Git Intro - Part 4</a>、<a href="https://www.youtube.com/watch?v=dZbj9gjjYv8">Git Intro - Part 5</a> 介绍了多人合作情况下,commit的自动合并</p>
+<p>如果自动合并失败手动修改后再次commit就可以了</p>
+<p><a href="https://www.youtube.com/watch?v=r0oHi0vXhLE">Git Intro - Part 6</a>介绍了一个本地仓库多个远程仓库的情况</p>
+<blockquote>
+<p><a href="https://learngitbranching.js.org/?locale=zh_CN">Git学习游戏</a><br>
+<a href="https://wyag.thb.lt/">实现自己的Git</a>(非cs61b版)</p>
+</blockquote>
+<h1 id="一些设置">一些设置</h1>
+<h3 id="中英文切换">中英文切换</h3>
+<p><code>echo &quot;alias git='LANG=en_GB git'&quot; &gt;&gt; ~/.zshrc</code></p>
+<p>如果想要切回中文进入 <a href="https://so.csdn.net/so/search?q=vim&amp;spm=1001.2101.3001.7020">vim</a> .zshrc 文件中的环境变量配置删除即可</p>
+<h1 id="问题">问题</h1>
+<h2 id="头针分离-xcode不能push">头针分离 xCode不能push</h2>
+<figure data-type="image" tabindex="28"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-04_11.40.18.png" alt="截屏2022-12-04 11.40.18.png" loading="lazy"></figure>
+<h1 id="一些小问题">一些小问题</h1>
+<p>使用git pull 远程和本地不一样的commit应该自动使用merge,但我的却是让我制定哪一个</p>
+<p>所以用<code>git config --global --add pull.rebase/merge true</code>修改默认行为</p>
+<p>或者使用等命令</p>
+<p><code>git config pull.merge true</code> 使用merge</p>
+<p><code>git config pull.rebase true</code> 使用rebase</p>
+<p><code>git config pull.ff only</code>  # fast-forward only</p>
+<figure data-type="image" tabindex="29"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_13.37.47.png" alt="merge冲突的代码" loading="lazy"></figure>
+<p>merge冲突的代码</p>
+<figure data-type="image" tabindex="30"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-12-08_13.38.25.png" alt="merge冲突的提示
+修改后再次commit并push就能同步两边了" loading="lazy"></figure>
+<p>merge冲突的提示<br>
+修改后再次commit并push就能同步两边了</p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/TRY3MXPna/">
+                  <h3 class="post-title">
+                    杂七杂八的记录
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>
