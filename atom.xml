@@ -1,0 +1,1228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://nhuji.github.io</id>
+    <title>Huhu&apos;s blog</title>
+    <updated>2024-01-01T13:27:11.418Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://nhuji.github.io"/>
+    <link rel="self" href="https://nhuji.github.io/atom.xml"/>
+    <subtitle>It&apos;s me, huhu</subtitle>
+    <logo>https://nhuji.github.io/images/avatar.png</logo>
+    <icon>https://nhuji.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2024, Huhu&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Git 是如何进行版本控制的？]]></title>
+        <id>https://nhuji.github.io/post/jAzo5mUYN/</id>
+        <link href="https://nhuji.github.io/post/jAzo5mUYN/">
+        </link>
+        <updated>2024-01-01T13:07:19.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="你有想过-git-是怎么记录一个文件的不同版本的吗">你有想过 Git 是怎么记录一个文件的不同版本的吗</h2>
+<p>请只考虑它版本控制相关的基本功能（忽略协作、冲突解决，远程、分布式等特性），我们可以把 Git 的主要功能分为</p>
+<ol>
+<li><strong>提交（Commits）</strong>：保存文件的特定版本</li>
+<li><strong>分支（Branching）</strong>：创建和切换不同的开发分支</li>
+<li><strong>检出（Checkout）</strong>：切换到不同的提交或分支</li>
+<li><strong>合并（Merging）</strong>：合并不同分支的改动</li>
+</ol>
+<p>可以发现 Git 做的其实就是帮我们保存一份文件在记录下的不同的状态/版本，所以 <strong>Commit</strong> 命令就像是一个相机一样记录下文件当前的状态，然后我们可以通过 <strong>Checkout</strong> 命令来回到这份文件的不同的时期</p>
+<p>如果让我们来实现这样一个文件的不同版本的记录 我们会怎么做呢？</p>
+<p>我们很自然地就可以想到 那每次记录的时候，直接存一份变化后的文件就好了，事实上 Git 也是这么做的（你可能会觉得这样做的话，不是会存储同一个文件的 n 个只有细微差别的版本吗，我们接下来会说到这一点）</p>
+<p>Git 会把我们每一份文件存储为一个对应的 blob 对象（你可以简单的理解为 Git 每次都会存储完整的一个文件到它的库中。虽然格式和原始文件不一样），这样当我们需要某个 commit 里的这个文件，直接把这个 blob 再次拿出来就好了</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1704114559656.png" alt="" loading="lazy"></figure>
+<p>比如图中我们有 3 个文件，顶层目录（也就是最顶部的 tree ）有两个文件**<code>README</code>** 和 **<code>Rakefile</code><strong>它们各自对应一个 blob，而子目录 lib 里的</strong><code>simplegit.rb</code>**同样也对应一个 blob</p>
+<p>当我们把上图抽象一下它就像一个 commit，那么我们扩展一下把多个这样的结构联系起来就成了 多个 commit 组合成的 history，就像下图一样</p>
+<p>其中黄色部分就代表了之前的图，整个部分作为一个 commit，而 tree 依然是目录结构，而它拥有的文件指向了它们各自对应的 blob，也就是米色的部分</p>
+<p>他们左上角都标注了它们各自的 ID</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1704114573571.png" alt="" loading="lazy"></figure>
+<p>让我们来看看图中的例子</p>
+<p>第一次提交我们创建了第一版的 <strong>test.txt</strong> 文件，于是 Git 有了一个对应 ID 为83baae的 blob</p>
+<p>第二次提交我们修改了刚刚的 <strong>test.txt</strong> 文件，于是 Git 又另外保存了一个 1f7a7a 的 blob 来对应修改后的 <strong>test.txt</strong><br>
+所以现在我们的 Git 存储库里有了两个完整的 <strong>test.txt</strong> 来对应它不同 commit 时的状态<br>
+接着我们继续在第二次提交时新创建了一个 <strong>new.txt</strong> 文件，因此也多了一个 ID 为 fa49b0 的 blob 来存储这个新创建的文件</p>
+<p>在第三次提交开始前，我们可以发现我们的存储库里有了 3 个 blob 分别对应两个不同版本的<strong>test.txt</strong> 和一个版本的  <strong>new.txt</strong></p>
+<p>接着我们进行第三次提交，这次我们没有修改文件了，而是决定创建一个 bak 子目录，并且在里面放一份和第一次提交一样的 <strong>test.txt</strong> 文件作为备份（虽然有 Git 后完全不需要这样手动备份）由于这个备份目录里的 <strong>test.txt</strong> 文件和第一次提交时的<strong>test.txt</strong> 完全一样所以这次 Git 不会存储任何新的 blob 而是直接把 bak 目录指向第一次提交的 tree 就好了</p>
+<p>所以来做个小结，Git 给每次变化的文件都存储一个对应的完整内容的 blob ，并且如果这个文件没有变化或者哪怕在不同目录存着和之前一样的文件， Git 也不会存新的 blob，Git 通过这样的方式完成第一次的去重 （哪怕文件名但内容一样也不会存多个 blob）</p>
+<h2 id="git-怎么知道文件内容是否一样呢">Git 怎么知道文件内容是否一样呢？</h2>
+<p>在上面提到 Git 会给每个东西都标记一个 ID，比如 commit、tree、blob 等，这也是 Git 用来判断文件内容是否相同的手段，Git 使用了SHA-1（Secure Hash Algorithm 1）加密哈希函数，它可以将任意长度的数据输入转换成一个固定长度的输出，也就是说它可以把一个数据/文件转换成固定长度的数字，而这个数字就是 Git 给 blob 的 ID</p>
+<p>让我们来做个小实验</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/1704114763568.png" alt="" loading="lazy"></figure>
+<p>创建了两个不同 <strong><code>hello.txt</code></strong> 和 <strong><code>world.txt</code></strong> 的文件并且都写入完全一样的内容<br>
+然后通过**<code>git hash-object</code>**这个底层命令得到了 Git 计算的 ID</p>
+<p>可以看到哪怕文件名字完全不同但计算出的 ID 是一样的，同样的接下来我把一个文件的内容稍微修改添加了一个点，可以看到计算的的 ID 完全不同了</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/1704114842481.png" alt="" loading="lazy"></figure>
+<p>所以 Git 就是通过这样的手段识别内容相同的文件并存储 blob 后给于对应的ID作为引用，所以哪怕我们在一个仓库内把同一个文件放一百万份也只会存储一个 blob</p>
+<h2 id="那么多同一个文件的不同版本怎么避免冗余呢">那么多同一个文件的不同版本怎么避免冗余呢？</h2>
+<p>上面提到哪怕是同一个文件，只要有轻微的不同，哪怕一个字符不一样那么也会为它存一个 blob，所以虽然 Git 通过 ID 的计算对内容相同的文件进行去重，但依然会有同一个文件的 n 个不同版本的完整文件存储在库里的问题，如果这么做那么仓库会变得非常巨大，而且明显很不合理</p>
+<p>这个时候 Git 就会使用另一种手段，也就是 zlib 压缩和增量储存技术，你在提交等操作时 Git 都可能会执行<code>git gc</code> 命令，将blob 通过压缩后再把类似的 blob通过增量技术打包成一个 packfile 文件，Git 打包时，会查找命名及大小相近的文件，来达到只保留差异部分的效果，比如它会选择一个基础版本然后再把其他版本的差异存储下来放入 packfile 中。</p>
+<p>另外其实你也可以手动执行<code>git gc</code> 命令，特别你做了一堆文件更改并且想要推送到远程想要节省时间时。</p>
+<p>所以虽然我们会觉得每个 commit 可能是下面这样的结构，每个 commit 里分别包含当前所有文件的引用（同一个文件不同颜色代表不同的版本）</p>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/1704114869828.png" alt="" loading="lazy"></figure>
+<p>但实际上是这样的看起来比较混乱的，但其实内容一样的文件和目录只存一份的结构</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/1704114875406.png" alt="" loading="lazy"></figure>
+<h2 id="commit-的结构">Commit 的结构</h2>
+<p>说完了单个的文件是怎么存储的，接下来说说 commit 的组织</p>
+<p>首先我们可以发现抛开 Git 各种复杂的特性，它本质上遵循了函数式数据结构的思想，通过这样<strong>不可变</strong>的特性保证了我们修改的稳定，这也是为什么有人说 “Git 永远不会真正丢失任何东西”</p>
+<p>为什么说 Git 的本质可以被看作一种数据结构呢 ****, 可以参考一下<a href="https://web.archive.org/web/20160324100429/http://www.jayway.com/2013/03/03/git-is-a-purely-functional-data-structure/">《Git is a purely functional data structure》</a></p>
+<p>可以说每次 commit，哪怕我们是修改或者重写之前的 commit 其实都是在之前的基础上新增信息而不是修改原有的信息，这一点和函数式数据结构非常类似</p>
+<p>这篇文章里其实对Git 怎么进行 commit、rebase、merge 介绍的原理介绍得比较清楚了，所以下面就简单的说一说 commit 本身的结构</p>
+<p>一个 commit 可以分为下面几个部分：</p>
+<ul>
+<li><strong>父提交（Parent Commit）的引用</strong><br>
+也就是指向它前面的那一个提交的引用，非常类似于单链表</li>
+<li><strong>元数据</strong><br>
+也就是这条提交的作者是谁，时间是多久、提交的信息（也在就git commit -m 里的写的东西）等等</li>
+<li><strong>对文件的引用</strong><br>
+也就是之前提到的 blob，一个 commit 里会包含对所有文件对应的 blob 的引用</li>
+</ul>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/1704114907874.png" alt="" loading="lazy"></figure>
+<p>比如如图，每个 commit 都有关引用指向他们的父提交，而他们本身也有对文件 blob 的引用，比如在 commit 2 里新增了 <strong>World.txt</strong> 但是没有修改 <strong>Hello.txt</strong> 所以它依然指向 blob 1</p>
+<p>当然分支和 head 这样的指针其实也是有对对应的 commit 的引用的</p>
+<h2 id="git-是怎么管理这些文件的">Git 是怎么管理这些文件的</h2>
+<p>现在我们知道了 Git 怎么高效地保存一个文件的不同版本，commit 的结构是怎么样的，那么它又是怎么组织这些东西呢</p>
+<p>让我我们以这个简化后的图作为说明仓库的说明</p>
+<figure data-type="image" tabindex="8"><img src="https://nhuji.github.io/post-images/1704114918353.png" alt="" loading="lazy"></figure>
+<p>我们可以把仓库分为三个区域：<strong><strong>暂存区、提交、文件存放</strong></strong></p>
+<h3 id="暂存区"><strong>暂存区</strong></h3>
+<p>在 Git 中，暂存区（Staging Area）用于记录下一次 commit 将包含哪些内容</p>
+<p>我们可以将暂存区视为两部分：一部分是准备添加到下一次提交中的文件（Staged for addition），另一部分是标记为删除的文件（Staged for removal）</p>
+<p>当你执行 <strong><code>git add</code></strong> 命令时，你实际上是在告诉 Git 将更改添加到暂存区的添加区域</p>
+<p>比如下面我们 init 了仓库，然后创建了一个文件并 <strong><code>git add hello.txt</code></strong></p>
+<p>这时就能看到我们把这个文件存储了一个 blob（也就是放在了文件存放区），并且设置了一个引用到 Blob 0</p>
+<figure data-type="image" tabindex="9"><img src="https://nhuji.github.io/post-images/1704114930917.png" alt="" loading="lazy"></figure>
+<p>如果我们进行 commit 的话，暂存区的部分就会作为我们 commit 的信息</p>
+<p>所以这个时候我们 commit 仓库就得到了 commit 1，仓库也就变成了下面这样</p>
+<figure data-type="image" tabindex="10"><img src="https://nhuji.github.io/post-images/1704114943025.png" alt="" loading="lazy"></figure>
+<h3 id="提交">提交</h3>
+<p>这个部分能就记录了我们各个提交具体内容，和提交之间的关系，还包括 HEAD 和分支还有他们指针的信息</p>
+<h3 id="文件存放"><strong>文件存放</strong></h3>
+<p>Blob 是 Git 用来存储文件数据的对象。每当你创建或修改文件并将其添加到暂存区时，Git 会为文件内容创建一个新的 blob。Blob 对象与文件名无关，只与文件内容相关。这意味着如果两个文件内容相同，它们会共享同一个 blob，即使它们的文件名不同</p>
+<h2 id="结语">结语</h2>
+<p>通过上面介绍的 Git 保存不同文件的版本的方式，以及怎么压缩管理这些文件，怎么组织 commit，怎么对 commit 进行各种操作（在引用的那篇博客里有详细介绍）和 Git 仓库的结构，也许 Git 可能不再那么像一个黑盒了吧</p>
+<p>当然依然有很多内容没能展开，比如Git 仓库里的文件太多了后怎么快速获得呢，新的 commit 具体怎么链接之前的 commit、为什么说 Git 有纯函数式数据结构的特点等等</p>
+<p>其实根据上面的原理，利用比如 Java 的对象 序列化等 我们也能很轻松的做一个进行版本控制的命令行工具 因为我们现在知道 Git 的本质就是一个纯函数式的数据结构，所以也不需要复杂的更改逻辑，只要新增信息来达到修改的效果就好了，而它对文件的版本控制其实就是每个改动的文件都存一份完整的 blob 然后再压缩，并且也清楚仓库的大概结构，所以虽然真正的 Git 有各种无比复杂的功能，但核心其实和我们在做的任何程序都没有本质区别，也没那么复杂。</p>
+<h2 id="参考资料">参考资料</h2>
+<p>结构图：</p>
+<p><a href="https://git-scm.com/book/en/v2">https://git-scm.com/book/en/v2</a></p>
+<p>仓库图：</p>
+<p><a href="https://cdn-uploads.piazza.com/attach/k5eevxebzpj25b/jqr7jm9igtc7l5/k97ipfmgmb3n/Gitlet_Slides.pdf">https://cdn-uploads.piazza.com/attach/k5eevxebzpj25b/jqr7jm9igtc7l5/k97ipfmgmb3n/Gitlet_Slides.pdf</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[SF Symbols 的特性]]></title>
+        <id>https://nhuji.github.io/post/u3mWv20Qi/</id>
+        <link href="https://nhuji.github.io/post/u3mWv20Qi/">
+        </link>
+        <updated>2023-11-25T11:50:32.000Z</updated>
+        <content type="html"><![CDATA[<p>说到 SF Symbols 不知道大家有什么印象？</p>
+<p>我们可能觉得 SF Symbols 只是一个系统内置的图标库而已</p>
+<p>因为UI方面会提供我们开发需要的各种图标和符号，所以可能也没怎么接触它，但是它其实无处不在，从iPhone到Mac再到Apple Watch等，现在可以说你在使用苹果设备时无时无刻都能看到SF Symbols</p>
+<p>比如这个控制中心的页面，可以说从上到下全是SF Symbols</p>
+<p>从飞行模式，到音乐的切换按钮，再到亮度调节</p>
+<p>甚至手电筒图标的变化</p>
+<p><img src="https://nhuji.github.io/post-images/2023-11-21_at_11.57.55.png" alt="2023-11-21 at 11.57.55.png" loading="lazy"><br>
+甚至到收藏，切换英语时的图标变化动画等等都是SF的使用</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/wecom-temp-203328-94fe14f19c1f2895a75101c87213ce8f.jpg" alt="wecom-temp-203328-94fe14f19c1f2895a75101c87213ce8f.jpg" loading="lazy"></figure>
+<h2 id="问题">问题</h2>
+<p>让我们先从一个我以前遇到的问题和怎么用SF Symbol解决开始</p>
+<p>假如我们要做一个游戏的图鉴，其中一个武器有两个版本，区分了是否受到污染</p>
+<p>![Untitled](https://nhuji.github.io/post-images/Untitled 1.png)</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/Untitled%201.png" alt="Untitled" loading="lazy"></figure>
+<p>而游戏中用一个类似✨sparkles的标志，来表示武器没有被污染</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/2023-11-17_at_17.40.23.png" alt="2023-11-17 at 17.40.23.png" loading="lazy"></figure>
+<p>我想要在app的图鉴列表里模仿这种效果，那么一般怎么才能在SwiftUI做到？在其他技术里呢？</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/e7f9485c2ed5a76688e3db6b77de931b.png" alt="e7f9485c2ed5a76688e3db6b77de931b.png" loading="lazy"></figure>
+<p>可能最先想到的是直接在文字旁加一个视图</p>
+<p>一个HStack就解决了</p>
+<pre><code class="language-swift">HStack(spacing: 5) {
+    **Text(guideItem.name)**
+        .strokeText(color: colorScheme == .dark ? Color(hex: &quot;76b6ff&quot;).opacity(0.3) : .clear, lineWidth: 0.1)
+        .shadow(color: colorScheme == .dark ? Color(hex: &quot;A5CBF6&quot;).opacity(0.5) : .clear, radius: 4)
+        .font(UIDevice.current.userInterfaceIdiom == .phone ? .callout : .title3)
+        .foregroundColor(self.viewModel.getStatus(for: guideItem.id) ? Color.blue : Color.primary)
+
+    if guideItem.special != nil {
+        **Image(&quot;special&quot;)**
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 20, height: 20)
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/Untitled%202.png" alt="Untitled" loading="lazy"></figure>
+<p>这样不是不行，但在多行文字的时候很难看，并没有在文字的末尾跟随着换行</p>
+<p>而且由于图片的高度和文字不一致导致不同武器文字之间的基线也对不齐</p>
+<p>另外这个图片本身的颜色变化也和武器拥有的状态不匹配，我们可能又需要额外的对不同状态使用不同的图片</p>
+<hr>
+<p>接下来我们很自然就可能会想到把文字和图片组合<br>
+比如我们可以把图像转换为Text视图再和前面的文字Text视图组合</p>
+<pre><code class="language-swift">Text(LocalizedStringKey(guideItem.name), tableName: &quot;default&quot;)
++
+**Text(Image(&quot;special&quot;))**
+</code></pre>
+<p>这样可以并排并且换行了</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/Untitled%203.png" alt="Untitled" loading="lazy"></figure>
+<p>但是，这样做就会导致新的问题，首先是我们需要控制这个图片的宽高，并且由于要支持不同平台的设备（比如iPad）还需要设置不同的宽高，也许我们可以读取字号再计算，但这样很麻烦</p>
+<p>同时之前提到的根据武器拥有状态不同而要进行对应的图片颜色变化的问题依然需要解决</p>
+<p>而更重要的问题是这样做在需要换行的时候，组合视图总是倾向于把图片放到第二行</p>
+<p>虽然有点吹毛求疵，但目的主要是介绍SF Symbols 的特性，好像有一点萝卜坑的感觉，但我们继续解决吧</p>
+<hr>
+<p>我们按照游戏内的风格制作了一个<strong>自定义</strong>的SF Symbols，具体怎么制作后面再介绍</p>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/Untitled%204.png" alt="Untitled" loading="lazy"></figure>
+<p>总之我们有了这个符号，就可以开始在项目里使用了，由于SF Symbols拥有和文字一样的特性，可以方便的和文字一起使用，放入项目后直接<code>Image(&quot;special&quot;)</code>就可以用这个符号了，简单和文字组合就好了</p>
+<pre><code class="language-swift">HStack(spacing: 0) {
+    Text(guideItem.name)
+        + Text(guideItem.special != nil ? &quot;\u{00A0}&quot; : &quot;&quot;) // 和符号之间的空格
+        + Text(guideItem.special != nil ? **Image(&quot;special&quot;)** : Image(&quot;transparentPlaceholder&quot;)) 
+}
+.strokeText(color: colorScheme == .dark ? Color(hex: &quot;76b6ff&quot;).opacity(0.3) : .clear, lineWidth: 0.1)
+.shadow(color: colorScheme == .dark ? Color(hex: &quot;A5CBF6&quot;).opacity(0.5) : .clear, radius: 4)
+.font(UIDevice.current.userInterfaceIdiom == .phone ? .callout : .title3)
+.foregroundColor(self.viewModel.getStatus(for: guideItem.id) ? Color.blue : Color.primary)
+</code></pre>
+<figure data-type="image" tabindex="8"><img src="https://nhuji.github.io/post-images/Untitled%205.png" alt="Untitled" loading="lazy"></figure>
+<p>我们可以看到第一行即便加入了符号，这个武器的名字的基线和其他武器名也在一条线上</p>
+<p>而第二行在文字换行后符号也跟着换行了</p>
+<p>当然由于SF Symbols的“文字”的特性，我们也无需额外的处理，也能让它直接和文字一起在不同的拥有状态下变色了</p>
+<p>甚至如果有老年用户需要把字号调到无比巨大也没问题 （但老年用户应该不会玩游戏…吧？）</p>
+<figure data-type="image" tabindex="9"><img src="https://nhuji.github.io/post-images/Untitled%206.png" alt="Untitled" loading="lazy"></figure>
+<p>希望通过上面这个例子可以改变我们以前可能觉得SF Symbols就是一堆系统内置的图片的想法</p>
+<p>接下来让我正式开始介绍它有哪些特性以及怎么制作自定义的SF Symbols吧</p>
+<h1 id="sf-symbols-的特性">SF Symbols 的特性</h1>
+<p>SF 符号 （SF Symbols）提供了数千个风格一致且可配置性高的符号，这些符号可与 San Francisco 系统字体无缝整合且可自动适配所有粗细和字号的文本。可以在显示界面图标的任何地方，例如导航栏、工具栏、标签页栏、上下文菜单和文本中，使用符号来表达物体或概念。</p>
+<p>SF Symbols 设计上考虑了排版，包含不同的权重、尺度、轮廓和填充变体、封装形状和对齐等特性。</p>
+<p>从2019的iOS13发布起来已经进行了很多改变，下面大概是按照时间线介绍的，所以越后面的特性对系统版本的要求越高</p>
+<p>它很重要的一个特性就是可以被当做文字来处理，SF Symbols 是一套与文本协调的矢量符号库，符号可以缩放并与文本的粗细协调，支持自定义。</p>
+<p>比如放到文字里，它可以很好的与文本协调显示</p>
+<figure data-type="image" tabindex="10"><img src="https://nhuji.github.io/post-images/2023-11-14_at_15.57.36.png" alt="一条水平线" loading="lazy"></figure>
+<p>一条水平线</p>
+<p>在根据字体粗细大小变化时也不是简单的放大，描边而是有对应的变化和处理</p>
+<figure data-type="image" tabindex="11"><img src="https://nhuji.github.io/post-images/2023-11-14_at_15.58.54.png" alt="不同粗细表现都很好" loading="lazy"></figure>
+<p>不同粗细表现都很好</p>
+<figure data-type="image" tabindex="12"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.02.30.png" alt="所以无论字体大小如何都能很好的配合" loading="lazy"></figure>
+<p>所以无论字体大小如何都能很好的配合</p>
+<p>不需要我们手动进行图片大小的计算</p>
+<hr>
+<p>它还会自动对齐布局</p>
+<figure data-type="image" tabindex="13"><img src="https://nhuji.github.io/post-images/2023-11-14_at_15.57.53.png" alt="互相对齐" loading="lazy"></figure>
+<p>互相对齐</p>
+<h2 id="与文字对齐">与文字对齐</h2>
+<p>比如我们在做这样的一个列表时，我们希望无论怎么换行，图片始终和第一行对齐</p>
+<figure data-type="image" tabindex="14"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.27.21.png" alt="2023-11-14 at 16.27.21.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.27.55.png" alt="2023-11-14 at 16.27.55.png" loading="lazy"></figure>
+<p>在UIkit中也许我们会设定一些约束，而在SwiftUI中可能用Spacer()之类的东西把它顶到上面去</p>
+<p>而SF就很容易了，我们可以直接在IB里为它设置<code>baselineOffsetFromBottom</code>让它和第一行文字的基线对齐</p>
+<figure data-type="image" tabindex="16"><img src="https://nhuji.github.io/post-images/Untitled%207.png" alt="Untitled" loading="lazy"></figure>
+<p>在在 SwiftUI 中，可以这样做</p>
+<figure data-type="image" tabindex="17"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.35.49.png" alt="sf自带的基线" loading="lazy"></figure>
+<p>sf自带的基线</p>
+<p>不过如果是<strong>普通图片</strong>，UIKit中我们还是可以手动计算一下图片基线相关的值并将这个值传递给 <code>withBaselineOffsetFromBottom</code> 方法来创建一个新的 <code>UIImage</code> 实例来做到</p>
+<p>而在SwiftUI里也可以用类似的方式计算并和基线对齐</p>
+<figure data-type="image" tabindex="18"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.37.24.png" alt="需要手动指定" loading="lazy"></figure>
+<p>需要手动指定</p>
+<p>所以通过这种方式，即使不是SF符号也能解决这个对齐问题</p>
+<p>比如我们要把符号换成真是的头像，就可以用上面的方式做到</p>
+<figure data-type="image" tabindex="19"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.46.14.png" alt="2023-11-14 at 16.46.14.png" loading="lazy"></figure>
+<h2 id="与文字混合使用">与文字混合使用</h2>
+<p>所以SF Symbols的这种“文字”的特性让它可以很好的插入文本里</p>
+<figure data-type="image" tabindex="20"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.54.17.png" alt="UIKit" loading="lazy"></figure>
+<p>UIKit</p>
+<figure data-type="image" tabindex="21"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.55.08.png" alt="2023-11-14 at 16.55.08.png" loading="lazy"></figure>
+<hr>
+<p>要改变颜色也很轻松，不需要格式化作为模板什么的了</p>
+<figure data-type="image" tabindex="22"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.57.07.png" alt="UIKit" loading="lazy"></figure>
+<p>UIKit</p>
+<figure data-type="image" tabindex="23"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.56.31.png" alt="要加颜色也很简单" loading="lazy"></figure>
+<p>要加颜色也很简单</p>
+<p>通过配置和动态类型支持，符号可以自动适应不同的环境和内容大小</p>
+<h2 id="本地化">本地化</h2>
+<p>有很多本地化的字符，也会自动适应，无需在代码中指定本地化变体</p>
+<figure data-type="image" tabindex="24"><img src="https://nhuji.github.io/post-images/Untitled%208.png" alt="Untitled" loading="lazy"></figure>
+<h1 id="渲染模式">渲染模式</h1>
+<p>一般我们可能以为SF Symbols只支持单色，或者像文字那样被赋予颜色，但其实一个SF Symbols里也可以有多种颜色存在</p>
+<p>SF 符号 3 及更高版本提供了四种渲染模式：单色、分层、调色盘和多色</p>
+<p>比如在天气的组件里，就使用了<strong>多色</strong>的模式下的SF Symbols，这是预设的颜色，我们只需要指定他为Multicolor模式就好了</p>
+<figure data-type="image" tabindex="25"><img src="https://nhuji.github.io/post-images/2023-11-14_at_18.22.00.png" alt="2023-11-14 at 18.22.00.png" loading="lazy"></figure>
+<p>渲染模式有多重要呢？适当的颜色和层次选择可以给App带来很不一样的观感</p>
+<figure data-type="image" tabindex="26"><img src="https://nhuji.github.io/post-images/2023-11-15_at_10.31.44.png" alt="2023-11-15 at 10.31.44.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="27"><img src="https://nhuji.github.io/post-images/2023-11-15_at_10.31.53.png" alt="2023-11-15 at 10.31.53.png" loading="lazy"></figure>
+<p>接下来来介绍一下SF的四种渲染模式</p>
+<figure data-type="image" tabindex="28"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.48.37.png" alt="2023-11-16 at 17.48.37.png" loading="lazy"></figure>
+<h3 id="单色渲染模式monochrome">单色渲染模式（Monochrome）</h3>
+<figure data-type="image" tabindex="29"><img src="https://nhuji.github.io/post-images/Untitled%209.png" alt="Untitled" loading="lazy"></figure>
+<p>将一种颜色应用到符号中的所有层。符号中的路径以你指定的颜色渲染或者作为颜色填充路径中的透明形状</p>
+<p>反映 SF Symbols 的排版本质，颜色中性，适用于追求视觉统一性的场景（不会让某一个图标特别显眼）</p>
+<p>比如在这个长按的菜单里，我们不会想看到上面那样五颜六色的符号，而是和文字颜色统一的符号</p>
+<p>当统一性是首要考虑因素时，单色模式是理想选择</p>
+<p>另外它也支持不同的透明度设置</p>
+<figure data-type="image" tabindex="30"><img src="https://nhuji.github.io/post-images/2023-11-16_at_14.46.44.png" alt="2023-11-16 at 14.46.44.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="31"><img src="https://nhuji.github.io/post-images/2023-11-16_at_15.01.42.png" alt="2023-11-16 at 15.01.42.png" loading="lazy"></figure>
+<p>我们知道同一个系统色会在不同的模式下显示不同，SF同样也是这样</p>
+<h3 id="分层渲染模式hierarchical">分层渲染模式（Hierarchical）</h3>
+<figure data-type="image" tabindex="32"><img src="https://nhuji.github.io/post-images/Untitled%2010.png" alt="Untitled" loading="lazy"></figure>
+<p>将一种颜色应用到符号中的所有层，颜色的不透明度因每一层的分层级别而异</p>
+<p>同样和单色一样是一个色调，但是会使用不同不透明度创建视觉层次，让单一色调带动整体美感</p>
+<figure data-type="image" tabindex="33"><img src="https://nhuji.github.io/post-images/2023-11-15_at_10.58.37.png" alt="2023-11-15 at 10.58.37.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="34"><img src="https://nhuji.github.io/post-images/2023-11-15_at_10.33.39.png" alt="2023-11-15 at 10.33.39.png" loading="lazy"></figure>
+<p>这种效果的实现是因为在设计SF是就为它区分了不同的层次</p>
+<figure data-type="image" tabindex="35"><img src="https://nhuji.github.io/post-images/2023-11-15_at_10.56.01.png" alt="Tertiary只在少数情况下需要，比如下雨" loading="lazy"></figure>
+<p>Tertiary只在少数情况下需要，比如下雨</p>
+<p>当我们在分层模式下为SF设置颜色时，这个颜色会作为基色自动套用在不同层次</p>
+<figure data-type="image" tabindex="36"><img src="https://nhuji.github.io/post-images/2023-11-15_at_10.57.00.png" alt="2023-11-15 at 10.57.00.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="37"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.30.23.png" alt="使用方式" loading="lazy"></figure>
+<p>使用方式</p>
+<figure data-type="image" tabindex="38"><img src="https://nhuji.github.io/post-images/2023-11-16_at_18.33.35.png" alt="UIKit中使用配置来统一给图标设置" loading="lazy"></figure>
+<p>UIKit中使用配置来统一给图标设置</p>
+<p>这么做有什么用呢？</p>
+<p>可以用于强化界面中符号的可读性和辨识度。比如多个图标并排的情况下，重点就很重要了  这样可以减少视觉干扰（通过调整不透明度而非移除元素，减少视觉噪音）</p>
+<figure data-type="image" tabindex="39"><img src="https://nhuji.github.io/post-images/2023-11-15_at_10.54.41.png" alt="2023-11-15 at 10.54.41.png" loading="lazy"></figure>
+<h3 id="调色板渲染模式palette">调色板渲染模式（Palette）</h3>
+<figure data-type="image" tabindex="40"><img src="https://nhuji.github.io/post-images/Untitled%2011.png" alt="Untitled" loading="lazy"></figure>
+<p>将两种或更多种颜色应用到符号，每层使用一种颜色。为定义三个分层级别的符号仅指定两种颜色意味着第二层和第三层使用相同颜色</p>
+<p>这个模式呢就比较自由了，之前提到SF本身是被分配了不同的层次的</p>
+<p>在这个模式下我们可以手动的独立控制各个颜色</p>
+<figure data-type="image" tabindex="41"><img src="https://nhuji.github.io/post-images/2023-11-20_at_11.17.13.png" alt="2023-11-20 at 11.17.13.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="42"><img src="https://nhuji.github.io/post-images/2023-11-20_at_11.17.28.png" alt="2023-11-20 at 11.17.28.png" loading="lazy"></figure>
+<p>为什么要这么做呢？因为颜色可以标记功能组或区分不同功能的符号，你想要指定什么品牌色或者主题色的情况下也可以使用它</p>
+<p>另外这种模式下如果不指定第三层的颜色那么他会继承第二层的颜色</p>
+<figure data-type="image" tabindex="43"><img src="https://nhuji.github.io/post-images/2023-11-16_at_14.40.51.png" alt="2023-11-16 at 14.40.51.png" loading="lazy"></figure>
+<ul>
+<li>
+<p>控制符号各层的多种颜色，最多三种，支持自定义和材料样式。</p>
+<figure data-type="image" tabindex="44"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.32.32.png" alt="2023-11-16 at 17.32.32.png" loading="lazy"></figure>
+</li>
+<li>
+<p>甚至可以指定次要的颜色为模糊或者材料</p>
+<figure data-type="image" tabindex="45"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.33.14.png" alt="2023-11-16 at 17.33.14.png" loading="lazy"></figure>
+</li>
+<li>
+<p>可以。。但很少用的渐变覆盖</p>
+</li>
+</ul>
+<figure data-type="image" tabindex="46"><img src="https://nhuji.github.io/post-images/Untitled%2012.png" alt="Untitled" loading="lazy"></figure>
+<pre><code class="language-swift">Image(systemName: &quot;person.3.sequence.fill&quot;)
+    .symbolRenderingMode(.palette)
+    .foregroundStyle(
+        **.linearGradient**(colors: [.red, .black], startPoint: .top, endPoint: .bottomTrailing),
+        .linearGradient(colors: [.green, .black], startPoint: .top, endPoint: .bottomTrailing),
+        .linearGradient(colors: [.blue, .black], startPoint: .top, endPoint: .bottomTrailing)
+    )
+    .font(.system(size: 144))
+</code></pre>
+<p>调色盘模式允许你对SF符号进行各种复杂而准确的颜色指定</p>
+<h3 id="多色渲染模式multicolor">多色渲染模式（Multicolor）</h3>
+<figure data-type="image" tabindex="47"><img src="https://nhuji.github.io/post-images/Untitled%2013.png" alt="Untitled" loading="lazy"></figure>
+<p>为部分符号应用有内涵的颜色以增强含义。例如，<code>leaf</code> 符号使用绿色反映现实世界中树叶的外观，而 <code>trash.slash</code> 符号使用红色提示数据丢失。部分多色符号包括可接收其他颜色的层</p>
+<p>这种显示符号的固有或原生颜色，反映物理世界中的对象或将颜色与概念相关联。</p>
+<p>比如叶子应该是绿色的，硬盘的添加标注应该是绿色，移除标志应该是红色的，这些都是<strong>预设</strong>的</p>
+<figure data-type="image" tabindex="48"><img src="https://nhuji.github.io/post-images/2023-11-16_at_14.41.56.png" alt="2023-11-16 at 14.41.56.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="49"><img src="https://nhuji.github.io/post-images/2023-11-16_at_14.42.07.png" alt="2023-11-16 at 14.42.07.png" loading="lazy"></figure>
+<ul>
+<li>
+<p>支持全彩、部分彩和无多彩信息的单色渲染。</p>
+<figure data-type="image" tabindex="50"><img src="https://nhuji.github.io/post-images/2023-11-16_at_14.44.09.png" alt="比如只有全上色，多层，或者没有色彩时使用单色" loading="lazy"></figure>
+<p>比如只有全上色，多层，或者没有色彩时使用单色</p>
+<figure data-type="image" tabindex="51"><img src="https://nhuji.github.io/post-images/2023-11-16_at_14.45.26.png" alt="2023-11-16 at 14.45.26.png" loading="lazy"></figure>
+</li>
+</ul>
+<p>猜猜crt显示器蓝屏的图标叫什么？</p>
+<figure data-type="image" tabindex="52"><img src="https://nhuji.github.io/post-images/2023-11-20_at_10.54.36.png" alt="2023-11-20 at 10.54.36.png" loading="lazy"></figure>
+<p>另外符号现在具有<strong>首选渲染模式</strong>，可自动选择最能突出每个符号独特特性的渲染模式（根据符号的性质提供自动的首选渲染模式），渲染模式仍可以明确指定以确保统一外观</p>
+<h1 id="符号的多变">符号的多变</h1>
+<h2 id="符号变体">符号变体</h2>
+<p>说完几种渲染模式后，我们可以看到有很多类似的SF符号，它们很多时候都是一个符号的变体</p>
+<p>同一个SF符号有多种变体以适应不同使用场景，比如简单的house就可以有很多种不同类型的变体来适配各种使用场合</p>
+<figure data-type="image" tabindex="53"><img src="https://nhuji.github.io/post-images/2023-11-20_at_14.04.16.png" alt="2023-11-20 at 14.04.16.png" loading="lazy"></figure>
+<h2 id="自动适应">自动适应</h2>
+<p>而我们在不同的地方使用<code>[Label](https://developer.apple.com/documentation/swiftui/label)</code> 视图来结合标题和图标，它也会自动根据场景来决定显示的方式，并自动获得辅助功能支持 比如你如果放到下方的页面切换的栏里，它就会仔细选择fill的变体</p>
+<figure data-type="image" tabindex="54"><img src="https://nhuji.github.io/post-images/2023-11-16_at_16.46.21.png" alt="SwiftUI会根据情况自动决定怎么进行显示（你也可以进行指定）" loading="lazy"></figure>
+<p>SwiftUI会根据情况自动决定怎么进行显示（你也可以进行指定）</p>
+<ul>
+<li>
+<p>自定义符号通过改变初始化器在 <code>Image</code> 和 <code>Label</code> 中使用</p>
+<figure data-type="image" tabindex="55"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.02.39.png" alt="使用自定义符号的时候" loading="lazy"></figure>
+<p>使用自定义符号的时候</p>
+</li>
+<li>
+<p>符号在 <code>Text</code> 中通过字符串插值嵌入，与文本一起重排</p>
+<figure data-type="image" tabindex="56"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.07.21.png" alt="2023-11-16 at 17.07.21.png" loading="lazy"></figure>
+</li>
+</ul>
+<p>让我们再详细一点了解它的变体，比如在列表时我们默认会使用没有填充的版本</p>
+<figure data-type="image" tabindex="57"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.20.21.png" alt="2023-11-16 at 17.20.21.png" loading="lazy"></figure>
+<p>但也可以自己指定来获得fill的版本</p>
+<figure data-type="image" tabindex="58"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.20.24.png" alt="2023-11-16 at 17.20.24.png" loading="lazy"></figure>
+<h2 id="修改符号的表现">修改符号的表现</h2>
+<ul>
+<li>
+<p>之前说过可以通过<code>foregroundStyle</code> 修改符号颜色</p>
+<figure data-type="image" tabindex="59"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.12.59.png" alt="2023-11-16 at 17.12.59.png" loading="lazy"></figure>
+</li>
+<li>
+<p><code>font</code> 修改符号大小，文本样式会随动态类型改变 （可以看到符号大小和文字大小一起改变）</p>
+<figure data-type="image" tabindex="60"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.14.36.png" alt="2023-11-16 at 17.14.36.png" loading="lazy"></figure>
+</li>
+<li>
+<p>另外SF还有三种缩放来应对不同的使用场景（并不是单纯的等比放大，而是设计时就有考虑）<code>imageScale</code> 修改符号相对于文本的比例大小。（不改变文字的大小）</p>
+<figure data-type="image" tabindex="61"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.15.25.png" alt="2023-11-16 at 17.15.25.png" loading="lazy"></figure>
+</li>
+</ul>
+<h1 id="可变颜色特性variable-color">可变颜色特性（Variable Color）</h1>
+<p>这是一个比较新的特性，所以放到后面。</p>
+<p>无论使用何种渲染模式，SF 符号 4 都可通过可变颜色这种方式来表现可随时间而变化的特征，例如容量或强度。为了在视觉上体现这种变化，可变颜色会根据值到达 0%~100% 的不同阈值将颜色应用到符号的不同层</p>
+<p>我想最能感受到不同的地方应该是在分享屏幕时，无论是Mac还是iPhone，新版本的系统中分享屏幕时符号都会闪烁了。这就是可变颜色的使用</p>
+<figure data-type="image" tabindex="62"><img src="https://nhuji.github.io/post-images/2023-11-17_at_16.21.30.gif" alt="2023-11-17 at 16.21.30.gif" loading="lazy"></figure>
+<p>之前说过SF本身有分层，而现在这种分层也可以被用来制作变化的符号了</p>
+<figure data-type="image" tabindex="63"><img src="https://nhuji.github.io/post-images/2023-11-17_at_14.30.19.png" alt="2023-11-17 at 14.30.19.png" loading="lazy"></figure>
+<p>比如Wi-Fi，信号改变，加载等等</p>
+<figure data-type="image" tabindex="64"><img src="https://nhuji.github.io/post-images/2023-11-17_at_14.25.06.gif" alt="2023-11-17 at 14.25.06.gif" loading="lazy"></figure>
+<p>可变颜色允许突出表示不同强度级别或时间序列的路径</p>
+<p>比如这个音量符号，会随着百分比的改变调整外观</p>
+<figure data-type="image" tabindex="65"><img src="https://nhuji.github.io/post-images/2023-11-20_at_12.27.41.gif" alt="2023-11-20 at 12.27.41.gif" loading="lazy"></figure>
+<figure data-type="image" tabindex="66"><img src="https://nhuji.github.io/post-images/2023-11-20_at_12.27.21.png" alt="2023-11-20 at 12.27.21.png" loading="lazy"></figure>
+<p><strong>通过百分比值</strong>改变符号的外观，反映随时间变化的值</p>
+<figure data-type="image" tabindex="67"><img src="https://nhuji.github.io/post-images/2023-11-17_at_14.57.31.gif" alt="2023-11-17 at 14.57.31.gif" loading="lazy"></figure>
+<p>会均匀分配，对于不能平分的会四舍五入，然后从下一个百分百开始进入下个阶段</p>
+<p>变色适用于所有渲染模式，没有关于符号受影响部分数量的规则，也就是说可以加很多很多个变化的层，比如加载图标那样</p>
+<h1 id="动画">动画</h1>
+<p>在2022年可变色彩的基础上，今年的WWDC上推出了SF动画的预设 （SF 符号 5）</p>
+<ul>
+<li>提供多种可配置的动画预设，适用于所有规模和渲染模式的符号。</li>
+<li>动画通过分层进行，每层都能一次动画，使得符号的编排清晰准确。</li>
+<li>也可以选择让所有层同时动画。</li>
+<li>动画空间是指符号在应用运动时创造深度感的维度。不同的平面有不同的视觉效果，比如中间平面是参考点，前平面使符号看起来更大，后平面则相反。</li>
+</ul>
+<h2 id="动画库的不同预设">动画库的不同预设</h2>
+<ul>
+<li>
+<p><strong>出现（Appear）</strong>：符号渐渐进入视野时使用。</p>
+<figure data-type="image" tabindex="68"><img src="https://nhuji.github.io/post-images/2023-11-21_at_17.58.31.gif" alt="2023-11-21 at 17.58.31.gif" loading="lazy"></figure>
+</li>
+<li>
+<p><strong>消失（Disappear）</strong>：符号从界面中移除时使用。</p>
+<figure data-type="image" tabindex="69"><img src="https://nhuji.github.io/post-images/2023-11-21_at_17.59.15.gif" alt="2023-11-21 at 17.59.15.gif" loading="lazy"></figure>
+</li>
+<li>
+<p><strong>弹跳（Bounce）</strong>：模拟物体弹跳的动态效果，反馈交互成功或动作发生。<br>
+比如进行书签标记或者反馈亮度的调节</p>
+<figure data-type="image" tabindex="70"><img src="https://nhuji.github.io/post-images/2023-11-17_at_16.14.39.gif" alt="2023-11-17 at 16.14.39.gif" loading="lazy"></figure>
+</li>
+<li>
+<p><strong>缩放（Scale）</strong>：通过改变符号大小提供视觉反馈，强调符号重要性或确认交互。比如变小时表示被按下了，或者比如在iPad用鼠标操作时图像的变大表示被关注点<br>
+另外缩放还具有状态，只有取消时才会恢复</p>
+<figure data-type="image" tabindex="71"><img src="https://nhuji.github.io/post-images/2023-11-17_at_16.18.11.png" alt="弹跳和缩放的主要区别在于弹跳表示一个动作已经发生或者需要发生，而缩放可以在选择一个东西时提供焦点或反馈" loading="lazy"></figure>
+<p>弹跳和缩放的主要区别在于弹跳表示一个动作已经发生或者需要发生，而缩放可以在选择一个东西时提供焦点或反馈</p>
+</li>
+<li>
+<p><strong>脉冲（Pulse）</strong>：通过改变不透明度传达持续活动的状态，强化符号表达的概念。<br>
+比如新系统的随航就跟着变化了</p>
+<figure data-type="image" tabindex="72"><img src="https://nhuji.github.io/post-images/2023-11-17_at_16.21.30.gif" alt="2023-11-17 at 16.21.30.gif" loading="lazy"></figure>
+</li>
+<li>
+<p>可变颜色**（Variable Color）**：之前提到的可变颜色，今年也包含在动画库中了，现在有累积（Cumulative）和迭代（Iterative）两种表现形式，更加灵活了</p>
+<figure data-type="image" tabindex="73"><img src="https://nhuji.github.io/post-images/2023-11-17_at_16.23.23.gif" alt="2023-11-17 at 16.23.23.gif" loading="lazy"></figure>
+<p>比如开启Wi-Fi时用累积，寻找Wi-Fi时用迭代</p>
+<figure data-type="image" tabindex="74"><img src="https://nhuji.github.io/post-images/2023-11-17_at_16.25.50.gif" alt="2023-11-17 at 16.25.50.gif" loading="lazy"></figure>
+</li>
+<li>
+<p><strong>替换（Replace）</strong>：符号状态变化时，一个符号替换另一个，传达符号状态变化。<br>
+至于变成什么符号可以自己指定，也可以分层或整个变化</p>
+<figure data-type="image" tabindex="75"><img src="https://nhuji.github.io/post-images/2023-11-17_at_16.29.13.gif" alt="2023-11-17 at 16.29.13.gif" loading="lazy"></figure>
+<p>比如音乐播放按钮就可以使用它，或者在选择文字时键盘的变化</p>
+<figure data-type="image" tabindex="76"><img src="https://nhuji.github.io/post-images/2023-11-17_at_16.34.47.gif" alt="2023-11-17 at 16.34.47.gif" loading="lazy"></figure>
+</li>
+</ul>
+<h1 id="接下来的发展">接下来的发展？</h1>
+<p><strong>SF Symbols</strong>推出以来从数量增加（现在已经有5000+个了），到多种渲染模式提供更加多彩的表达再到可变颜色和预设动画，越来越灵活了，让我们可以方便的对它调用和修改出不同的表现 用在不同的场景</p>
+<p>在 iOS 的17.2 Beta 3里，这种灵动的趋势被进一步发展了</p>
+<p>和刚刚介绍的简单的那些动画效果不一样，这一版beta里闹钟符号的动画更加灵动了甚至有点动态模糊的效果，和真实的闹钟非常相似</p>
+<p>而系统里切换歌曲的SF也有着不一样的动画表现</p>
+<p>也许明年WWDC我们就能看到更多符号拥有更复杂的预设动画，甚至我们也可能自定义出如此灵动动画的SF了</p>
+<h1 id="总结">总结</h1>
+<p>现在回过头来看在苹果各种不同系统和各种应用上我们都能看到SF的大量使用，为用户提供了一种一致性和多变而灵活的体验，更重要的是作为开发者，我们也可以通过创建自己的SF符号使用各种特性来让我们开发的App也能轻松获得更好的符号表现</p>
+<figure data-type="image" tabindex="77"><img src="https://nhuji.github.io/post-images/2023-11-21_at_12.05.00.png" alt="2023-11-21 at 12.05.00.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="78"><img src="https://nhuji.github.io/post-images/incoming-32907C84-4CDF-4097-919D-B34CFE4140D5.png" alt="incoming-32907C84-4CDF-4097-919D-B34CFE4140D5.PNG" loading="lazy"></figure>
+<figure data-type="image" tabindex="79"><img src="https://nhuji.github.io/post-images/2023-11-22_at_10.10.54.gif" alt="2023-11-22 at 10.10.54.gif" loading="lazy"></figure>
+<p>最后再吐槽一下，这么多图片后面发乐享时会累死吧？😂</p>
+<h1 id="demo">Demo</h1>
+<p>一个简单的SwiftUI的SF符号使用展示</p>
+<p>展示了各种渲染模式和文字组合、Label的使用等，其中调色盘模式的SF<br>
+符号颜色是随机的</p>
+<figure data-type="image" tabindex="80"><img src="https://nhuji.github.io/post-images/2023-11-22_at_10.24.11.gif" alt="2023-11-22 at 10.24.11.gif" loading="lazy"></figure>
+<h1 id="资料">资料</h1>
+<p>如果想进一步深入，以下是官方相关的资料</p>
+<ul>
+<li><a href="https://developer.apple.com/sf-symbols/">官网</a></li>
+<li><a href="https://developer.apple.com/cn/design/human-interface-guidelines/sf-symbols">《人机界面指南》- SF 符号</a></li>
+</ul>
+<p><strong>WWDC：</strong></p>
+<ul>
+<li><a href="https://developer.apple.com/videos/all-videos/?q=SF%20sy#:~:text=Introducing%20SF%20Symbols">Introducing SF Symbols</a></li>
+<li><a href="https://developer.apple.com/videos/play/wwdc2020/10207/">SF Symbols 2</a></li>
+<li><a href="https://developer.apple.com/videos/play/wwdc2021/10097/">What’s new in SF Symbols</a></li>
+<li><a href="https://developer.apple.com/videos/play/wwdc2021/10349/">SF Symbols in SwiftUI</a></li>
+<li><a href="https://developer.apple.com/videos/all-videos/?q=SF%20sy#:~:text=SF%20Symbols%20in%20UIKit%20and%20AppKit">SF Symbols in UIKit and AppKit</a></li>
+<li><a href="https://developer.apple.com/videos/play/wwdc2021/10250/">Create custom symbols</a></li>
+<li><a href="https://developer.apple.com/videos/all-videos/?q=SF%20sy#:~:text=What%27s%20new%20in%20SF%20Symbols%204">What's new in SF Symbols 4</a></li>
+<li><a href="https://developer.apple.com/videos/all-videos/?q=SF%20sy#:~:text=Adopt%20Variable%20Color%20in%20SF%20Symbols">Adopt Variable Color in SF Symbols</a></li>
+<li><a href="https://developer.apple.com/videos/all-videos/?q=SF%20sy#:~:text=What%E2%80%99s%20new%20in%20SF%20Symbols%205">What’s new in SF Symbols 5</a></li>
+<li><a href="https://developer.apple.com/videos/play/wwdc2023/10257/">Create animated symbols</a></li>
+</ul>
+<p><strong>文档：</strong></p>
+<ul>
+<li><a href="https://developer.apple.com/documentation/symbols/">Symbols</a></li>
+<li><a href="https://developer.apple.com/documentation/uikit/uiimage/creating_custom_symbol_images_for_your_app">Creating custom symbol images for your app</a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[在 Swift 中生成随机值的方法]]></title>
+        <id>https://nhuji.github.io/post/os9fDSyme/</id>
+        <link href="https://nhuji.github.io/post/os9fDSyme/">
+        </link>
+        <updated>2023-10-02T10:38:35.000Z</updated>
+        <content type="html"><![CDATA[<p>我的笔记里有不少感觉可以分享出来的东西,所以后面也会发点类似这个文章,虽然都比较简单,算是记录和分享一下吧<br>
+<strong>1. 使用 <code>randomElement()</code></strong><br>
+这种比较简洁也不需要计算索引,不过可能会返回空集合<br>
+也可以使用guard let 但通常用于提前退出方法或者函数,可以减少嵌套，使代码更加清晰</p>
+<pre><code class="language-swift">if let randomPlay = Play.allCases.randomElement() {
+		// 使用 randomPlay
+    print(&quot;Random play: \(randomPlay)&quot;)
+} else {
+    // 集合为空的情况,因为在Play为空时会返回nil
+}
+// 也可以不用if强制解包
+let randomPlay = Play.allCases.randomElement()!
+</code></pre>
+<p><strong>2. 使用 <code>Int.random(in:)</code> 生成随机索引</strong><br>
+简洁易读,比较不错的实现方式</p>
+<pre><code class="language-swift">let allOptions = Play.allCases
+let randomIndex = **Int.random(in: 0..&lt;allOptions.count)**
+let randomPlay = allOptions[randomIndex]
+print(&quot;Random play: \(randomPlay)&quot;)
+</code></pre>
+<p>类似的还有Float.random(in:),Double.random(in:),Bool.random()等</p>
+<p><strong>3. 使用 <code>RandomNumberGenerator</code></strong><br>
+提供了更多的灵活性，可以使用不同的随机数生成器。<br>
+适合需要更高级随机数生成需求的场景</p>
+<pre><code class="language-swift">var rng = SystemRandomNumberGenerator()
+let allOptions = Play.allCases
+let randomIndex = Int(rng.next(upperBound: UInt(allOptions.count)))
+let randomPlay = allOptions[randomIndex]
+print(&quot;Random play: \(randomPlay)&quot;)
+</code></pre>
+<p><strong><code>RandomNumberGenerator</code></strong> 是 Swift 中用于生成随机数的协议。<strong><code>SystemRandomNumberGenerator</code></strong>(系统自带的唯一一个) 是遵循该协议的一个类型，它使用系统的随机数生成器来生成随机数,也可以使用其他随机数生成器</p>
+<p>由于<strong>灵活性</strong>,我们可以创建比如”更容易出石头的随机器”<br>
+比如这个70%的概率出石头的生成器</p>
+<pre><code class="language-swift">struct BiasedRandomNumberGenerator: RandomNumberGenerator {
+    func next() -&gt; UInt64 {
+        // 生成一个 0 到 9 的随机数
+        let randomValue = arc4random_uniform(10)
+        
+        // 70% 的概率返回 0（表示“石头”）
+        if randomValue &lt; 7 {
+            return 0
+        } else if randomValue &lt; 9 {
+            return 1
+        } else {
+            return 2
+        }
+    }
+}
+
+let biasedRNG = **BiasedRandomNumberGenerator()**
+let allOptions = Play.allCases
+let randomIndex = Int(biasedRNG.next() % UInt64(allOptions.count))
+let randomPlay = allOptions[randomIndex]
+print(&quot;Biased random play: \(randomPlay)&quot;)
+</code></pre>
+<p>或则我们可以做线性同余生成器（Linear Congruential Generator，LCG）来提供一个种子值来初始化这个生成器，以获得可重现的随机序列(提供一个种子获得可重复的结果)<br>
+这种伪随机数适用于需要可重现随机序列的场景，例如模拟、测试或游戏开发中的过程生成</p>
+<pre><code class="language-swift">struct LinearCongruentialGenerator: RandomNumberGenerator {
+    private var state: UInt64
+    
+    init(seed: UInt64) {
+        self.state = seed
+    }
+    
+    mutating func next() -&gt; UInt64 {
+        state = 6364136223846793005 &amp;* state &amp;+ 1
+        return state
+    }
+}
+
+var lcg = LinearCongruentialGenerator(**seed**: 12345)
+let randomValue = lcg.next()
+</code></pre>
+<p><strong>4. 使用 <code>arc4random_uniform()</code></strong><br>
+如果要支持早期iOS的话可以用它</p>
+<pre><code class="language-swift">let allOptions = Play.allCases
+let randomIndex = **Int(arc4random_uniform(UInt32(allOptions.count)))**
+let randomPlay = allOptions[randomIndex]
+print(&quot;Random play: \(randomPlay)&quot;)
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[SwiftUI: 将图案符号和文字结合]]></title>
+        <id>https://nhuji.github.io/post/zfA2gNJwf/</id>
+        <link href="https://nhuji.github.io/post/zfA2gNJwf/">
+        </link>
+        <updated>2023-08-08T07:43:11.000Z</updated>
+        <content type="html"><![CDATA[<p>在尝试给武器添加区分新旧的Sparkles图标图标时发现简单的在文字后添加图案会非常不和谐,比如像这样:</p>
+<div  style="height: 350px;" >
+    <img src="/post-images/1691487633138.png" style="display: block; height: 300px; margin: 20px auto;">
+</div>
+  <pre><code class="language-swift" >
+ HStack(spacing: 5) {
+    Text(guideItem.name)
+        .strokeText(color: colorScheme == .dark ? Color(hex: "76b6ff").opacity(0.3) : .clear, lineWidth: 0.1)
+        .shadow(color: colorScheme == .dark ? Color(hex: "A5CBF6").opacity(0.5) : .clear, radius: 4)
+        .font(UIDevice.current.userInterfaceIdiom == .phone ? .callout : .title3)
+        .foregroundColor(self.viewModel.getStatus(for: guideItem.id) ? Color.blue : Color.primary)
+
+    if guideItem.special != nil {
+        Image("special")
+            .resizable()
+            .renderingMode(.template)
+            .aspectRatio(contentMode: .fit)
+            .foregroundColor(.primary)
+            .frame(width: 20, height: 20)
+    }
+}
+</code></pre>
+<p>可以看到这样的话文字和图案被HStack分成了两块,并且有种对齐的感觉,导致了和其他item视觉上的不平衡</p>
+<p>虽然可以直接用类似下面这样转image为text再相加的方法,但图像大小和颜色都需要预先调整并且难以随着字体大小变化和适配不同屏幕大小的设备</p>
+<div  style="height: 350px;" >
+    <img src="/post-images/1691488771686.png" style="display: block; height: 300px; margin: 20px auto;">
+</div>
+  <pre><code class="language-swift" >
+    Text(LocalizedStringKey((guideItem.method != nil ? "item." : "") + guideItem.name), tableName: "Aeon")
+    +
+    Text(Image("special"))
+</code></pre>
+<p>要想把图片单纯的作为符号加入文字可以用两种方式作为字体和使用Symbol Image的方法把svg变成&quot;符号&quot;,我们使用第二种,可以参考下面的文档<br>
+<a href="https://developer.apple.com/cn/documentation/xcode/creating_custom_symbol_images_for_your_app/">为你的 App 创建自定符号图像</a><br>
+获得自定符号模板后在矢量绘图软件将需要的图案编辑并验证再导入Xcode作为<strong>Symbol Image Set</strong>使用</p>
+<div  style="height: 150px;" >
+    <img src="/post-images/1691488975224.png" style="display: block; width: 400px; margin: 20px auto;">
+</div>
+<p>之后就比较简单了,可以直接用Image(&quot;special&quot;) 使用添加的符号,注意一下细节就好了<br>
+比如在符号和文字之间添加空格个,但不要直接用&quot; &quot;这样的空格,不然很容易导致符号在字符比较长的时候符号换行到首尾,一个使用非换行空格避免符号<br>
+然后对于符号是否出现的判断也使用了'''guideItem.special != nil ? Image(&quot;special&quot;) : Image(&quot;transparentPlaceholder&quot;)'''这样的判断,因为不能直接用Text(&quot;&quot;)这样的文字和Image运算,也不能在里面对图片添加各种效果,所以使用了transparentPlaceholder这样1x1大小的透明图片作为替代</p>
+<pre><code class="language-swift" >
+    HStack(spacing: 0) {
+        Text(guideItem.name)
+            + Text(guideItem.special != nil ? "\u{00A0}" : "") 
+            + Text(guideItem.special != nil ? Image("special") : Image("transparentPlaceholder")) 
+    }
+    .strokeText(color: colorScheme == .dark ? Color(hex: "76b6ff").opacity(0.3) : .clear, lineWidth: 0.1)
+    .shadow(color: colorScheme == .dark ? Color(hex: "A5CBF6").opacity(0.5) : .clear, radius: 4)
+    .font(UIDevice.current.userInterfaceIdiom == .phone ? .callout : .title3)
+    .foregroundColor(self.viewModel.getStatus(for: guideItem.id) ? Color.blue : Color.primary)
+</code></pre>
+<p>总之最后获得和文字适配同一个颜色的符号,并且需要的时候始终出现在文字最后无论是否换行,</p>
+<div  style="height: 350px;" >
+    <img src="/post-images/1691490252897.png" style="display: block; height: 300px; margin: 20px auto;">
+</div>
+并且会始终和文字保持一个字号和颜色,哪怕文字大小有变化也能完美适配,哪怕字号夸张到下面这样:
+<div  style="height: 400px;" >
+    <img src="/post-images/1691490479460.png" style="display: block; height: 400px; margin: 20px auto;">
+</div>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[终于完成了我的第一个iOS App! 塞尔达传说王国之泪的攻略]]></title>
+        <id>https://nhuji.github.io/post/-9p5lrfb4/</id>
+        <link href="https://nhuji.github.io/post/-9p5lrfb4/">
+        </link>
+        <updated>2023-07-31T09:28:41.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="动森的小程序">动森的小程序</h1>
+<p>说这个app之前先谈谈以前的经历吧<br>
+很早之前就一直想做塞尔达传说相关的app,上一次做这种东西还是疫情时的动森图鉴的小程序<br>
+应该是2020年初因为疫情被关在家里,那会动森也快发布了,非常喜欢这个系列然后又因为隔离没事干(还记得那时候因为任天堂迟迟不开直面会以为他们对这游戏没什么期望2333,没想到后面国内居然爆火了,被封禁就是另外一回事了)</p>
+<p>就开始做动森的小程序,作为一个基本上算是展示一些列表的小程序技术上并没多难,服务器也直接用了云开发,所以很多时间都花在了UI和数据整理上,刚好那时候也认识了做过之前3DS版动森的民间汉化的螳螂虾,他也打算做个集合森的表格,在数据收集方面真的是轻松了不少(但也有整理数据到凌晨3点的时候...)然后还被秘书子拉着一起去做了<a href="https://wiki.biligame.com/dongsen">动森的bwiki</a>(也就是设计了下界面,数据整理,制作banner,做了些管理之类的工作)</p>
+<p>总之算是奇迹?在他们的帮助下,成功的在游戏发售的当天推出了小程序得到了不少的关注!<br>
+当然发售后也更新了不少数据,特别是之后两三年,每次动森更新的时候我都要自己整理更新的数据以至于后面听到更新就害怕😂<br>
+<img src="https://nhuji.github.io/post-images/1690796519165.png" alt="" loading="lazy"><br>
+总之一方面确实做得还行,另一方面做得很早(毕竟同步发售日确实很难哈哈哈)<br>
+最后一共有三十多万人用过!算是新手的好运吗?到现在每天还有两三百的访问和几十的新增用户,当然如果还是那么多人使用我应该付不起涨价后的云开发费用(现在大概是一个月开屏广告收入10块而服务器要50块左右)</p>
+<h1 id="为什么要做王泪的ios攻略app">为什么要做王泪的iOS攻略App</h1>
+<p>然后到了今年,我一直想要做个iOS App不过一直没下手(太懒了),而我也算是塞尔达传说系列死忠吧,还记得小时候一次玩风之棍时后的就爱上了这个系列,不过非要说最喜欢的系列....还是马力欧吧,毕竟有银河1&amp;2这种游戏...扯远了</p>
+<p>至于为什么不接着做微信小程序,一方面是试试新的技术(特别是iOS),另一方面就是微信真的恶心,因为恶意举报被下架过几次,然后就要浪费时间去申诉,而且对个人开发者的限制也很大.另一方面呢就是云开发的翻倍的涨价也让我不可能再能负担起一个像&quot;游戏地图&quot;这样需要大量图片的小程序,当然最重要一点的是在上面做一个地图的体验肯定不会太好,这也是我没有选择做一个网站或者在app内内置网页的原因,leaflet的使用体验真的不怎么好,这个时候可以免费支持云同步和存数据在本地不需要服务器,体验还不错的iOS App就可以说是最佳选择了,虽然一年99刀的开发者费用也不便宜,但至少预期可控嘛</p>
+<p>我知道在旷野之息的爆火后,做这种地图或者攻略的肯定少不了,我不指望能重复动森的成功,也没有精力去做什么攻略来竞争,并且我也不想因为开发这种东西就失去了对游戏本身的第一次纯粹的体验(本本子因为做游戏媒体就不得不一边玩一边写攻略,好惨)</p>
+<p>事实证明王泪确实非常好,虽然游戏框架基本没啥变化,而空岛做得比较一般,地下的探索引导也不够好,立体的地图让原本的三角法则设计的地图失效而地图本身地形改变不大等,但还是很好玩,毕竟在旧的已经做得很好的东西上要做出新意真的不容易,也有很多老塞尔达的元素和味道,比如炸弹花什么的<br>
+所以在我算是比较快的第一次通关王国之泪后,大概是5月末吧,才开始着手开发这个app,当然那个时候已经有一大堆同类的互动地图之类的,所以我就更不急了😜不过最后需要的时间还是超出了我的预期,最后花了两个多月才弄出觉得可以发布了的版本</p>
+<h1 id="开发过程和想法">开发过程和想法</h1>
+<p>这次做这个有很多第一次,第一次做iOS App, 做地图, 做云同步数据, 做多语言的本地化等等,总之对我自己算是比较大的挑战吧</p>
+<p>首先就是要选地图用什么技术,考虑很多之后打算用mapkit,毕竟原生体验比较好,搜了一下也能满足我大部分的需求,不过它必须基于现实地图,所以我想起了野炊纪录片里开发者说他们通过京都来感知海拉鲁地点之间的距离,于是我就把App的地面地图也基于在了京都(也就是现在的游戏地面地图实际是覆盖在京都上的!)<br>
+我提取了最简单的呀哈哈位置转换成现实的位置,尝试加载在了地图上,效果还不错<br>
+<img src="https://nhuji.github.io/post-images/1690798647238.png" alt="" loading="lazy"><br>
+然后后面就是进行各种定制了,在地图上我想应该花了超过一半的开发时间</p>
+<p>大概做了这些工作:<br>
+SwiftUI的图形标注性能太差所以UIkit的方式实现,对callout进行定制现在更多信息和功能,提取游戏的地图图片并基于现实位置转换成mapikit需要的瓦片地图,地图切换,标注的筛选,标注的icon显示和点击改变的效果,根据分类和状态过滤显示的标注,怎么加载和删除标注,接收云同步的数据后更新标注,详情页,标注功能,显示和游戏内风格类似的地名并且根据缩放改变等等....<br>
+总之真的是做了非常非常多的工作才让它算是以比较理想的方式工作</p>
+<p>然后图鉴部分也算是遭受了一些折磨吧,一开始头铁非要做一个可以自动识别位置的一整个的列表,但SwiftUI在这方面表现真的很差,差不多改了一周发现完全行不通放弃了,然后那会今年的WWDC也刚好宣布了对滚动列表的更新支持位置识别和滚动什么的,不用自己费力监测了,看到的时候总感觉有种白干了很久的感觉<br>
+<img src="https://nhuji.github.io/post-images/1690799721584.gif" alt="" loading="lazy"><br>
+在把切换分类的栏换了好几个位置和尽量改动让UI符合游戏风格后,总算也比较满意的完成了图鉴的列表,真的要吐槽swiftUI真的太多问题了!<br>
+<img src="https://nhuji.github.io/post-images/1690801106551.png" alt="" loading="lazy"></p>
+<p>这两个月的几乎所有空闲时间被填满: 做各种功能,收集整理数据,优化性能,弄UI(包括iPad适配,light和dark模式),云同步合并和更新逻辑,搜索,详情页,本地化后等等的140多个commit后终于算是完成基本可用的版本后发布了!</p>
+<p>说起来这次也算我第一次自己解包来收集各种数据,比如地图的地点,游戏图片什么的等等,但真的太困难了,特别是还要一边开发一边做这种东西的时候,只能放弃什么都自己做这个不可行的想法,不然可能到年末都还没做好.纠结了半天鼓起勇气去问了Aeon,还好他人真的非常非常好,同意让我使用他为他<a href="https://totk-map.aeonsake.com/">自己的地图</a>准备的数据,不然我可能就只能继续死磕数据挖掘或者找其他来源了.说起来我一直觉得自己不怎么聪明,特别是和他这样的人比较时😂希望我下次再做什么东西时能自己挖掘数据吧.</p>
+<p>另外这次GPT4也帮了我不少忙,比如我的本地化,上架时随便写的介绍,介绍一些我没做过的功能,数据处理等方面,虽然靠他写程序是不太可能不过感觉还是离不开了哈哈哈,这大半年之所以这么AI狂热也是因为真的能感受到技术发展带来的变化</p>
+<p>虽然现在上架了但后面还是有很多需要优化和添加的功能,比如这两天开始尝试写烹饪的计算器,但那么多规则要注意,做出来肯定也要很久,然后地图标记了的点数量统计也还没做,还有很多东西没图标,估计的自己画才行,另外UI上感觉也还需要很多优化才行,我还算蛮注重审美,但在大量代码需要写的情况下,这个App的UI并没有太多时间去考虑,现在只算差强人意吧,另外还有很多数据得靠我自己整理添加等<br>
+PS: 这也是为什么我的上两个博客是什么奇怪的隐私政策和技术支持,是因为App Store必须要开发者提供这两个的网页链接2333</p>
+<p>这一切也不用急,毕竟说实话这个App更像是我自我满足的产物,很多东西可能只是为了符合自己的要求,而且在游戏发布快3个月后,同类攻略的网站,APP如此多的情况下也不太可能有多少用户,所以打算慢慢朝着理想的方面改进(当然,也不是说如果有用户提出建议也不重要的意思),所以很多改进估计会慢慢来而不是像过去两个月那样一直在做,很累人哈哈哈</p>
+<p>总之,非常高兴能终于做了这一个想做了很久的App,能上架我还蛮激动的,希望以后也能继续做各种东西(不限于攻略或者App),而不是再过三年才开始想做另一个玩意.</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[TOTK Companion Privacy Policy]]></title>
+        <id>https://nhuji.github.io/post/WcZ_G4l0X/</id>
+        <link href="https://nhuji.github.io/post/WcZ_G4l0X/">
+        </link>
+        <updated>2023-07-28T17:48:44.000Z</updated>
+        <content type="html"><![CDATA[<p>English:</p>
+<p>Privacy Policy</p>
+<p>This privacy policy is designed to help you understand how we handle any personal information that is associated with you.</p>
+<p>Information We Collect<br>
+Our app, TOTK Companion, does not collect or store any of your personal information. We respect your personal privacy rights and have designed our app to function without the need to collect any of your personal information.</p>
+<p>iCloud<br>
+TOTK Companion uses iCloud for data synchronization. This means that all your data is stored in your personal iCloud account, not on our servers. We do not have access to this information.</p>
+<p>Third-Party Service Providers<br>
+Our app does not include any third-party tracking or data collection services.</p>
+<p>Data Protection<br>
+We have taken appropriate security measures to protect your personal information from loss, misuse, unauthorized access, disclosure, alteration, or destruction.</p>
+<p>Changes to This Privacy Policy<br>
+We may update our Privacy Policy from time to time. We recommend you review this page periodically for any changes.</p>
+<p>Contact Us<br>
+If you have any questions about our privacy policy, please contact us by email at hujinfinite@gmail.com.</p>
+<p>Deutsch:</p>
+<p>Datenschutz-Bestimmungen</p>
+<p>Diese Datenschutzrichtlinie soll Ihnen helfen zu verstehen, wie wir mit personenbezogenen Daten umgehen, die mit Ihnen in Verbindung stehen.</p>
+<p>Informationen, die wir sammeln<br>
+Unsere App, TOTK Companion, sammelt oder speichert keine Ihrer persönlichen Informationen. Wir respektieren Ihre persönlichen Datenschutzrechte und haben unsere App so gestaltet, dass sie ohne die Erfassung Ihrer persönlichen Daten funktioniert.</p>
+<p>iCloud<br>
+TOTK Companion verwendet iCloud zur Datensynchronisation. Das bedeutet, dass alle Ihre Daten in Ihrem persönlichen iCloud-Konto und nicht auf unseren Servern gespeichert werden. Wir haben keinen Zugriff auf diese Informationen.</p>
+<p>Drittanbieter-Dienstleister<br>
+Unsere App enthält keine Dienste von Drittanbietern zur Nachverfolgung oder Datenerfassung.</p>
+<p>Datenschutz<br>
+Wir haben angemessene Sicherheitsmaßnahmen ergriffen, um Ihre persönlichen Daten vor Verlust, Missbrauch, unbefugtem Zugriff, Offenlegung, Veränderung oder Zerstörung zu schützen.</p>
+<p>Änderungen dieser Datenschutzrichtlinie<br>
+Wir können unsere Datenschutzrichtlinie von Zeit zu Zeit aktualisieren. Wir empfehlen Ihnen, diese Seite regelmäßig auf Änderungen zu überprüfen.</p>
+<p>Kontaktieren Sie uns<br>
+Wenn Sie Fragen zu unserer Datenschutzrichtlinie haben, kontaktieren Sie uns bitte per E-Mail unter hujinfinite@gmail.com.</p>
+<p>Français:</p>
+<p>Politique de confidentialité</p>
+<p>Cette politique de confidentialité est conçue pour vous aider à comprendre comment nous traitons toute information personnelle qui vous est associée.</p>
+<p>Informations que nous collectons<br>
+Notre application, TOTK Companion, ne collecte ni ne stocke aucune de vos informations personnelles. Nous respectons vos droits à la vie privée personnelle et avons conçu notre application pour fonctionner sans avoir besoin de collecter vos informations personnelles.</p>
+<p>iCloud<br>
+TOTK Companion utilise iCloud pour la synchronisation des données. Cela signifie que toutes vos données sont stockées dans votre compte iCloud personnel, et non sur nos serveurs. Nous n'avons pas accès à ces informations.</p>
+<p>Fournisseurs de services tiers<br>
+Notre application n'inclut aucun service de suivi ou de collecte de données de tiers.</p>
+<p>Protection des données<br>
+Nous avons pris des mesures de sécurité appropriées pour protéger vos informations personnelles contre la perte, l'abus, l'accès non autorisé, la divulgation, l'altération ou la destruction.</p>
+<p>Modifications de cette politique de confidentialité<br>
+Nous pouvons mettre à jour notre politique de confidentialité de temps à autre. Nous vous recommandons de consulter cette page régulièrement pour prendre connaissance des éventuelles modifications.</p>
+<p>Contactez-nous<br>
+Si vous avez des questions concernant notre politique de confidentialité, veuillez nous contacter par e-mail à hujinfinite@gmail.com.</p>
+<p>Español:</p>
+<p>Política de privacidad</p>
+<p>Esta política de privacidad está diseñada para ayudarte a entender cómo manejamos cualquier información personal que esté asociada contigo.</p>
+<p>Información que recopilamos<br>
+Nuestra aplicación, TOTK Companion, no recopila ni almacena ninguna de tus información personal. Respetamos tus derechos de privacidad personal y hemos diseñado nuestra aplicación para funcionar sin la necesidad de recopilar ninguna de tus información personal.</p>
+<p>iCloud<br>
+TOTK Companion utiliza iCloud para la sincronización de datos. Esto significa que todos tus datos se almacenan en tu cuenta personal de iCloud, no en nuestros servidores. No tenemos acceso a esta información.</p>
+<p>Proveedores de servicios de terceros<br>
+Nuestra aplicación no incluye ningún servicio de seguimiento o recopilación de datos de terceros.</p>
+<p>Protección de datos<br>
+Hemos tomado medidas de seguridad apropiadas para proteger tu información personal contra pérdida, mal uso, acceso no autorizado, divulgación, alteración o destrucción.</p>
+<p>Cambios en esta política de privacidad<br>
+Podemos actualizar nuestra política de privacidad de vez en cuando. Te recomendamos que revises esta página periódicamente para cualquier cambio.</p>
+<p>Contáctanos<br>
+Si tienes alguna pregunta sobre nuestra política de privacidad, por favor contáctanos por correo electrónico a hujinfinite@gmail.com.</p>
+<p>中文:</p>
+<p>本隐私政策旨在帮助您了解我们如何处理与您相关的个人信息。</p>
+<ol>
+<li>我们收集的信息</li>
+</ol>
+<p>我们的应用，TOTK Companion，不收集或存储您的任何个人信息。我们尊重您的个人隐私权，因此我们设计了应用，使其在不需要收集您的任何个人信息的情况下运行。</p>
+<ol start="2">
+<li>iCloud</li>
+</ol>
+<p>TOTK Companion使用iCloud进行数据同步。这意味着您的所有数据都存储在您的个人iCloud账户中，而不是我们的服务器。我们无法访问这些信息。</p>
+<ol start="3">
+<li>第三方服务提供商</li>
+</ol>
+<p>我们的应用不包含任何第三方跟踪或数据收集服务。</p>
+<ol start="4">
+<li>数据保护</li>
+</ol>
+<p>我们采取了适当的安全措施以保护您的个人信息免受丢失、滥用、未经授权的访问、披露、更改或销毁。</p>
+<ol start="5">
+<li>隐私政策的更改</li>
+</ol>
+<p>我们可能会不时更新我们的隐私政策。我们建议您定期查看此页面以了解任何更改。</p>
+<ol start="6">
+<li>联系我们</li>
+</ol>
+<p>如果您对我们的隐私政策有任何问题，请通过电子邮件hujinfinite@gmail.com与我们联系。</p>
+<p>繁體中文:</p>
+<p>隱私政策</p>
+<p>此隱私政策旨在幫助您理解我們如何處理與您相關的任何個人信息。</p>
+<p>我們收集的信息<br>
+我們的應用程序，TOTK Companion，不收集或存儲您的任何個人信息。我們尊重您的個人隱私權，並設計了我們的應用程序，無需收集您的任何個人信息。</p>
+<p>iCloud<br>
+TOTK Companion使用iCloud進行數據同步。這意味著您的所有數據都存儲在您的個人iCloud賬戶中，而不是我們的服務器上。我們無法訪問此信息。</p>
+<p>第三方服務提供商<br>
+我們的應用程序不包括任何第三方跟踪或數據收集服務。</p>
+<p>數據保護<br>
+我們已採取適當的安全措施，以保護您的個人信息免受損失、濫用、未經授權的訪問、披露、更改或破壞。</p>
+<p>更改此隱私政策<br>
+我們可能會不時更新我們的隱私政策。我們建議您定期查看此頁面以查看任何更改。</p>
+<p>聯繫我們<br>
+如果您對我們的隱私政策有任何問題，請通過電子郵件hujinfinite@gmail.com與我們聯繫。</p>
+<p>請注意，這些翻譯可能不完全準確，如果您有任何疑問，您應該尋求專業的法律諮詢。</p>
+<p>日本語:</p>
+<p>プライバシーポリシー</p>
+<p>このプライバシーポリシーは、あなたに関連する個人情報をどのように取り扱っているかを理解するためのものです。</p>
+<p>収集する情報<br>
+私たちのアプリ、TOTK Companionは、あなたの個人情報を収集または保存しません。私たちはあなたの個人的なプライバシー権を尊重し、あなたの個人情報を収集することなくアプリを機能させるように設計しています。</p>
+<p>iCloud<br>
+TOTK Companionは、データ同期のためにiCloudを使用します。これは、すべてのデータがあなたの個人的なiCloudアカウントに保存され、私たちのサーバーではないことを意味します。私たちはこの情報にアクセスすることはありません。</p>
+<p>第三者のサービスプロバイダー<br>
+私たちのアプリには、第三者の追跡やデータ収集サービスは含まれていません。</p>
+<p>データ保護<br>
+私たちは適切なセキュリティ対策を講じて、あなたの個人情報が紛失、不正使用、不許可のアクセス、開示、改変、または破壊から保護されるようにしています。</p>
+<p>このプライバシーポリシーの変更<br>
+私たちは、時折プライバシーポリシーを更新することがあります。変更があった場合は、定期的にこのページを確認することをお勧めします。</p>
+<p>お問い合わせ<br>
+私たちのプライバシーポリシーについてのご質問がある場合は、hujinfinite@gmail.comまでメールでお問い合わせください。</p>
+<p>Política de Privacidad</p>
+<p>Esta política de privacidad está diseñada para ayudarte a entender cómo manejamos cualquier información personal que esté asociada contigo.</p>
+<p>Información que recopilamos<br>
+Nuestra aplicación, TOTK Companion, no recopila ni almacena ninguna de tus información personal. Respetamos tus derechos de privacidad personal y hemos diseñado nuestra aplicación para funcionar sin la necesidad de recopilar ninguna de tus información personal.</p>
+<p>iCloud<br>
+TOTK Companion utiliza iCloud para la sincronización de datos. Esto significa que todos tus datos se almacenan en tu cuenta personal de iCloud, no en nuestros servidores. No tenemos acceso a esta información.</p>
+<p>Proveedores de Servicios de Terceros<br>
+Nuestra aplicación no incluye ningún servicio de seguimiento o recopilación de datos de terceros.</p>
+<p>Protección de Datos<br>
+Hemos tomado medidas de seguridad apropiadas para proteger tu información personal de pérdida, mal uso, acceso no autorizado, divulgación, alteración o destrucción.</p>
+<p>Cambios en esta Política de Privacidad<br>
+Podemos actualizar nuestra Política de Privacidad de vez en cuando. Te recomendamos que revises esta página periódicamente para cualquier cambio.</p>
+<p>Contáctanos<br>
+Si tienes alguna pregunta sobre nuestra política de privacidad, por favor contáctanos por correo electrónico a hujinfinite@gmail.com.</p>
+<p>Politica sulla Privacy</p>
+<p>Questa politica sulla privacy è progettata per aiutarti a capire come gestiamo qualsiasi informazione personale che è associata a te.</p>
+<p>Informazioni che raccogliamo<br>
+La nostra app, TOTK Companion, non raccoglie né memorizza alcuna delle tue informazioni personali. Rispettiamo i tuoi diritti alla privacy personale e abbiamo progettato la nostra app per funzionare senza la necessità di raccogliere alcuna delle tue informazioni personali.</p>
+<p>iCloud<br>
+TOTK Companion utilizza iCloud per la sincronizzazione dei dati. Questo significa che tutti i tuoi dati sono memorizzati nel tuo account personale iCloud, non sui nostri server. Non abbiamo accesso a queste informazioni.</p>
+<p>Fornitori di servizi di terze parti<br>
+La nostra app non include alcun servizio di tracciamento o raccolta dati di terze parti.</p>
+<p>Protezione dei dati<br>
+Abbiamo adottato misure di sicurezza appropriate per proteggere le tue informazioni personali da perdita, abuso, accesso non autorizzato, divulgazione, alterazione o distruzione.</p>
+<p>Modifiche a questa Politica sulla Privacy<br>
+Potremmo aggiornare la nostra Politica sulla Privacy di tanto in tanto. Ti consigliamo di rivedere periodicamente questa pagina per eventuali modifiche.</p>
+<p>Contattaci<br>
+Se hai domande sulla nostra politica sulla privacy, contattaci via email a hujinfinite@gmail.com.</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[TOTK Companion Technical Support]]></title>
+        <id>https://nhuji.github.io/post/aKdswSMYU/</id>
+        <link href="https://nhuji.github.io/post/aKdswSMYU/">
+        </link>
+        <updated>2023-07-28T17:39:40.000Z</updated>
+        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1690566802302.png" alt="" loading="lazy"></figure>
+<p>如果你在使用TOTK Companion时遇到任何问题或者有任何建议请通过邮箱联网我:hujinfinite@gmail.com<br>
+谢谢!</p>
+<p>如果您在使用TOTK Companion時遇到任何問題或者有任何建議請通過郵箱聯網我:hujinfinite@gmail.com<br>
+謝謝!</p>
+<p>Wenn Sie Probleme oder Vorschläge haben, während Sie TOTK Companion verwenden, kontaktieren Sie mich bitte per E-Mail: hujinfinite@gmail.com<br>
+Danke!</p>
+<p>If you encounter any problems or have any suggestions while using TOTK Companion, please contact me via email: hujinfinite@gmail.com<br>
+Thank you!</p>
+<p>Si tiene algún problema o sugerencia mientras usa TOTK Companion, contácteme por correo electrónico: hujinfinite@gmail.com<br>
+¡Gracias!</p>
+<p>Si vous rencontrez des problèmes ou avez des suggestions lors de l'utilisation de TOTK Companion, veuillez me contacter par email: hujinfinite@gmail.com<br>
+Merci!</p>
+<p>Se incontri problemi o hai suggerimenti durante l'uso di TOTK Companion, contattami via email: hujinfinite@gmail.com<br>
+Grazie!</p>
+<p>Als u problemen ondervindt of suggesties heeft tijdens het gebruik van TOTK Companion, neem dan contact met mij op via e-mail: hujinfinite@gmail.com<br>
+Dank je!</p>
+<p>Если у вас возникнут проблемы или предложения при использовании TOTK Companion, пожалуйста, свяжитесь со мной по электронной почте: hujinfinite@gmail.com<br>
+Спасибо!</p>
+<p>TOTK Companion을 사용하는 동안 문제가 발생하거나 제안 사항이 있으면 이메일로 저에게 연락하십시오: hujinfinite@gmail.com<br>
+감사합니다!</p>
+<p>Si encuentras algún problema o tienes alguna sugerencia mientras usas TOTK Companion, por favor contáctame por correo electrónico: hujinfinite@gmail.com<br>
+¡Gracias!</p>
+<p>Se incontri problemi o hai suggerimenti durante l'uso di TOTK Companion, per favore contattami via email: hujinfinite@gmail.com<br>
+Grazie!</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[使用GPT4协助本地化iOS/Mac应用]]></title>
+        <id>https://nhuji.github.io/post/tPlg2W3oK/</id>
+        <link href="https://nhuji.github.io/post/tPlg2W3oK/">
+        </link>
+        <updated>2023-05-23T06:30:14.000Z</updated>
+        <summary type="html"><![CDATA[<p>通过把xlcoc转换为JSON让AI帮助翻译成多种语言并转换回xliff格式</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>通过把xlcoc转换为JSON让AI帮助翻译成多种语言并转换回xliff格式</p>
+<!-- more -->
+<p>本文将会以Apple 2021/2020 WWDC的示例程序 <a href="https://developer.apple.com/documentation/swiftui/fruta_building_a_feature-rich_app_with_swiftui">Fruta: Building a Feature-Rich App with SwiftUI</a> 来作为用GPT4来多语言本地化的例子<br>
+由于买API比较麻烦所以本文使用的是半自动的通过粘贴JSON到ChatGPT Plus的方式进行翻译<br>
+(特别是将来GPT4 32k版推出的话应该支持绝大多数翻译的字数要求了)<br>
+你也可以修改成使用API的完全自动化流程避免手动粘贴</p>
+<h2 id="xlcoc转换成json">xlcoc转换成JSON</h2>
+<p>我们知道Xcode可以直接用<code>LocalizedStringKeys</code>来抽取需要翻译的文本,然后导出为各种语言的xlcoc文件,而这个文件夹本身是包含xliff的,所以我们可以用xml的相关支持来读取修改<br>
+于是编写了一段Python代码来让Xcode导出的翻译文件夹生成一个适用于类似GPT4这样的AI翻译的JSON文件</p>
+<pre><code class="language-python" >
+import os
+import json
+import xml.etree.ElementTree as ET
+
+# 这是你的xcloc文件所在的文件夹
+input_dir = "/Users/nhuji/Desktop/Fruta Localizations"
+
+# 这是你想要将解析出的数据保存为JSON的文件夹
+output_dir = "/Users/nhuji/Desktop/Fruta Localizations JSON"
+
+# 创建一个字典来保存所有的数据
+data = {}
+
+# 遍历文件夹中的所有文件
+for filename in os.listdir(input_dir):
+    # 检查文件是否是xcloc文件
+    if filename.endswith(".xcloc"):
+        # 获取语言代码
+        language_code = filename[:-6]  # 去掉".xcloc"后缀
+
+        # 找到xcloc文件中的xliff文件
+        for root, dirs, files in os.walk(os.path.join(input_dir, filename)):
+            for file in files:
+                if file.endswith(".xliff"):
+                    # 解析xliff文件
+                    tree = ET.parse(os.path.join(root, file))
+                    root = tree.getroot()
+
+                    # 遍历xliff文件中的所有file元素
+                    for file in root.iter('{urn:oasis:names:tc:xliff:document:1.2}file'):
+                        # 获取original属性值
+                        original = file.get('original')
+
+                        # 如果这个original还没有在数据字典中，就添加一个新的条目
+                        if original not in data:
+                            data[original] = {}
+
+                        # 遍历file元素中的所有trans-unit元素
+                        for trans_unit in file.iter('{urn:oasis:names:tc:xliff:document:1.2}trans-unit'):
+                            # 获取id、source、target和note元素的文本
+                            id = trans_unit.get('id')
+                            source = trans_unit.find(
+                                '{urn:oasis:names:tc:xliff:document:1.2}source').text
+                            target_element = trans_unit.find(
+                                '{urn:oasis:names:tc:xliff:document:1.2}target')
+                            target = target_element.text if target_element is not None else ""
+                            note = trans_unit.find(
+                                '{urn:oasis:names:tc:xliff:document:1.2}note').text
+
+                            # 如果这个id还没有在数据字典中，就添加一个新的条目
+                            if id not in data[original]:
+                                data[original][id] = {
+                                    'source': source, 'note': note}
+
+                            # 将这种语言的翻译添加到数据字典中
+                            data[original][id][language_code] = target
+
+# 将字典转换为JSON格式，并保存到文件中
+os.makedirs(output_dir, exist_ok=True)
+with open(os.path.join(output_dir, 'translations.json'), 'w', encoding='utf-8') as f:
+    json.dump(data, f, ensure_ascii=False, indent=4)
+</code></pre>
+<hr>
+<p>这个代码运行完毕后我们应该得到类似下面的JSON文件</p>
+<pre><code class="language-JSON" >{
+    "Shared/Resources/en.lproj/InfoPlist.strings": {
+        "CFBundleDisplayName": {
+            "source": "Fruta",
+            "note": "Bundle display name",
+            "ru": "Фрута",
+            "zh-Hant": "Fruta",
+            "en": "Fruta",
+            "zh-Hans": "Fruta",
+            "ja": "Fruta"
+        },
+        "CFBundleName": {
+            "source": "Fruta",
+            "note": "Bundle name",
+            "ru": "Фрута",
+            "zh-Hant": "Fruta",
+            "en": "Fruta",
+            "zh-Hans": "Fruta",
+            "ja": "Fruta"
+        },
+        "NSHumanReadableCopyright": {
+            "source": "Copyright © 2020-2021 Apple. All rights reserved.",
+            "note": "Copyright (human-readable)",
+            "ru": "© 2020–2021 Apple. Все права защищены.",
+            "zh-Hant": "Copyright © 2020-2021 Apple. All rights reserved.",
+            "en": "Copyright © 2020-2021 Apple. All rights reserved.",
+            "zh-Hans": "Copyright © 2020-2021 Apple. All rights reserved.",
+            "ja": "Copyright © 2020-2021 Apple. All rights reserved."
+        }
+    },
+    "Shared/Resources/en.lproj/Ingredients.strings": {
+        "Almond Milk": {
+            "source": "Almond Milk",
+            "note": "Ingredient name",
+            "ru": "Миндальное молоко",
+            "zh-Hant": "",
+            "en": "Almond Milk",
+            "zh-Hans": "",
+            "ja": ""
+        },
+    ...
+}
+</code></pre>
+<hr>
+<h2 id="用ai翻译json">用AI翻译JSON</h2>
+<p>使用类似下面这样的Prompts(提示词)然后就可以发送需要翻译的文本了</p>
+<blockquote>
+<p>我接下来会给你提供一个JSON格式的本地化文本,请你帮助翻译,,其中英语和俄语不需要翻译了,你可以用source作为翻译的来源,note作为翻译的说明,你还可以参考已经翻译的en和ru但不能修改它们,这些要翻译的语言可能被预先占位符占住,你可以直接替换调它,另外还有一部分字符是属于程序中支持插入文本的占位符,请也把它们放到合适的位置,你也可以根据情况决定是否要翻译某个东西,另外我的翻译文件支持markdown语法,你可以根据语境调整修饰的词等,各个语言都要尽量自然和贴合note中说明的使用场景, 明白了吗?<br>
+<img src="https://nhuji.github.io/post-images/1684825339811.png" alt="" loading="lazy"></p>
+</blockquote>
+<p>在本文发布的时候ChatGPT Plus只对极小部分用户开发了32k版本,而大部分用户还是8k版本,所以需要分段粘贴(可以用修改发送文字的方式给出新的文本,避免提示词的上下文丢失)<br>
+然后得到的翻译结果如下:</p>
+<pre><code class="language-JSON" >{
+    "Shared/Resources/en.lproj/InfoPlist.strings": {
+        "CFBundleDisplayName": {
+            "source": "Fruta",
+            "note": "Bundle display name",
+            "ru": "Фрута",
+            "zh-Hant": "Fruta",
+            "en": "Fruta",
+            "zh-Hans": "Fruta",
+            "ja": "フルータ"
+        },
+        "CFBundleName": {
+            "source": "Fruta",
+            "note": "Bundle name",
+            "ru": "Фрута",
+            "zh-Hant": "Fruta",
+            "en": "Fruta",
+            "zh-Hans": "Fruta",
+            "ja": "フルータ"
+        },
+        "NSHumanReadableCopyright": {
+            "source": "Copyright © 2020-2021 Apple. All rights reserved.",
+            "note": "Copyright (human-readable)",
+            "ru": "© 2020–2021 Apple. Все права защищены.",
+            "zh-Hant": "Copyright © 2020-2021 蘋果公司。保留所有權利。",
+            "en": "Copyright © 2020-2021 Apple. All rights reserved.",
+            "zh-Hans": "Copyright © 2020-2021 苹果公司。保留所有权利。",
+            "ja": "Copyright © 2020-2021 Apple. 保留所有權利。"
+        }
+    },
+    "Shared/Resources/en.lproj/Ingredients.strings": {
+        "Almond Milk": {
+        "source": "Almond Milk",
+        "note": "Ingredient name",
+        "ru": "Миндальное молоко",
+        "zh-Hant": "杏仁奶",
+        "en": "Almond Milk",
+        "zh-Hans": "杏仁奶",
+        "ja": "アーモンドミルク"
+    },
+    "Avocado": {
+        "source": "Avocado",
+        "note": "Ingredient name",
+        "ru": "Авокадо",
+        "zh-Hant": "鱷梨",
+        "en": "Avocado",
+        "zh-Hans": "鳄梨",
+        "ja": "アボカド"
+    },
+    ...
+}
+</code></pre>
+<hr>
+<h2 id="json转换回xliff">JSON转换回xliff</h2>
+<p>需要的文本都被翻译完成后,我们就可以用这个JSON再转换回xlcoc并导入Xcode了,当然在导入前还需要人工检查一下,虽然GPT4加上翻译说明应该已经能比较准确的翻译应用了,但准确用语,复数支持,文本格式等复杂情况可能还需要人工校验一下,避免出现问题<br>
+接下来我们再使用下面的代码将JSON转换回xliff</p>
+<pre><code class="language-python" >
+import os
+import json
+import xml.etree.ElementTree as ET
+
+# 这是你的JSON文件的位置
+input_file = "/Users/nhuji/Desktop/Fruta Localizations JSON/translations.json"
+
+# 这是你想要将新的xliff文件保存到的文件夹
+output_dir = "/Users/nhuji/Desktop/Fruta Localizations XLIFF"
+
+# 从JSON文件中读取数据
+with open(input_file, 'r', encoding='utf-8') as f:
+    data = json.load(f)
+
+# 确保输出文件夹存在
+os.makedirs(output_dir, exist_ok=True)
+
+# 获取所有的语言代码
+language_codes = set()
+for translations in data.values():
+    for translation in translations.values():
+        language_codes.update(translation.keys())
+language_codes.discard('source')
+language_codes.discard('note')
+
+# 为每种语言创建一个新的xliff文件
+for language_code in language_codes:
+    # 创建一个新的xliff根元素
+    root = ET.Element(
+        'xliff', {'version': '1.2', 'xmlns': 'urn:oasis:names:tc:xliff:document:1.2'})
+
+    # 为每个文件添加一个新的file元素
+    for original, translations in data.items():
+        # 创建一个新的file元素
+        file = ET.SubElement(root, 'file', {'original': original,
+                                            'source-language': 'en', 'target-language': language_code, 'datatype': 'plaintext'})
+
+        # 创建一个新的body元素
+        body = ET.SubElement(file, 'body')
+
+        # 为每个翻译添加一个新的trans-unit元素
+        for id, translation in translations.items():
+            # 创建一个新的trans-unit元素
+            trans_unit = ET.SubElement(body, 'trans-unit', {'id': id})
+
+            # 创建一个新的source元素
+            source = ET.SubElement(trans_unit, 'source')
+            source.text = translation['source']
+
+            # 创建一个新的target元素
+            target = ET.SubElement(trans_unit, 'target')
+            target.text = translation.get(
+                language_code, "")  # 使用get方法，如果键不存在，返回空字符串
+
+            # 创建一个新的note元素
+            note = ET.SubElement(trans_unit, 'note')
+            note.text = translation['note']
+
+    # 将新的xliff文件保存到文件中
+    tree = ET.ElementTree(root)
+    tree.write(os.path.join(
+        output_dir, f'{language_code}.xliff'), encoding='utf-8', xml_declaration=True)
+</code></pre>
+<hr>
+<p>这样我们就得到了转换回来各种语言的xliff文件<br>
+<img src="https://nhuji.github.io/post-images/1684838371375.png" alt="" loading="lazy"><br>
+由于xlcoc的本质是<code>Xcode Localization Catalog</code>文件夹,所以不能直接转换,我们可以继续写程序让它放入对应的文件夹中,不过这里就不展示了,也可以直接把翻译好的xliff放入对应语言的xlcoc<br>
+接着我们将翻译好的xlcoc文件再次导入Xcode,就可以看到我们的翻译成果了!<br>
+可以看到多种语言都顺利的支持了!包括需要插入的占位符等<br>
+<img src="https://nhuji.github.io/post-images/1684850420676.png" alt="" loading="lazy"></p>
+<h2 id="相关资源和说明">相关资源和说明</h2>
+<ul>
+<li><a href="https://github.com/NHUJI/iOS-Localization-With-AI">文字代码的Github仓库</a></li>
+<li>示例程序 <a href="https://developer.apple.com/documentation/swiftui/fruta_building_a_feature-rich_app_with_swiftui">Fruta: Building a Feature-Rich App with SwiftUI</a></li>
+<li>使用了AI生成的封面图</li>
+<li>目前8K版本的GPT4需要注意token限制,不然可能出现问题,使用更完善的API和自定义prompt来自动处理较小分段的翻译可能可以获得更好的效果(比如转换成JSON时按.strings文件分割,翻译都完成后再合并转换)</li>
+<li>专业名词可以尝试先输入给GPT后再让它翻译来保持准确性</li>
+<li>在GPT3.5使用的话,可能需要说明代号对应的文字,比如<code>zh-Hant</code>为繁体中文</li>
+<li>如果出现只翻译需要的部分的文字的问题可以要求&quot;请在下面的文字基础上替换要翻译的文字&quot;</li>
+<li>ChatGPT May 12 Version更新中官方表示&quot;users can now choose to continue generating a message beyond the maximum token limit. Each continuation counts towards the message allowance.&quot;也就是说当生成的文字超出tokens限制时可以按<code>Continue generating</code>继续生成</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[SwiftUI: sheet出现后导致导航栏按扭不能用的问题解决]]></title>
+        <id>https://nhuji.github.io/post/5BOI6Afqi/</id>
+        <link href="https://nhuji.github.io/post/5BOI6Afqi/">
+        </link>
+        <updated>2023-04-23T07:15:15.000Z</updated>
+        <content type="html"><![CDATA[<p>这又是一个让我怀疑了自己半天,然后最后发现是Apple本身的bug的事情=, =<br>
+这个bug是sheet弹出后,导航栏的按扭会失效而再次弹出sheet又会恢复的问题</p>
+<h2 id="重现">重现</h2>
+<p>首先放了两个按扭(一个切换编辑模式,一个点击就变色)</p>
+<pre><code class="language-swift" >.toolbar {
+    ToolbarItem {
+        EditButton()
+    }
+    ToolbarItem {
+        Button(action: {
+            isClicked.toggle()
+        }) {
+            Text("Click me")
+                .foregroundColor(isClicked ? .red : .blue)
+        }
+    }
+}
+</code></pre>
+<!-- 我先测试了两个按扭,都可以正常工作,然后编辑模式下弹出sheet再关闭后,两个按扭均不能点击了,再次弹出sheet后又都恢复了功能
+![](https://nhuji.github.io/post-images/1682237571098.gif) -->
+<div  style="float: left; height: 350px;" >
+    <img src="/post-images/1682237571098.gif" style="float: left; height: 300px; margin-right: 20px;">
+    <p>我先测试了两个按扭,都可以正常工作,然后编辑模式下弹出sheet再关闭后,两个按扭均不能点击了,再次弹出sheet后又都恢复了功能</p>
+    <p>这个问题我发现会出现在小屏的设备和模拟器,像14 pro max这样的大屏设备的模拟器就没有这种问题</p>
+    <p>另外如果在按扭不能用的时候时候下拉List一下,又可以正常点击按扭了,反正基本可以确定是Apple一个多年的bug (搜了一下几年前就有人提到这个问题了)</p>
+</div>
+<h2 id="解决方式">解决方式</h2>
+<p>解决也蛮简单<code>EditButton().frame(height: 96, alignment: .trailing)</code>,这样用frame加一个高度就能解决这个问题了</p>
+<h2 id="额外的吐槽">额外的吐槽</h2>
+<p><code>sheet</code>似乎经常出问题啊,上一次还遇到了它第一次出现时不能获得最新值的问题<br>
+不过解决也蛮简单,把视图从里面独立出去就能拿到值了</p>
+<pre><code class="language-swift" >父结构{
+	某个视图
+	.sheet(isPresented: $isShowingThemeEditor) {
+	    ThemeEditorView(selectedTheme: $selectedTheme, themes: $themes.themes)
+	}
+}
+...
+子结构
+struct ThemeEditorView: View {
+    @Binding var selectedTheme: ThemeChooser.Theme?
+    @Binding var themes: [ThemeChooser.Theme]
+
+    var body: some View {
+        ThemeEditor(theme: $themes[selectedTheme!])
+    }
+}
+</code></pre>
+<h3 id="参考">参考</h3>
+<ol>
+<li><a href="https://stackoverflow.com/questions/58512344/swiftui-navigation-bar-button-not-clickable-after-sheet-has-been-presented">Navigation bar button not clickable after sheet has been presented</a></li>
+</ol>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[GPT4发布后的一点想法]]></title>
+        <id>https://nhuji.github.io/post/ZrgGXERhc/</id>
+        <link href="https://nhuji.github.io/post/ZrgGXERhc/">
+        </link>
+        <updated>2023-03-15T04:54:31.000Z</updated>
+        <content type="html"><![CDATA[<p>早上醒来就看到OpenAI发的GPT4公布和直播预告,不过我只有等到中午才有时间好好看一下回放<br>
+最大的进化应该是现在支持读取图片了吧,而且不是传统的那种把图片转换成文字后GPT再总结,而是真正的在训练的时候就加入了图片,所以说GPT4可以真正理解图片了<br>
+<img src="https://nhuji.github.io/post-images/1678856541480.png" alt="" loading="lazy"><br>
+印象非常深刻的就是直播时Join Greg Brockman把他纸上画的网站图给GPT4然后生成了对应的网页,虽然网站本身很简陋,但这种读图的能力真的让人感到惊讶.(至少很多图形验证码得紧张了哈哈哈)</p>
+<p>还有一个进化就是token数量,相较于GPT3.5最大4096,而GPT最高支持32768token(价格贵不少),之前不管是用ChatGPT处理一些文章或者玩角色扮演游戏时都很容易因为token而受限,比如要分段输入让他总结段落后再总结全文、角色扮演时遗忘之前的信息,现在八倍的token应该能解决不少问题了,特别是修改代码之类的问题,直播时Join Greg Brockman给GPT4非常长的交税资料啥的也能精确找到里面一个小的部分.总之之前很大的一个痛点缓解了,如果未来token足够长,让GPT生成一个网站项目感觉也不是不可能哈哈哈<br>
+对了微软也确认之前的new bing就是运行在GPT4上的,也难怪我感觉它对语气的辨别能力更强了<br>
+<img src="https://nhuji.github.io/post-images/1678857283060.png" alt="" loading="lazy"></p>
+<p>另外还有个牛逼的点,就是对中文的支持也增强了,GPT4的中文能力已经比之前ChatGPT用的GPT3.5强了<img src="https://nhuji.github.io/post-images/1678857625211.png" alt="" loading="lazy"><br>
+通用大模型的潜力真的是...恐怖<br>
+连以前的考试能力都从人类的倒数百分之十变成了前百分之十<br>
+<img src="https://nhuji.github.io/post-images/1678857733277.png" alt="" loading="lazy"></p>
+<p>现在技术进步真的可怕,让人感觉变化太快了,我上个月开始的GPT原理理解的文章都还没写完,又出现了更新的大变化.不管是自然语言处理这方面,AI绘画、视频处理等都有了不少让人震惊的新东西,如果说以前觉得AI时代快到了,那现在就已经是未来的一部分了</p>
+<p>AI到底会给人们、给世界带来什么变化呢?也许人类存在的意义也会因为AI而改变吧...让人激动又有点害怕<br>
+以前总是幻想可以AI按照每个人的想法来可以生成不同的虚拟世界游戏来让人们体验想像中的各种东西,虽然看起来还有点远,不过AI带来的创造力的解放也让人感觉不远了</p>
+<p>比如有一个想法就能让AI生成大纲然后具体剧情、漫画、动画直到变成可以互动的内容,那一定会诞生非常多的内容带来新的信息爆炸,就像文字出现让知识可以传承、纸笔出现让知识可以传播、互联网的普及也诞生了比以前多得多的内容比如网络小说、绘画等内容. AI也很可能在人类的使用下带来比以前多几个数量级的内容(其实也不用想象,当时NovelAI的图像生成刚出来没多久生成的图像就比它拿来训练的D站全部图像还要多了)</p>
+<p>我们这样的普通人其实很难跟上这种巨大变化的时代,但我能感觉到似乎一个和过去很不同的时代正在慢慢开启,能做的也只有尽量尝试理解和使用这些新动向了,避免变成像以前电脑出现时却不会用电脑的中年人一样<br>
+还有这种需要大量资源训练和推进的通用大模型的碾压优势其实也让人担心像以前各种作品中天网、big bother之类的等大公司、大机构垄断的世界出现, 希望未来的人们能在AI的冲击下找到新的定位吧...</p>
+<p>只是一点乱七八糟的想法,去年以来这么多新东西的出现...真的让人惊叹、焦虑、害怕和激动...但变化总比不变好,不是吗?比起一成不变地度过一生,我想,能感受这些巨大的改变更让人觉得有意思吧.</p>
+<h3 id="参考">参考</h3>
+<ol>
+<li><a href="https://openai.com/research/gpt-4">GPT-4 research</a></li>
+<li><a href="https://www.youtube.com/live/outcGtbnMuQ?feature=share">GPT-4 Developer Livestream</a></li>
+</ol>
+]]></content>
+    </entry>
+</feed>
