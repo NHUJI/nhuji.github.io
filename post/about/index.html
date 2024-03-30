@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>关于 | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1711779864985">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="
+暂时不想写太多东西嘿嘿嘿😛
+
+⏰ 关于博客发布时间
+2023年以前的文章是搬运自我以前的博客笔记等,所以标注的发布时间可能并不准确, 很可能只是乱写的发布时间
+📬 联系我
+hujinfinite(at)gmail.com
+🎮 彩蛋
+..." />
+    <meta name="keywords" content="" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1711779864985" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1711779864985" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1711779864985" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://twitter.com/pikanhuji" target="_blank">
+            <i class="fa-brands fa-twitter"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://space.bilibili.com/1760189" target="_blank">
+            <i class="fa-brands fa-bilibili"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">@2023 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">关于</h2>
+            <div class="post-date">2022-02-22</div>
+            
+            <div class="post-content" v-pre>
+              <blockquote>
+<p>暂时不想写太多东西嘿嘿嘿😛</p>
+</blockquote>
+<h2 id="关于博客发布时间">⏰ 关于博客发布时间</h2>
+<p>2023年以前的文章是搬运自我以前的博客笔记等,所以标注的发布时间可能并不准确, 很可能只是乱写的发布时间</p>
+<h2 id="联系我">📬 联系我</h2>
+<p>hujinfinite(at)gmail.com</p>
+<h2 id="彩蛋">🎮 彩蛋</h2>
+<p><a href="https://nd-ten.vercel.app/">合成直面会</a><br>
+<a href="404.html">404页面</a> (⚠️癫痫警告)<br>
+<a href="#doodle">可以点击切换的像素图</a></p>
+<h2 id="️-个人作品">🖥️ 个人作品</h2>
+<h3 id="动森nook-inc无人岛移居图鉴">动森Nook Inc无人岛移居图鉴</h3>
+<p>超过32万用户使用过的微信原生开发的《集合啦！动物森友会》(あつまれ どうぶつの森, Animal Crossing: New Horizons) 的图鉴小程序,提供游戏内各种服装、家具、生物和DIY配方等的详细信息查询.<br>
+<img src="https://nhuji.github.io/post-images/1676638968106.jpg" alt="" width="100" height="100" loading="lazy"></p>
+<h3 id="王泪伙伴-totk-companion">王泪伙伴 TOTK Companion</h3>
+<p>我的第一个iOS App,提供塞尔达传说王国之泪的攻略<br>
+可以在互动地图内筛选和标记游戏内的各种地点和宝箱等<br>
+可以查看海拉鲁图鉴和游戏内防具的各种信息<br>
+并且支持在你的各种设备之间同步标记数据!<br>
+<img src="https://nhuji.github.io/post-images/1690802120013.png" alt="" loading="lazy"><br>
+<a href="https://apps.apple.com/us/app/totk-companion">去App Sotre下载!</a></p>
+<h2 id="更新历史">更新历史</h2>
+ <!--  预定更新内容: 目录(可以通过收集h3标签之类的实现) -->
+<hr>
+<h3 id="043-2023423-">0.4.3 <!--  2023.4.23 --></h3>
+<ul>
+<li>添加代码高亮功能 使用了<a href="https://highlightjs.org/">highlight.js</a></li>
+</ul>
+<!-- - 使用方式: <pre><code class="language-html">code</code></pre> 主题修改:主题的post.ejs文件 -->
+<hr>
+<h3 id="042-2023219-">0.4.2 <!--  2023.2.19 --></h3>
+<ul>
+<li>将文章URL修改为短ID, 给彩蛋按钮增加了每次点击动画速度都变快的功能</li>
+</ul>
+<h3 id="041-2023217-">0.4.1 <!--  2023.2.17 --></h3>
+<ul>
+<li>给使用的css-doodle增加了彩色和自动更新代码,并添加了一个<a href="#doodle">按钮</a>来启用 (来自<a href="https://uiverse.io/namecho/slippery-moth-23">namecho</a>),还更新了信息描述. 另外修正了由于符号错误导致的逻辑错误</li>
+</ul>
+<h3 id="04">0.4</h3>
+<ul>
+<li>添加了Google Analytics</li>
+<li>增加了关于页面的css-doodle彩蛋 (A web component for drawing patterns with CSS)</li>
+</ul>
+<hr>
+<h3 id="032">0.3.2</h3>
+<ul>
+<li>修正了响应式设计相关的显示错误</li>
+</ul>
+<h3 id="031">0.3.1</h3>
+<ul>
+<li>增加了头像光效和悬停效果 光效部分修改了<a href="https://codepen.io/gayane-gasparyan/pen/jOmaBQK">gayane</a>的作品</li>
+</ul>
+<h3 id="03">0.3</h3>
+<ul>
+<li>添加了各种社交账号,并升级到了font awesome 6.0</li>
+<li>替换了<a href="404.html">404页面</a>, 修改自<a href="https://codepen.io/ZonFire99/pen/EaYmGV">ZonFire99</a>并且添加了点击任何地方或13秒后返回首页的逻辑</li>
+<li>托管到了Vercel加快访问速度</li>
+</ul>
+<hr>
+<h3 id="02">0.2</h3>
+<ul>
+<li>加入了部分以前的文章</li>
+<li>修改了各种参数和名称以个性化</li>
+</ul>
+<hr>
+<h3 id="01-2023216-">0.1 <!-- 2023.2.16 --></h3>
+<ul>
+<li>替换成了simple模版</li>
+<li>配置Gridea(静态博客写作客户端,支持MD)到Github Pages成功</li>
+</ul>
+<hr>
+
+            </div>
+            
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>
