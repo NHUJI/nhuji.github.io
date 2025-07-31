@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>No.2 预训练：让神经网络预测“下一个 token” | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="什么是预训练
+GPT 中的 Generative Pre-trained Transformer 的 Pre-trained 就是指的这一步
+
+在我们收集到了各种互联网和各种数据后并把它们都转换为 tokens 后，就到了 LLM 训练最核..." />
+    <meta name="keywords" content="LLM" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">No.2 预训练：让神经网络预测“下一个 token”</h2>
+            <div class="post-date">2025-05-10</div>
+            
+            <div class="post-content" v-pre>
+              <h3 id="什么是预训练">什么是预训练</h3>
+<p>GPT 中的 Generative Pre-trained Transformer 的 Pre-trained 就是指的这一步</p>
+<!-- more -->
+<p>在我们收集到了各种互联网和各种数据后并把它们都转换为 tokens 后，就到了 LLM 训练最核心的 <strong>预训练</strong> 步骤：我们要训练神经网络去 “预测下一个 token”。具体做法是在数据里<strong>随机抽取一段文本</strong>然后让模型去预测下一个 token：</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753864707719.png" alt="" loading="lazy"></figure>
+<p>如果截取的 context window 是 ”I went to the park” , 那么模型可能给出不同几率的 store, park, school, 那么就会调整模型参数/权重以让 park 被预测的<strong>概率提升</strong>,  过程中会这样并行的对整个数据集进行这样的训练⬇️</p>
+<ol>
+<li>从超大文本里随机取一段长度不定的 token 序列（称作 context window）</li>
+<li>给模型输入这段序列（比如 context window 前面四五千个 token）</li>
+<li>模型输出一个在词表大小范围内的概率分布，表示“下一个 token 会是哪个”</li>
+<li>我们知道真实的“下一个 token”是哪个，<strong>因此可以计算误差</strong>。然后我们通过反向传播来<strong>微调模型参数</strong>，使模型逐渐把正确 token 的概率调高</li>
+<li>不断重复在海量的数据上迭代更新，直到模型对“<strong>预测下一个 token</strong>”这件事上做得越来越好</li>
+</ol>
+<p>从一开始模型的参数是随机的，预测也是乱猜 甚至不能生成完整的单词；但经过足够多轮训练后，模型就逐渐能捕捉到“文本序列中各种语言模式与统计规律”。比如它会学到语法结构、语义关联、常识知识等——只要这些信息对预测下一个 token 有帮助，都可能被学会。</p>
+<h3 id="神经网络内部transformer">神经网络内部：Transformer</h3>
+<p>本质上，Transformer 是一个巨大但确定的函数，它接收一段 token 序列（最多可到上万甚至十几万 token），内部做一堆矩阵运算、自注意力机制、MLP 层等，最终输出对每个位置接下来可能 token 的概率分布。训练的目标就是不断修改这些“网络参数”，让它越来越善于预测</p>
+<p>内部原理虽然数学上可以展平成“无数个加减乘除、激活函数等运算”，但从高层看，你可以把它想象成一张超大计算图，每一层都有若干注意力头、多层感知机等，向后一直堆几十层甚至上百层，最后输出所有 token 的下一个 token 概率</p>
+<h3 id="推理inference">推理（Inference）</h3>
+<p>训练完成后，就可以用这个模型进行“推理”了。(注意和o1,R1 之类的推理模型的推理不是一个意思)，其实就是在给定一段“上下文（context）”后，模型不断抽样生成下一个 token；再把这个 token 拼回上下文，继续让模型生成下一个……周而复始，最后得到一大串文本输出</p>
+<p>因为每次都会根据概率分布进行抽样，所以输出是 <strong>随机</strong> 的，可能每次生成的内容略有不同。一般我们会对这个概率分布做一些**采样或温度调控，让文本更有创造性或更贴近事实。**模型训练完成后,模型的参数就不会改变了, 所以推理过程不会改变它的参数</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1753864735977.png" alt="" loading="lazy"></figure>
+<p>采样就是从这个概率分布中选择一个具体token的过程。有几种常见的采样方法：</p>
+<ol>
+<li>贪婪采样：总是选择概率最高的token</li>
+<li>温度采样：通过调整&quot;温度&quot;参数控制随机性的程度 (我们经常能在调用 API 时看到温度值这个选项就是说的它)</li>
+<li>Top-K采样：只从概率最高的K个选项中随机选择一个</li>
+<li>Top-p采样：选择概率总和达到阈值p的最小集合中随机选择一个</li>
+</ol>
+<p>如果好奇过程是怎么样的可以看看这个可视化网站 <a href="https://bbycroft.net/llm">LLM Visualization</a></p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/1753864748154.gif" alt="" loading="lazy"></figure>
+<p>文本被 LLM 一个一个 token 按照概率生成</p>
+<h3 id="基座模型base-model">基座模型（Base Model）</h3>
+<p>如果我们把上面的预训练流程跑到最后，就可以得到一个所谓 <strong>基座模型（Base Model）</strong>。这个模型只做了“预测下一个 token”这件事，并没有经过任务定制，也没有特别针对对话进行调教。</p>
+<ul>
+<li>它读了海量互联网文本，所以<strong>知识面很广</strong>，但也只是以概率方式学到常见的语言模式。</li>
+<li>它<strong>不会自然地根据人类提问来回答</strong>，更可能是“自动补全文本”的风格，相当于一个“互联网页面片段模拟器”。给它任何提示，它就朝着“最像什么互联网文本”那个方向去续写。</li>
+</ul>
+<p>这种基座模型有时也能做简单对话，但往往不稳定，而且没有对话中那种“有礼貌、有上下文”的特性。举例来说，如果你直接问“2+2 等于多少？”，预训练模型可能并不一定回答“4”，也可能乱扯到别的地方, 比如给你 3+3 4+4 这样的续写。因为它只是根据统计学发散生成。</p>
+<p>另外基座模型一般不会开放使用,它更像是&quot;互联网文本模拟器”, 你给出一段文本它接着续写这段文本在互联网上接着是什么</p>
+<p>这个阶段是训练一个模型<strong>成本最大</strong>的时候,并且这是模型知识的来源</p>
+<p>在实践中，厂商通常会在预训练后进行一个或多个后续步骤，把这“基座模型”打磨成一个更好用的“对话助手（assistant）”。这就需要我们之后介绍的第二大阶段——后训练（post-training）</p>
+<p><strong>Base Model 训练成本占比</strong>：大约 <strong>70%-85%</strong>，主要由计算资源驱动。 <strong>Post-training 成本占比</strong>：大约 <strong>15%-30%</strong>，包括计算成本和数据/人力成本</p>
+<p>我们可以将 Base Model 当成成一个受过良好通识教育的人，具备广泛的知识储备和沟通能力，但在特定行业（例如医疗、金融、编程）可能缺乏专业知识。当你需要一个在特定领域表现优异的模型时，就需要在 Base Model 基础上进行特定任务的微调, 比如最开始的 Github Copilot 就是基座模型加上额外的代码训练然后做到了代码补全的</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://nhuji.github.io/tag/X65AQq1vh_/" class="tag">
+                    LLM
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/tJhrug2j0d/">
+                  <h3 class="post-title">
+                    ChatGPT 终于能原生画图了，我们能用它做点什么？(GPT-4o 原生图片输出能力介绍)
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

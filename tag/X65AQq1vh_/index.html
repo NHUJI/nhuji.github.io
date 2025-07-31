@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>LLM | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="It&#39;s me, huhu">
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <h2 class="current-tag">标签: LLM</h2>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://nhuji.github.io/post/L5B6pVEn-2/">
+                  <h2 class="post-title">No.4 强化学习（Reinforcement Learning）和人类反馈强化学习</h2>
+                </a>
+                <div class="post-date">
+                  2025-06-14
+                </div>
+                <div class="post-abstract">
+                  <p>之前介绍的预训练 + SFT，虽然已经能让 LLM 完成大部分工作，但在后训练阶段我们还能继续增强它，因此引入 <strong>强化学习(RL)</strong>, 简单来说，RL 给模型提供了另一种**“自我探索与优化”**的能力</p>
+
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://nhuji.github.io/post/rBO74WnpGS/">
+                  <h2 class="post-title">No.3 后训练 让 LLM 能和你连续对话</h2>
+                </a>
+                <div class="post-date">
+                  2025-05-25
+                </div>
+                <div class="post-abstract">
+                  <p>如之前所说,后训练成本相比预训练低得多, 并不需要再用到全部互联网数据。</p>
+<p>基座模型虽然能模仿互联网内容续写内容, 或者像 Copilit 那样补全代码, 但还不够有用 , <strong>如何让模型变得有用呢</strong>？尤其是，如何让它像 ChatGPT 一样能够与人进行多轮对话、回答问题？这就需要 <strong>SFT（监督微调）</strong></p>
+
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://nhuji.github.io/post/2op5GxNWKO/">
+                  <h2 class="post-title">No.2 预训练：让神经网络预测“下一个 token”</h2>
+                </a>
+                <div class="post-date">
+                  2025-05-10
+                </div>
+                <div class="post-abstract">
+                  <h3 id="什么是预训练">什么是预训练</h3>
+<p>GPT 中的 Generative Pre-trained Transformer 的 Pre-trained 就是指的这一步</p>
+
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://nhuji.github.io/post/tJhrug2j0d/">
+                  <h2 class="post-title">ChatGPT 终于能原生画图了，我们能用它做点什么？(GPT-4o 原生图片输出能力介绍)</h2>
+                </a>
+                <div class="post-date">
+                  2025-04-02
+                </div>
+                <div class="post-abstract">
+                  <p>4o 的生图工终于在公布差不多1 年后,终于开放使用了,看看我们能利用这个模型实际做一些什么 (因为这篇主要是为了向同事介绍这个模型,因此不少图用了公司 logo,所以这里的分享会对 logo打码)</p>
+<p>不过从简单的说就是和 SD 这样的扩散生图的模型不同, 4o 的生图采用了自回归的方式也是和生成对话一样有顺序的生成的,因此能获得比较精确的效果</p>
+
+                </div>
+              </div>
+              
+                <a class="right" href="https://nhuji.github.io/post/tJhrug2j0d/">
+                  <div class="feature-container" style="background-image: url('https://nhuji.github.io/post-images/tJhrug2j0d.png')">
+                  </div>
+                </a>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://nhuji.github.io/post/SFWDWHmM8K/">
+                  <h2 class="post-title">No.1 ChatGPT 的训练数据来源</h2>
+                </a>
+                <div class="post-date">
+                  2025-03-16
+                </div>
+                <div class="post-abstract">
+                  <p>LLM 究竟是什么呢? 一方面，它确实有一些非常神奇、令人惊叹的能力；另一方面，它在某些方面也并不擅长。所以, 在这个对话框背后究竟是什么？我们输入任何东西，按下回车，会出现一段文字——产生这些文字的原理是什么？我们到底在和什么“对话”？ 相信如果我们能大概了解它的能力,也对我们更好地使用它有很大的帮助(而不是说我们真的要去训练模型)</p>
+
+                </div>
+              </div>
+              
+            </article>
+          
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+  </body>
+</html>

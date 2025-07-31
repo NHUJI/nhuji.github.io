@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>使用 Claude Artifact 辅助产品原型设计经验分享 | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="引言
+在 ChatGPT 流行后的一年半后,相信大家都已经在日常生活和工作中或多或少的使用 AI 来娱乐,解答疑问或者提高效率了
+这次分享在协助其他项目原型设计时的一些使用 AI 的经验
+
+背景
+简单的说,我们在设计某个截图 app 的一项..." />
+    <meta name="keywords" content="" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">使用 Claude Artifact 辅助产品原型设计经验分享</h2>
+            <div class="post-date">2024-09-07</div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="引言"><strong>引言</strong></h2>
+<p>在 ChatGPT 流行后的一年半后,相信大家都已经在日常生活和工作中或多或少的使用 AI 来娱乐,解答疑问或者提高效率了</p>
+<p>这次分享在协助其他项目原型设计时的一些使用 AI 的经验</p>
+<!-- more -->
+<h2 id="背景"><strong>背景</strong></h2>
+<p>简单的说,我们在设计某个截图 app 的一项功能原型: 制作截图后的快速访问功能, 它类似于使用 iPhone 截图后, 图片出现在屏幕左下角, 让用户可以拖动分享图片到各种 App, 或者直接在上面点开编辑图片或 pin 到屏幕上等</p>
+<h2 id="挑战"><strong>挑战</strong></h2>
+<p>在进行原型设计时，我们面临了许多问题需要解决：</p>
+<ol>
+<li>多张截图时是否要折叠？</li>
+<li>如果折叠，怎么展开,动画是什么样的？</li>
+<li>鼠标悬浮在图片上时，操作按钮的布局如何设计？</li>
+<li>悬浮时的视觉效果应该是怎样的？</li>
+</ol>
+<p>虽然和设计一起讨论了n 多不同的设计效果并画图,但还是不够直观</p>
+<h2 id="局限性"><strong>局限性</strong></h2>
+<p>虽然这些图片很有帮助,但静态的原型图还是有不少局限:</p>
+<ul>
+<li>难以真实感受实际效果，只能靠想象</li>
+<li>最终设计/开发出来的效果可能与预想不符</li>
+<li>与别人沟通时，难以直观地准确传达意图</li>
+</ul>
+<p>而如果开发人员来实现各种效果Demo的话效率很低,浪费大量时间<br>
+(和情绪,相信大家都有被需求改来改去困扰的时候😂)</p>
+<h2 id="ai-来拯救世界划掉"><strong>AI 来拯救世界(划掉)</strong></h2>
+<p>受到 Claude 最近推出的 Artifact 功能的启发，我们想到可以利用网页来制作UI/UX Demo。</p>
+<p>简单的介绍一下它吧,它可以将 AI 生成 Web 代码或 Markdown 或者一些数据可视化到侧边的窗口, 虽然并不是以前 LLM 做不到的事情, 但现在可以用它很直观和方便的体验它给出的东西了</p>
+<p>比如尝试要求他写一个小游戏,直接就在右侧体验而不需要保存后再看怎么修改<br>
+<img src="https://nhuji.github.io/post-images/1753849706919.gif" alt="" loading="lazy"></p>
+<p>或者可视化的讲解一些知识<br>
+<img src="https://nhuji.github.io/post-images/1753849714900.gif" alt="" loading="lazy"></p>
+<h2 id="使用它创建交互式原型"><strong>使用它创建交互式原型</strong></h2>
+<p>于是要求它以网页来模仿桌面,来模仿我们截图后的快速访问功能</p>
+<p>让我们可以非常快速的尝试各种不同效果</p>
+<p>比如多张截图展开的动画效果和是否需要按钮来触发<br>
+<img src="https://nhuji.github.io/post-images/1753849735521.gif" alt="" loading="lazy"></p>
+<p>或者按钮怎么布局以及微妙的选中效果等</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753849744199.gif" alt="" loading="lazy"></figure>
+<p>总之最后经过各种尝试和迭代后终于得到了比较满意的原型⬇️,  这是我们只使用 figma 绘制原型图难以体会到的效果和效率</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1753849754553.gif" alt="" loading="lazy"></figure>
+<p>总之虽然不能真的用它当做开发的结果,但确实这种用网页模拟设计原型能让我们大概了解到如果做成成品会是什么感觉</p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/4F-tqnmpHw/">
+                  <h3 class="post-title">
+                    Swift Charts 介绍
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

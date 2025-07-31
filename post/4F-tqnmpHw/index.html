@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>Swift Charts 介绍 | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="它是苹果在 2022年 WWDC 推出的一个框架 (iOS16.0+, macOS 13.0+ …),让我们可以用 SwiftUI 的语法来制作所有 Apple 平台都能使用的图表, 虽然我们可能由于版本支持情况暂时用不到, 不过了解一下也..." />
+    <meta name="keywords" content="iOS" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Swift Charts 介绍</h2>
+            <div class="post-date">2024-07-17</div>
+            
+            <div class="post-content" v-pre>
+              <p>它是苹果在 2022年 WWDC 推出的一个框架 (iOS16.0+, macOS 13.0+ …),让我们可以用 SwiftUI 的语法来制作所有 Apple 平台都能使用的图表, 虽然我们可能由于版本支持情况暂时用不到, 不过了解一下也不错</p>
+<!-- more -->
+<p>使用它, 只需较少的代码就能制作有效且可定制的图表。这个框架提供了标记、刻度、坐标轴和图例等构建模块，所以我们可以将它们组合起来，开发各种数据驱动的图表。<br>
+<img src="https://nhuji.github.io/post-images/1753848904542.png" alt="" loading="lazy"></p>
+<p>目前我们在苹果的各种设备上系统自带 APP 的图表都是使用它制作的</p>
+<p>比如股票,健康,天气 APP 中这些看起来差别很大的图表<br>
+乃至 Mac 上的硬盘容量,手机的电池使用情况, 到 Apple watch 上的运动,都用到了它<br>
+<img src="https://nhuji.github.io/post-images/1753848953624.png" alt="" loading="lazy"></p>
+<p>相信看到这里,大家应该对他的可定制化这一点有一些认识了</p>
+<h2 id="示例">示例</h2>
+<h3 id="barmark">BarMark</h3>
+<p>接下来让我们实际使用它做一做表格</p>
+<p>假设我们现在要为一个公司小卖部做一个后台管理的统计 App, 它可以看每日的销量情况,可以看到具体的零食的销售趋势,单个用户的活跃程度,成本和销售价比例对比等等<br>
+<img src="https://nhuji.github.io/post-images/1753849073681.gif" alt="" loading="lazy"></p>
+<p>那么先从先从简单的 Barmark(条形图) 开始吧</p>
+<p>我们需要看到小卖部每天的销量的表格, 我们可以很简单就使用 BarMark 添加一个条形图来表示<br>
+<img src="https://nhuji.github.io/post-images/1753849126453.png" alt="" loading="lazy"></p>
+<pre><code>// 创建图表
+Chart(salesData.prefix(selectedRange), id: \\.id) { data in
+        // 创建条形图
+        BarMark(
+        x: .value(&quot;Date&quot;, data.date, unit: .day), // 日期
+        y: .value(&quot;Sales&quot;, data.sales) // 销售量
+    )
+}
+
+</code></pre>
+<p>很简单的几行代码,就得到了上面的条形图</p>
+<p>接下来为 X 轴添加日期,也很简单, 利用AxisMarks就好了,然后我们把格式设定为日</p>
+<pre><code>Chart(salesData.prefix(selectedRange), id: \\.id) { data in
+    BarMark(
+        x: .value(&quot;Date&quot;, data.date, unit: .day),
+        y: .value(&quot;Sales&quot;, data.sales)
+    )
+}
+chartXAxis {
+    // 设置X轴的格式
+    AxisMarks(values: .stride(by: .day)) { _ in
+        AxisValueLabel(format: .dateTime.weekday().day())
+    }
+}
+
+</code></pre>
+<p>然后为了方便我们准确看到哪些天的销量比较高,我们打算添加一个过滤功能,让我们设定数量以上的 bar 颜色改成橙色</p>
+<pre><code>BarMark(
+    x: .value(&quot;Date&quot;, data.date, unit: .day),
+    y: .value(&quot;Sales&quot;, data.sales)
+)
+.foregroundStyle(data.sales &gt; Int(threshold) ? aboveColor.gradient : belowColor.gradient) // 根据销售量设置颜色
+
+</code></pre>
+<p>然后添加一条辅助的线作为过滤的线, 在Chart 里添加一个 RuleMark 就好了</p>
+<pre><code>Chart(salesData.prefix(selectedRange), id: \\.id) { data in
+    
+    BarMark(
+        x: .value(&quot;Date&quot;, data.date, unit: .day),
+        y: .value(&quot;Sales&quot;, data.sales)
+    )
+
+    // 创建阈值线
+    RuleMark(
+        y: .value(&quot;Threshold&quot;, threshold)
+    )
+    .lineStyle(StrokeStyle(lineWidth: 2))
+    .foregroundStyle(.red)
+    .annotation(position: .top, alignment: .leading) {
+        // 为阈值线添加标注(高度自定义)
+        Text(&quot;\\(threshold, specifier: &quot;销量: %.0f 个&quot;)&quot;)
+            .font(.title2.bold())
+            .foregroundColor(.primary)
+            .background {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color(UIColor.systemBackground))
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color(UIColor.quaternarySystemFill).opacity(0.7))
+                }
+                .padding(.horizontal, -8)
+                .padding(.vertical, -4)
+            }
+            .padding(.bottom, 4)
+    }
+}
+
+</code></pre>
+<p>最后我们的图表就完成了!</p>
+<h3 id="更多样式">更多样式</h3>
+<p>我们通过一些基本的组件成功组合成了想要的表格</p>
+<p>由于 Swift Charts 这个声明式的框架理念是不用预先设置好的表格样式,而是给你基本的组件组合,所以我们想要更改表格的表现形式也很容易</p>
+<p>比如各种不同的 Mark 形式,和一些附加的表格信息添加</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753849288276.png" alt="" loading="lazy"></figure>
+<p>比如我们只需要简单的把 BarMark 替换为<a href="https://developer.apple.com/documentation/charts/areamark"><code>AreaMark</code></a> <a href="https://developer.apple.com/documentation/charts/linemark"><code>LineMark</code></a> <a href="https://developer.apple.com/documentation/charts/pointmark"><code>PointMark</code></a> 等等</p>
+<pre><code>BarMark(
+    x: .value(&quot;Date&quot;, data.date, unit: .day),
+    y: .value(&quot;Sales&quot;, data.sales)
+)
+
+</code></pre>
+<p>就能让刚刚的表格看起来非常不同</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1753849310230.png" alt="" loading="lazy"></figure>
+<p>我们还能为表格添加更多样式,比如为了方便用户,我添加一根划分每周的虚线<br>
+<img src="https://nhuji.github.io/post-images/1753849326852.png" alt="" loading="lazy"></p>
+<p>或者调转 X 和 Y 轴让表格横向显示</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/1753849343803.png" alt="" loading="lazy"></figure>
+<h3 id="高度可定制">高度可定制</h3>
+<p>总之 Swift Charts 不是一个个预置样式的图表组件让你填充数据, 而是提供一些基本构件让我们可以自由组合出不同样式</p>
+<p>并且支持 Dark Mode / Device Screen Sizes / Dynamic Type / Voice Over / Audio Graphs / High-Contrast / Localization / Multi-Platform 等等系统功能<br>
+<img src="https://nhuji.github.io/post-images/1753849351961.png" alt="" loading="lazy"></p>
+<p>所以接下来让我们尝试组合一下各种 mark,来表示不同零食的销量</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/1753849363106.png" alt="" loading="lazy"></figure>
+<p>比如我们用 line + symbol</p>
+<pre><code>Chart {
+		// 每种零食 
+    ForEach(selectedSnacks, id: \\.self) { snack in
+        // 每个零食的数据
+        ForEach(salesData.filter { $0.snack == snack }, id: \\.id) { data in
+            LineMark(
+                x: .value(&quot;Date&quot;, data.date, unit: .day),
+                y: .value(&quot;Sales&quot;, data.sales)
+            )
+            .interpolationMethod(.cardinal) // 连线的方式
+            .foregroundStyle(by: .value(&quot;Snack&quot;, data.snack))
+            **.symbol(by: .value(&quot;Snack&quot;, data.snack))**
+        }
+    }
+}
+
+</code></pre>
+<p>结合了曲线和图标来让表格更适合查看不同零食之间的销售趋势对比</p>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/1753849390810.gif" alt="" loading="lazy"></figure>
+<p>甚至更加定制化一点,我们可以用它来制作一个类似 Github 的热力图那样的表格来代表用户每天购买的零食数量 只需要使用 <strong>RectangleMark</strong> 就好了</p>
+<pre><code>Chart(heatmapData) { data in
+    **RectangleMark**(
+        xStart: .value(&quot;xStart&quot;, relativeWeek(date: data.date)),
+        xEnd: .value(&quot;xEnd&quot;, relativeWeek(date: data.date) + 1),
+        yStart: .value(&quot;yStart&quot;, dayOfTheWeek(date: data.date)),
+        yEnd: .value(&quot;yEnd&quot;, dayOfTheWeek(date: data.date) + 1)
+    )
+    .foregroundStyle(by: .value(&quot;Sales&quot;, data.sales))
+}
+.chartForegroundStyleScale(range: Gradient(colors: [.white, .green]))
+.chartLegend(.hidden)
+.chartYAxis {
+    AxisMarks(values: .automatic(desiredCount: 7, roundLowerBound: false, roundUpperBound: false)) { _ in
+        AxisGridLine(stroke: .init(lineWidth: 1))
+    }
+}
+.chartXAxis {
+    AxisMarks(values: .automatic(desiredCount: 20, roundLowerBound: false, roundUpperBound: false)) { _ in
+        AxisGridLine(stroke: .init(lineWidth: 1))
+    }
+}
+.chartYScale(domain: .automatic(reversed: true))
+.aspectRatio(20.0/7.0, contentMode: .fit)
+.padding()
+</code></pre>
+<p><img src="https://nhuji.github.io/post-images/1753849416895.gif" alt="" loading="lazy"><br>
+或者像Apple watch 中每天的圆环那样,制作同心圆来对比零食的成本和售价的比例</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/1753849426251.png" alt="" loading="lazy"></figure>
+<pre><code class="language-less">ZStack {
+    // 外圈
+    Chart(data) { snack in
+        SectorMark(
+            angle: .value(&quot;Sales&quot;, snack.sales),
+            innerRadius: .ratio(0.65),
+            outerRadius: .ratio(1.0)
+        )
+        .foregroundStyle(by: .value(&quot;Snack&quot;, snack.name))
+    }
+
+    // 内圈
+    Chart(data) { snack in
+        SectorMark(
+            angle: .value(&quot;Cost&quot;, snack.cost),
+            innerRadius: .ratio(0.3),
+            outerRadius: .ratio(0.55)
+        )
+        .foregroundStyle(by: .value(&quot;Snack&quot;, snack.name))
+    }
+}
+
+
+</code></pre>
+<p>或者像这样可以互动选择图表上的范围并在下面展示数据</p>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/1753849450403.png" alt="" loading="lazy"></figure>
+<p>或者多平台的支持</p>
+<p><img src="https://nhuji.github.io/post-images/1753849464419.png" alt="" loading="lazy"><br>
+<img src="https://nhuji.github.io/post-images/1753849467158.png" alt="" loading="lazy"></p>
+<p>注意看右边还有向散点图结合美国地图轮廓这样自定义形状展示设施情况的图表<br>
+<img src="https://nhuji.github.io/post-images/1753849483300.png" alt="" loading="lazy"></p>
+<pre><code>LinePlot(
+    contiguousUSABorderCoordinates,
+    x: .value(&quot;Longitude&quot;, \\.mapProjection.x),
+    y: .value(&quot;Latitude&quot;, \\.mapProjection.y)
+)
+.interpolationMethod(.catmullRom)
+.lineStyle(.init(lineWidth: 1, lineCap: .round, lineJoin: .round))
+.foregroundStyle(.gray)
+
+PointPlot(
+    model.filteredData,
+    x: .value(&quot;Longitude&quot;, \\.mapProjection.x),
+    y: .value(&quot;Latitude&quot;, \\.mapProjection.y)
+)
+.symbolSize(by: .value(&quot;Capacity&quot;, \\.capacityDC))
+.foregroundStyle(by: .value(&quot;Breakdown&quot;, model.breakdownField.keyPath))
+</code></pre>
+<p>它还有更多的功能我们就不深入了, 比如它还支持动画, 无障碍, 和图表互动等等</p>
+<h2 id="今年的更新">今年的更新</h2>
+<p>刚刚过去的 WWDC 上,苹果也为他带来了进一步的更新,让他可以将数据以外的内容可视化</p>
+<p>比如各种数据函数的绘制, 在数据分析领域很有用<br>
+<img src="https://nhuji.github.io/post-images/1753849510777.png" alt="" loading="lazy"></p>
+<p>甚至今年 iPad 上终于推出的计算器 App 中手写函数绘制图像的功能也是由它实现的<br>
+<img src="https://nhuji.github.io/post-images/1753849506981.png" alt="" loading="lazy"><br>
+总之这是一个非常灵活和支持大量系统特性的表格框架, 以后有机会不妨尝试一下吧</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://developer.apple.com/cn/videos/play/wwdc2022/10136/">认识 Swift Charts</a></p>
+<p><a href="https://developer.apple.com/cn/videos/play/wwdc2022/10137/">Swift Charts：提高标准</a></p>
+<p><a href="https://developer.apple.com/cn/videos/play/wwdc2023/10037/">探索 Swift Charts 中的饼图及交互性</a></p>
+<p><a href="https://developer.apple.com/cn/videos/play/wwdc2024-10155">Swift Charts：矢量图与函数图</a></p>
+<p><a href="https://developer.apple.com/cn/videos/play/wwdc2024/10083/">开始在 visionOS 中使用 HealthKit</a></p>
+<p><a href="https://developer.apple.com/documentation/charts/visualizing_your_app_s_data">Visualizing your app’s data</a></p>
+<p><a href="https://developer.apple.com/documentation/Charts/Creating-a-chart-using-Swift-Charts">Creating a chart using Swift Charts</a></p>
+<p><a href="https://developer.apple.com/documentation/Charts">Swift Charts</a></p>
+<p><a href="https://developer.apple.com/videos/play/wwdc2022/110340">设计实用高效的图表</a></p>
+<p><a href="https://developer.apple.com/videos/play/wwdc2022/10133">为 Apple Watch 构建效率 App</a></p>
+<p><a href="https://developer.apple.com/videos/play/wwdc2022/110342">利用图表设计 App 体验</a></p>
+<p><a href="https://developer.apple.com/documentation/Charts/creating-a-data-visualization-dashboard-with-swift-charts">使用 Swift Charts 创建数据可视化仪表板</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://nhuji.github.io/tag/Fyx_iPeovd/" class="tag">
+                    iOS
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/EubfLXyWaO/">
+                  <h3 class="post-title">
+                    iOS 密码自动填充介绍
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

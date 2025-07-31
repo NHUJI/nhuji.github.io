@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>在 Swift 中生成随机值的方法 | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="我的笔记里有不少感觉可以分享出来的东西,所以后面也会发点类似这个文章,虽然都比较简单,算是记录和分享一下吧
+1. 使用 randomElement()
+这种比较简洁也不需要计算索引,不过可能会返回空集合
+也可以使用guard let 但通常..." />
+    <meta name="keywords" content="Swift,iOS" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">在 Swift 中生成随机值的方法</h2>
+            <div class="post-date">2023-10-02</div>
+            
+            <div class="post-content" v-pre>
+              <p>我的笔记里有不少感觉可以分享出来的东西,所以后面也会发点类似这个文章,虽然都比较简单,算是记录和分享一下吧<br>
+<strong>1. 使用 <code>randomElement()</code></strong><br>
+这种比较简洁也不需要计算索引,不过可能会返回空集合<br>
+也可以使用guard let 但通常用于提前退出方法或者函数,可以减少嵌套，使代码更加清晰</p>
+<pre><code class="language-swift">if let randomPlay = Play.allCases.randomElement() {
+		// 使用 randomPlay
+    print(&quot;Random play: \(randomPlay)&quot;)
+} else {
+    // 集合为空的情况,因为在Play为空时会返回nil
+}
+// 也可以不用if强制解包
+let randomPlay = Play.allCases.randomElement()!
+</code></pre>
+<p><strong>2. 使用 <code>Int.random(in:)</code> 生成随机索引</strong><br>
+简洁易读,比较不错的实现方式</p>
+<pre><code class="language-swift">let allOptions = Play.allCases
+let randomIndex = **Int.random(in: 0..&lt;allOptions.count)**
+let randomPlay = allOptions[randomIndex]
+print(&quot;Random play: \(randomPlay)&quot;)
+</code></pre>
+<p>类似的还有Float.random(in:),Double.random(in:),Bool.random()等</p>
+<p><strong>3. 使用 <code>RandomNumberGenerator</code></strong><br>
+提供了更多的灵活性，可以使用不同的随机数生成器。<br>
+适合需要更高级随机数生成需求的场景</p>
+<pre><code class="language-swift">var rng = SystemRandomNumberGenerator()
+let allOptions = Play.allCases
+let randomIndex = Int(rng.next(upperBound: UInt(allOptions.count)))
+let randomPlay = allOptions[randomIndex]
+print(&quot;Random play: \(randomPlay)&quot;)
+</code></pre>
+<p><strong><code>RandomNumberGenerator</code></strong> 是 Swift 中用于生成随机数的协议。<strong><code>SystemRandomNumberGenerator</code></strong>(系统自带的唯一一个) 是遵循该协议的一个类型，它使用系统的随机数生成器来生成随机数,也可以使用其他随机数生成器</p>
+<p>由于<strong>灵活性</strong>,我们可以创建比如”更容易出石头的随机器”<br>
+比如这个70%的概率出石头的生成器</p>
+<pre><code class="language-swift">struct BiasedRandomNumberGenerator: RandomNumberGenerator {
+    func next() -&gt; UInt64 {
+        // 生成一个 0 到 9 的随机数
+        let randomValue = arc4random_uniform(10)
+        
+        // 70% 的概率返回 0（表示“石头”）
+        if randomValue &lt; 7 {
+            return 0
+        } else if randomValue &lt; 9 {
+            return 1
+        } else {
+            return 2
+        }
+    }
+}
+
+let biasedRNG = **BiasedRandomNumberGenerator()**
+let allOptions = Play.allCases
+let randomIndex = Int(biasedRNG.next() % UInt64(allOptions.count))
+let randomPlay = allOptions[randomIndex]
+print(&quot;Biased random play: \(randomPlay)&quot;)
+</code></pre>
+<p>或则我们可以做线性同余生成器（Linear Congruential Generator，LCG）来提供一个种子值来初始化这个生成器，以获得可重现的随机序列(提供一个种子获得可重复的结果)<br>
+这种伪随机数适用于需要可重现随机序列的场景，例如模拟、测试或游戏开发中的过程生成</p>
+<pre><code class="language-swift">struct LinearCongruentialGenerator: RandomNumberGenerator {
+    private var state: UInt64
+    
+    init(seed: UInt64) {
+        self.state = seed
+    }
+    
+    mutating func next() -&gt; UInt64 {
+        state = 6364136223846793005 &amp;* state &amp;+ 1
+        return state
+    }
+}
+
+var lcg = LinearCongruentialGenerator(**seed**: 12345)
+let randomValue = lcg.next()
+</code></pre>
+<p><strong>4. 使用 <code>arc4random_uniform()</code></strong><br>
+如果要支持早期iOS的话可以用它</p>
+<pre><code class="language-swift">let allOptions = Play.allCases
+let randomIndex = **Int(arc4random_uniform(UInt32(allOptions.count)))**
+let randomPlay = allOptions[randomIndex]
+print(&quot;Random play: \(randomPlay)&quot;)
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://nhuji.github.io/tag/jiZ5gXVKc/" class="tag">
+                    Swift
+                  </a>
+                
+                  <a href="https://nhuji.github.io/tag/Fyx_iPeovd/" class="tag">
+                    iOS
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/zfA2gNJwf/">
+                  <h3 class="post-title">
+                    SwiftUI: 将图案符号和文字结合
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

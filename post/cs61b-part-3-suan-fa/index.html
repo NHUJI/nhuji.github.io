@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>CS61b Part 3 算法 | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="涵盖了各种排序算法，包括选择排序、堆排序、合并排序、插入排序、shellsort、quicksort、分区、快速选择、稳定性、子数排序、计数排序、压缩等。文章还深入探讨了排序的定义和排序关系的属性，以及无前缀编码和哈夫曼编码。此外，它还包括..." />
+    <meta name="keywords" content="CS61b" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">CS61b Part 3 算法</h2>
+            <div class="post-date">2022-02-07</div>
+            
+              <div class="feature-container" style="background-image: url('https://nhuji.github.io/post-images/cs61b-part-3-suan-fa.gif')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <p>涵盖了各种排序算法，包括选择排序、堆排序、合并排序、插入排序、shellsort、quicksort、分区、快速选择、稳定性、子数排序、计数排序、压缩等。文章还深入探讨了排序的定义和排序关系的属性，以及无前缀编码和哈夫曼编码。此外，它还包括压缩理论和软件工程方面的信息。</p>
+<!-- more -->
+<p>这个博客并不是我最初写这篇笔记地方,所以可能出现各种包括发布时间、文字、样式等错误</p>
+<h1 id="week-12-13">Week 12 &amp; 13</h1>
+<h2 id="排序的定义">排序的定义</h2>
+<p>对于key:a、b和c的排序关系“&lt;”具有以下属性。<br>
+三分法：a &lt; b, a = b, b &lt; a中只有一个是真的。<br>
+跨度法则:如果a&lt;b，并且b&lt;c，那么a&lt;c</p>
+<p>上述属性的排序关系也被称为<strong>全序关系 (Total order)</strong></p>
+<hr>
+<p>另一个定义,inversion(倒转)的元素,排序就是将然倒转了的元素对不断减少最终变为0</p>
+<p>![前面一部分排序了,但后面没有 有种中间状态的感觉 在55种可能配对里有6对错误的配对(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_14.23.24.png)</p>
+<p>前面一部分排序了,但后面没有 有种中间状态的感觉 在55种可能配对里有6对错误的配对(比如8-6,6应该在前面)</p>
+<h2 id="各种基本的排序方式介绍">各种基本的排序方式介绍</h2>
+<h3 id="选择排序-selection-sort找到最小的item放到前面">选择排序 <strong><strong>Selection Sort:找到最小的item放到前面</strong></strong></h3>
+<p>以前就有过介绍[以前介绍过<strong>选择排序</strong></p>
+<p>就是找到最小的元素然后固定在前面的过程,直到全部元素都被固定</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_14.36.51.png" alt="Demo" loading="lazy"></figure>
+<p><a href="https://goo.gl/g14Cit">Demo</a></p>
+<p>效率很低,如果使用数组来进行需要Θ(N^2)</p>
+<p>选择排序可视化:</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/Selection-Sort-Animation.gif" alt="Selection-Sort-Animation.gif" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/Selection_sort_animation.gif" alt="Selection_sort_animation.gif" loading="lazy"></figure>
+<p>(所有排序可视化图片均来自wikipedia)</p>
+<h3 id="堆排序-heapsort-放入一个max-bst再取出"><strong>堆排序 Heapsort: 放入一个Max BST再取出</strong></h3>
+<p>堆大概就是一个二叉树父节点总是大于/小于子节点</p>
+<blockquote>
+<p>Max Heap 是一种特殊的堆数据结构，其中每个父节点的关键字都大于等于它的子节点。因此，堆顶元素始终是当前堆中最大的元素。</p>
+<p>在最大堆中，父节点的关键字是大于等于它的左右子节点。换句话说，最大堆是一种完全二叉树，其中每个父节点的关键字都大于等于它的左右子节点。</p>
+</blockquote>
+<p><strong>简单的堆排序</strong></p>
+<p>使用max heap存储数据再放入新的list就得到了排序</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_14.48.44.png" alt="Demo" loading="lazy"></figure>
+<p><a href="https://goo.gl/EZWwSJ">Demo</a></p>
+<p>这样就不会像选择排序那样每次看了大量内容却只使用最小的浪费时间</p>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_14.50.04.png" alt="max heap的排序的大的在前小的在后,然后按顺序放入output末尾就完成了堆排序" loading="lazy"></figure>
+<p>max heap的排序的大的在前小的在后,然后按顺序放入output末尾就完成了堆排序</p>
+<p>运行时间比选择排序快!</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_14.52.19.png" alt="截屏2022-10-06 14.52.19.png" loading="lazy"></figure>
+<hr>
+<p><strong>不需要额外空间的堆排序(真正被使用的)</strong></p>
+<p>不使用额外的数组,而是在本身进行操作</p>
+<p>分为两个步骤:</p>
+<p>1.Bottom-up heapify input array.</p>
+<p>2.重复多次:Delete largest item from the max heap, swapping root with last item in the heap.</p>
+<hr>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_15.30.52.png" alt="Demo" loading="lazy"></figure>
+<p><a href="https://docs.google.com/presentation/d/1SzcQC48OB9agStD0dFRgccU-tyjD6m3esrSC-GLxmNc/edit?usp=sharing">Demo</a></p>
+<p>首先使用一种叫Bottom-up heapify input array</p>
+<p>从下而上变成一个个小的heap</p>
+<figure data-type="image" tabindex="8"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_15.32.44.png" alt="截屏2022-10-06 15.32.44.png" loading="lazy"></figure>
+<p>比如17、17、19、26、41都相当于一个子heap</p>
+<p>于是再向上一层,又是一个17</p>
+<p>就组成了一个新的子heap</p>
+<figure data-type="image" tabindex="9"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_15.34.08.png" alt="截屏2022-10-06 15.34.08.png" loading="lazy"></figure>
+<p>接下来到达2发现它不适合作为2→26、41的heap的root,所以和41调换</p>
+<p>(这一步也可以叫做sinking,就是把每一个绿节点都和下面的比较看看能不能沉下去,能的话就调换)</p>
+<p>形成了新的子heap 41→26、2</p>
+<figure data-type="image" tabindex="10"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_15.35.50.png" alt="截屏2022-10-06 15.35.50.png" loading="lazy"></figure>
+<p>这样不断向上操作就得到了一个<strong>Max Heap</strong>(但是还有没排序)</p>
+<figure data-type="image" tabindex="11"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_15.37.36.png" alt="由于这个heap在数组0的位置是一个heap的root，那么整个数组就是一个heap 也就是完成了这个Bottom-up 的操作" loading="lazy"></figure>
+<p>由于这个heap在数组0的位置是一个heap的root，那么整个数组就是一个heap 也就是完成了这个Bottom-up 的操作</p>
+<p>和上一个创建一个新数组不一样的是,我们选择就在本身进行操作</p>
+<p>首先把root与最后一个交换</p>
+<figure data-type="image" tabindex="12"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_15.50.11.png" alt="截屏2022-10-06 15.50.11.png" loading="lazy"></figure>
+<p>然后再次进行上一步的sinking操作得到新的heap+已经固定的root</p>
+<p>然后不断重覆将root(第一项)和最后一项替换(heap的最后一项而不是数组的)→sink得到新的heap</p>
+<figure data-type="image" tabindex="13"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_15.50.19.png" alt="截屏2022-10-06 15.50.19.png" loading="lazy"></figure>
+<p>最后就得到了堆排序后的数组</p>
+<figure data-type="image" tabindex="14"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_15.51.51.png" alt="截屏2022-10-06 15.51.51.png" loading="lazy"></figure>
+<p>运行时间:</p>
+<p>Bottom-up Heapification: O(N log N) time.</p>
+<p>Selecting <em>largest</em> item: Θ(1) time.</p>
+<p>Removing <em>largest</em> item: O(log N) for each removal.</p>
+<blockquote>
+<p>若以升序排序说明，把数组转换成最大堆（Max-Heap Heap），这是一种满足最大堆性质（Max-Heap Property）的二叉树：对于除了根之外的每个节点i, A[parent(i)] ≥ A[i]。</p>
+<p>重复从最大堆取出数值最大的结点（把根结点和最后一个结点交换，把交换后的最后一个结点移出堆），并让残余的堆维持最大堆性质。</p>
+</blockquote>
+<figure data-type="image" tabindex="15"><img src="https://nhuji.github.io/post-images/Sorting_heapsort_anim.gif" alt="堆排序演示" loading="lazy"></figure>
+<p>堆排序演示</p>
+<h3 id="归并排序-merge-sort将两个排序合并成一个"><strong>归并排序 Merge sort:将两个排序合并成一个</strong></h3>
+<p>同样也是之前学习过的[<strong><strong>Mergesort 归并排序</strong></strong>]<br>
+由于学习过,所以简单介绍一下过程</p>
+<p>把items分成2个部分,再分别对他们<strong>归并排序</strong>(使用了递归 (Recursion),就一分再分)</p>
+<p>最终将两个部分里的最大值进行比较,小的就放入新的数组 不断重复直到完成</p>
+<figure data-type="image" tabindex="16"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_16.14.26.png" alt="Demo" loading="lazy"></figure>
+<p><a href="https://docs.google.com/presentation/d/1h-gS13kKWSKd_5gt2FPXLYigFY4jf5rBkNFl3qZzRRw/edit?usp=sharing">Demo</a></p>
+<p>可视化:</p>
+<figure data-type="image" tabindex="17"><img src="https://nhuji.github.io/post-images/Merge-sort-example-300px.gif" alt="一分再分,再按照大小组合" loading="lazy"></figure>
+<p>一分再分,再按照大小组合</p>
+<figure data-type="image" tabindex="18"><img src="https://nhuji.github.io/post-images/Merge_sort_animation2.gif" alt="Merge_sort_animation2.gif" loading="lazy"></figure>
+<h3 id="插入排序-insertion-sort找到插入item的位置"><strong>插入排序 Insertion sort:找到插入item的位置</strong></h3>
+<p>很简单且低效的排序方式:</p>
+<p>把input的item按顺序放入新的数组</p>
+<p>如果大就放左边,小就放右边,不大不小就数组在中间找个合适的位置</p>
+<figure data-type="image" tabindex="19"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_16.38.20.png" alt="Demo" loading="lazy"></figure>
+<p><a href="http://goo.gl/bVyVCS">Demo</a></p>
+<p><strong>进阶版 使用交换代替插入(in-place)</strong></p>
+<p>不另外建立数组,在本身进行交换就行了</p>
+<figure data-type="image" tabindex="20"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_16.45.27.png" alt="Demo" loading="lazy"></figure>
+<p><a href="https://docs.google.com/presentation/d/10b9aRqpGJu8pUk8OpfqUIEEm8ou-zmmC7b_BE5wgNg0/edit?usp=sharing">Demo</a></p>
+<figure data-type="image" tabindex="21"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_16.46.08.png" alt="**in-place插入排序例子**" loading="lazy"></figure>
+<p><strong>in-place插入排序例子</strong></p>
+<p>可视化:</p>
+<figure data-type="image" tabindex="22"><img src="https://nhuji.github.io/post-images/Insertion-sort-example-300px.gif" alt="Insertion-sort-example-300px.gif" loading="lazy"></figure>
+<figure data-type="image" tabindex="23"><img src="https://nhuji.github.io/post-images/Insertion_sort_animation.gif" alt="Insertion_sort_animation.gif" loading="lazy"></figure>
+<p>少量反转的数组(也就是几个item位置不对的话)上，使用插入排序非常快</p>
+<h3 id="希尔排序-shellsort-不断分区插入排序"><strong>希尔排序 Shellsort :不断分区插入排序</strong></h3>
+<p>(额外的内容)</p>
+<p>大概就是分区进行插入排序,并且随着排序进行,分区越来越小 最终就是普通的插入排序了,只需要移动很小一部分item的位置</p>
+<figure data-type="image" tabindex="24"><img src="https://nhuji.github.io/post-images/Sorting_shellsort_anim.gif" alt="Sorting_shellsort_anim.gif" loading="lazy"></figure>
+<blockquote>
+<p>例如，假设有这样一组数[ 13 14 94 33 82 25 59 94 65 23 45 27 73 25 39 10 ]，如果我们以步长为5开始进行排序，我们可以通过将这列表放在有5列的表中来更好地描述算法，这样他们就应该看起来是这样：</p>
+<pre><code>13 14 94 33 82
+25 59 94 65 23
+45 27 73 25 39
+10
+
+</code></pre>
+<p>然后我们对每列进行排序：</p>
+<pre><code>10 14 73 25 23
+13 27 94 33 39
+25 59 94 65 82
+45
+
+</code></pre>
+<p>将上述四行数字，依序接在一起时我们得到：[ 10 14 73 25 23 13 27 94 33 39 25 59 94 65 82 45 ].这时10已经移至正确位置了，然后再以3为步长进行排序：</p>
+<pre><code>10 14 73
+25 23 13
+27 94 33
+39 25 59
+94 65 82
+45
+
+</code></pre>
+<p>排序之后变为：</p>
+<pre><code>10 14 13
+25 23 33
+27 25 59
+39 65 73
+45 94 82
+94
+
+</code></pre>
+<p>最后以1步长进行排序（此时就是简单的插入排序了）。</p>
+</blockquote>
+<h2 id="快速排序-quicksort把item们分区进行分割随机性强"><strong>快速排序 Quicksort:把item们分区进行分割(随机性强)</strong></h2>
+<h3 id="分区分解-partitioning">分区(分解) <strong><strong>Partitioning</strong></strong></h3>
+<p>通过将数据分为大于小于某个值来进行分区</p>
+<figure data-type="image" tabindex="25"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_18.43.48.png" alt="截屏2022-10-06 18.43.48.png" loading="lazy"></figure>
+<p>分区有很多种可能的实现方式比如</p>
+<ol>
+<li>扫描数组然后把红色部分(小于x的)放到x前面蓝色部分不移动</li>
+</ol>
+<figure data-type="image" tabindex="26"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_18.44.59.png" alt="截屏2022-10-06 18.44.59.png" loading="lazy"></figure>
+<ol>
+<li>使用BST,把数据放到BST中这样root左边的全都是小的右边全都是大的</li>
+</ol>
+<figure data-type="image" tabindex="27"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_18.46.04.png" alt="截屏2022-10-06 18.46.04.png" loading="lazy"></figure>
+<ol>
+<li>创建一个新的数组然后进行三次扫描<br>
+第一次把全部红色的放入新数组<br>
+第二次放白色的<br>
+第三次放蓝色的</li>
+</ol>
+<p>(这种方式不是原作者采用的,但是是本课程采用的方式)</p>
+<figure data-type="image" tabindex="28"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_18.46.58.png" alt="截屏2022-10-06 18.46.58.png" loading="lazy"></figure>
+<p>总之有很多种实现分区的方式</p>
+<h3 id="3-scan分区方案">3-scan分区方案</h3>
+<p>经过分区后(采用上面第三种方法,扫描三次)</p>
+<p>可以发现5的位置固定了,因为它左边都是小于5的右边都是大于5的 接下来5没必要再移动位置了</p>
+<p>还可以发现左边的区域和右边的区域不需要再相互交流了</p>
+<figure data-type="image" tabindex="29"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_18.52.26.png" alt="‘pivot’也就是绿色点,选区是自由的 但一般选择最左边的点" loading="lazy"></figure>
+<p>‘pivot’也就是绿色点,选区是自由的 但一般选择最左边的点</p>
+<p>接下来的部分我们可以继续进行“分区”</p>
+<p>每次分区都有一个值被“固定位置”</p>
+<p>不断分区后就得到了排序的结果</p>
+<figure data-type="image" tabindex="30"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_18.59.29.png" alt="Demo" loading="lazy"></figure>
+<p><a href="https://docs.google.com/presentation/d/1QjAs-zx1i0_XWlLqsKtexb-iueao9jNLkN-gW9QxAD0/edit?usp=sharing">Demo</a> 可以看到这个分区表就有点类似于BST 所有思想其实和方法2差不多</p>
+<p>可视化:</p>
+<figure data-type="image" tabindex="31"><img src="https://nhuji.github.io/post-images/Sorting_quicksort_anim.gif" alt="在大多数情况下，快速排序都是最快的" loading="lazy"></figure>
+<p>在大多数情况下，快速排序都是最快的</p>
+<figure data-type="image" tabindex="32"><img src="https://nhuji.github.io/post-images/quickSort.gif" alt="quickSort.gif" loading="lazy"></figure>
+<h3 id="快速排序运行时间">快速排序运行时间</h3>
+<p>哪怕最坏情况比较蛮,但在大部分情况下的平均性能都很好!</p>
+<figure data-type="image" tabindex="33"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_19.06.13.png" alt="截屏2022-10-06 19.06.13.png" loading="lazy"></figure>
+<h3 id="快速排序本质和bst排序是一样的">快速排序本质和BST排序是一样的</h3>
+<figure data-type="image" tabindex="34"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_19.07.33.png" alt="截屏2022-10-06 19.07.33.png" loading="lazy"></figure>
+<h3 id="避免快速排序最坏情况产生">避免快速排序最坏情况产生</h3>
+<figure data-type="image" tabindex="35"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_19.11.27.png" alt="截屏2022-10-06 19.11.27.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="36"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_19.11.34.png" alt="截屏2022-10-06 19.11.34.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="37"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-06_19.11.42.png" alt="截屏2022-10-06 19.11.42.png" loading="lazy"></figure>
+<h3 id="避免quicksort的最坏情况">避免QuickSort的最坏情况</h3>
+<p>如果有重复的item或者list已经/接近被排序了这时候使用QuickSort效率就会很低</p>
+<p>比如有个list是从大到小排列的,这样每次拿最左边的都会导致需要完全遍历剩下的部分</p>
+<p>避免这种情况出现的策略:</p>
+<ol>
+<li>**Randomness:**随机在list里面挑选一个pivot,或者排序前进行打乱</li>
+<li>**Smarter pivot selection:**通过各种算法挑选一个尽量是中位数的pivot(见下面Quick Select)</li>
+<li>**Introspection:**如果递归了很多层就采取其他排序方法(递归多说明效率低可能不适合快速排序)</li>
+<li>**Preprocess the array:**预处理list,比如判断是不是已经/接近被排序的,适不适合使用QuickSort</li>
+</ol>
+<h3 id="in-place分区方案">In-place分区方案</h3>
+<p><strong><strong>Tony Hoare’s In-place Partitioning Scheme</strong></strong>(<a href="https://docs.google.com/presentation/d/1DOnWS59PJOa-LaBfttPRseIpwLGefZkn450TMSSUiQY/pub?start=false&amp;loop=false&amp;delayms=3000">Demo</a>、<a href="https://www.youtube.com/watch?v=NuQYFXmLUrM&amp;ab_channel=BukanCaraCepat">参考视频</a>)</p>
+<p>与之前一种分区方法对比,不需要额外的内存空间并且快很多 还避免了一些坏情况</p>
+<hr>
+<p>基本想法是选择一个pivot(可以随机选择)然后一个左和右指针,左指针喜欢比pivot小的值,右指针喜欢比pivot大的值</p>
+<p>两个指针都向着对方前进,遇到不喜欢的值后停下来,都停下来后就交换不喜欢的值</p>
+<figure data-type="image" tabindex="38"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-08_14.56.53.png" alt="截屏2022-10-08 14.56.53.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="39"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-08_14.57.02.png" alt="截屏2022-10-08 14.57.02.png" loading="lazy"></figure>
+<p>两个指针穿过后就不再前进了,这时候需要选新的pivot</p>
+<p>最终左边都是比较小的值右边都是比较大的值</p>
+<hr>
+<p>可以看到这种双指针的快速排序速度最快</p>
+<figure data-type="image" tabindex="40"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-08_15.29.14.png" alt="均是未优化版本.对于小的数组没有切换到插入式排序" loading="lazy"></figure>
+<p>均是未优化版本.对于小的数组没有切换到插入式排序</p>
+<p>另外最快最流行的分区方案是:two-pivot scheme</p>
+<h3 id="quick-select"><strong><strong>Quick Select</strong></strong></h3>
+<p>寻找精确的中位数需要耗费大量时间,但分区其实可以帮助我们(这也是最常用的寻找中位数算法)</p>
+<p>![使用的三次扫描分区,黑色部分说明不再考虑存在中位数(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-08_16.00.40.png)</p>
+<p>使用的三次扫描分区,黑色部分说明不再考虑存在中位数(因为分区后pivot的位置就是真实排序中它的位置)</p>
+<p>随便选一个pivot分区并且发现左边item小于右边,说明中位数不在左边,就不考虑左边了</p>
+<p>这样一直下去就能找到中位数了</p>
+<p>对于已经排序的list同样也会导致最坏情况</p>
+<p>比如右图不断寻找中位数</p>
+<figure data-type="image" tabindex="41"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-08_16.07.39.png" alt="截屏2022-10-08 16.07.39.png" loading="lazy"></figure>
+<h2 id="其他排序相关">其他排序相关</h2>
+<h3 id="稳定性-stability">稳定性 <strong><strong>Stability</strong></strong></h3>
+<blockquote>
+<p>**排序算法稳定性:**假定在待排序的记录序列中，存在多个具有相同的关键字的记录，若经过排序，这些记录的相对次序保持不变，即在原序列中，r[i]=r[j]，且r[i]在r[j]之前，而在排序后的序列中，r[i]仍在r[j]之前，则称这种排序算法是稳定的；否则称为不稳定的。</p>
+</blockquote>
+<p>例子:先按照名字排序再按照年级排序,有稳定性的就能保持之前的顺序,而没有稳定性的就会互相穿过</p>
+<figure data-type="image" tabindex="42"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-08_16.15.57.png" alt="有稳定性的算法" loading="lazy"></figure>
+<p>有稳定性的算法</p>
+<figure data-type="image" tabindex="43"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-08_16.16.05.png" alt="无稳定性的算法" loading="lazy"></figure>
+<p>无稳定性的算法</p>
+<h3 id="n-log-n-log-n-渐近上">N log N = log N! (渐近上)</h3>
+<p>证明:<a href="https://www.youtube.com/playlist?list=PL8FaHk7qbOD7y8-q2qpfhZ-fzphsk3ETf">video</a></p>
+<figure data-type="image" tabindex="44"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_13.46.15.png" alt="截屏2022-10-10 13.46.15.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="45"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_13.46.24.png" alt="截屏2022-10-10 13.46.24.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="46"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_13.46.37.png" alt="截屏2022-10-10 13.46.37.png" loading="lazy"></figure>
+<p>总结:只要使用了比较的排序方法runtime Ω(N log N)</p>
+<figure data-type="image" tabindex="47"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_15.47.19.png" alt="截屏2022-10-10 15.47.19.png" loading="lazy"></figure>
+<h3 id="最少排序数">最少排序数</h3>
+<p>对 n 个元素进行排序所需的最少比较次数:0、1、3、5、7、10、13、16、19、22、26、30、34、38、42</p>
+<p>(比如3个元素最少比较3次,4个最少五次)</p>
+<figure data-type="image" tabindex="48"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_15.28.09.png" alt="3个元素需要问3次" loading="lazy"></figure>
+<p>3个元素需要问3次</p>
+<h3 id="排序可视化">排序可视化</h3>
+<p><a href="https://www.youtube.com/watch?v=kPRA0W1kECg&amp;ab_channel=TimoBingmann">15 Sorting Algorithms in 6 Minutes</a></p>
+<h2 id="软件工程-part-2">软件工程 Part 2</h2>
+<p><strong>软件工程(1/3):</strong>[软件工程 <strong>Software Engineering I</strong>]<br>
+复杂性是与软件系统的结构有关的任何东西，它使人难以理解和修改系统</p>
+<hr>
+<p>比如这样一段代码,有大量重复内容,有很多low level的细节,如果有错误修改起来很困难/麻烦</p>
+<p>条件也很长并且没有注释帮助理解代码作用<br>
+扩展性不强,如果有新的条件就又需要添加</p>
+<figure data-type="image" tabindex="49"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-07_14.59.52.png" alt="截屏2022-10-07 14.59.52.png" loading="lazy"></figure>
+<p>写出各种helper函数比如<code>occupied(WEST, here)</code>就能去掉很多重复代码和方便修改</p>
+<p>复杂性有两个主要来源<br>
+依赖性:当一段代码不能被独立阅读、理解和修改时(比如上面很长的条件,到处重复的PLAYER)<br>
+隐蔽性:当重要信息不明显时(不能一眼看出在做什么,重复的代码,魔力数字等)</p>
+<p><strong>模块化设计 Modular Design</strong></p>
+<p>我们应该依靠模块化来隐藏复杂度,比如使用helper函数等</p>
+<p>在一个理想的世界里，系统会被分解成模块，每个模块都是完全独立的。<br>
+这里，&quot;模块 &quot;是一个非正式的术语，指的是一个类、一个包或其他代码单元。<br>
+模块不可能完全独立，因为每个模块的代码都要调用其他模块。<br>
+例如，需要知道方法的参数来调用它们。</p>
+<p>在模块化设计中，我们的目标是尽量减少模块之间的依赖关系。</p>
+<hr>
+<p>比如<strong>接口和实现(Interface vs. Implementation)</strong></p>
+<p>就是一个隐藏复杂度的方法</p>
+<figure data-type="image" tabindex="50"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-07_15.43.29.png" alt="截屏2022-10-07 15.43.29.png" loading="lazy"></figure>
+<p>一个简单的接口可以将模块在其他地方造成的复杂性降到最低。如果你只有一个getNext()方法，那就是别人能做的全部。<br>
+如果一个模块的接口很简单，我们就可以改变该模块的实现而不影响接口</p>
+<p>(比如List如果只有个arraysize方法而不是size方法,就限制了我们只能做ArrayList 所有接口要尽可能简单)</p>
+<hr>
+<p>&quot;最好的模块是那些提供强大功能而又有简单界面的模块。我用深度这个词来描述这种模块&quot;。</p>
+<p>例如，RedBlackBSTSet 2b就是一个深度模块。<br>
+简单的接口:添加、包含、删除方法,没有任何用户需要知道的非正式的东西（例如，用户不需要指定或知道哪些节点是红色或黑色的）。<br>
+强大的功能:操作是有效的,使用复杂、微妙的规则维持树的平衡</p>
+<p>用户只需要知道有这个功能而不必在意下面复杂的实现</p>
+<p>就和以前学习计算机体系一样,每次封装、抽象都有利于我们接下来更加方便的建造新的东西,如果在写一个CPU的HDL时还要考虑nand门的话 就太复杂了,二进制机器码→汇编→高级语言 这一过程就是通过封装来减少复杂度 所以我们才能写<code>i++</code>而不是<code>0110101001111…</code>之类的东西</p>
+<hr>
+<p>避免过度依赖 &quot;时间分解(temporal decomposition)&quot;，在这种情况下，代码按照现实发生的顺序进行,这样在进行其他操作时就很容易出问题 (比如应该使用一个统一的类来管理输入,而不是按照现实顺序觉得应该输入了,导致有多个入口)<br>
+使用一些时间上的分解是可以的，但要设法修复任何发生的信息泄漏</p>
+<h2 id="软件工程-part-3">软件工程 Part 3</h2>
+<p><a href="https://www.youtube.com/watch?v=7lLGNXbAVzo&amp;ab_channel=JoshHug">这一部分</a>hug没有讲课程</p>
+<p>而是关于个人生活职业发展还有科技产品夺走我们注意力的一些事</p>
+<p>看完了还感慨蛮多,比如有人认为什么在线课程会让学历价值稀释(我也有这种黑暗想法,哪怕我是受益者2333)</p>
+<p>在伯克利学习的这些东西会成为大型企业需要的(但我现在还不确定能不能找到工作,以后人生该怎么办)</p>
+<p>人们的焦虑,关于回复社交网络讯息之类的</p>
+<p>总之我觉得学习一定不是坏事,希望能做到WLB和终身学习</p>
+<p>有这么多高质量的课程可以学习真的很幸运,哪怕没有伯克利或者其他名校的学历</p>
+<p>但是课程带来的价值依然很巨大(没有同学关系网、学历背书、课程讨论会差很多就是)</p>
+<p>总之我想我应该花更多时间在个人提升上,而不是meanning less的时间消耗产品上</p>
+<p>很少在笔记里写这些可能更属于日记的东西,但就像这节特殊的课程一样 也行我需要更多的思考吧</p>
+<h2 id="基数排序-radix-sort"><strong>基数排序 Radix sort</strong></h2>
+<blockquote>
+<p>基数排序是一种非比较型整数排序算法，其原理是将整数按位数切割成不同的数字，然后按每个位数分别比较。由于整数也可以表达字符串和特定格式的浮点数，所以基数排序也不是只能使用于整数。</p>
+</blockquote>
+<p>正如之前所说的,只要使用“比较”来排序最坏情况都是N log N,如果不比较的话是不是就能有更好的算法了呢</p>
+<h3 id="sleep-sort-for-sorting-integers-not-actually-good"><strong><strong>Sleep Sort (for Sorting Integers) (not actually good)</strong></strong></h3>
+<p>基本思想就是按时间把元素打印出来来排序(实际这种性能还是很大,不现实)</p>
+<figure data-type="image" tabindex="51"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_17.04.39.png" alt="截屏2022-10-10 17.04.39.png" loading="lazy"></figure>
+<h3 id="counting-sort-exploiting-space-instead-of-time"><strong><strong>Counting Sort: Exploiting Space Instead of Time</strong></strong></h3>
+<p>前面的数字类似于index,我们新建一个数组直接放进相应的位置就可以了,不用进行比较</p>
+<figure data-type="image" tabindex="52"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_17.12.02.png" alt="截屏2022-10-10 17.12.02.png" loading="lazy"></figure>
+<p>如果有不是数字或者唯一的index,我们就可以计算重复次数再生成新的数组</p>
+<figure data-type="image" tabindex="53"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_17.26.01.png" alt="Demo" loading="lazy"></figure>
+<p><a href="https://docs.google.com/presentation/d/1vmVKHRSwb5WN1rHvktplbPGecHChxOwWa7ovRuiLzbA/edit?usp=sharing">Demo</a></p>
+<p>如果计算世界人口最多的100个城市Quicksort比Counting Sort好,因为我们可能要创建一个几百万的数组来放这些城市</p>
+<p><strong>Runtime</strong>:</p>
+<figure data-type="image" tabindex="54"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_17.44.51.png" alt="截屏2022-10-10 17.44.51.png" loading="lazy"></figure>
+<h3 id="lsd-radix-sort"><strong><strong>LSD Radix Sort</strong></strong></h3>
+<p>非常早的一种排序方式</p>
+<p>先从最右边一位开始排序直到最左边的,这种顺序也能保障最终的排序是对的</p>
+<figure data-type="image" tabindex="55"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_17.57.27.png" alt="截屏2022-10-10 17.57.27.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="56"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_17.58.55.png" alt="截屏2022-10-10 17.58.55.png" loading="lazy"></figure>
+<p>如果key是位数不同的,可以把空的地方看作一个比其他key都小的空白</p>
+<figure data-type="image" tabindex="57"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_18.00.23.png" alt="截屏2022-10-10 18.00.23.png" loading="lazy"></figure>
+<h3 id="msd-radix-sort"><strong><strong>MSD Radix Sort</strong></strong></h3>
+<p>虽然是LSD翻着来,但是会出现如下问题:再次按位排后会错乱</p>
+<figure data-type="image" tabindex="58"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_18.09.47.png" alt="截屏2022-10-10 18.09.47.png" loading="lazy"></figure>
+<p>所以我们可以当成子集来对待</p>
+<figure data-type="image" tabindex="59"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_18.11.31.png" alt="截屏2022-10-10 18.11.31.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="60"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-10_18.12.02.png" alt="截屏2022-10-10 18.12.02.png" loading="lazy"></figure>
+<h3 id="比较radix-sort和选择排序的速度">比较<strong><strong>Radix Sort和选择排序的速度</strong></strong></h3>
+<p>这取决于排序的对象,如果他们非常相似那么LSD Radix会更快,如果相似度很低那么merge会更快</p>
+<p>因为LSD从后面开始比对,而Merge比较依靠前面和不相似的字符来加快速度</p>
+<figure data-type="image" tabindex="61"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-15_12.54.35.png" alt="截屏2022-10-15 12.54.35.png" loading="lazy"></figure>
+<ul>
+<li>Treating alphabet size as constant, LSD Sort has runtime Θ(WN).</li>
+<li>Merge Sort has runtime between Θ(N log N) and Θ(WN log N).</li>
+</ul>
+<hr>
+<p>不过实际测试中(长度为100的相等String)merge却快了不少</p>
+<figure data-type="image" tabindex="62"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-15_15.01.09.png" alt="截屏2022-10-15 15.01.09.png" loading="lazy"></figure>
+<p>这是因为有JIT也就是<strong>即时编译</strong>在进行优化(just-in-time compilation)</p>
+<figure data-type="image" tabindex="63"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-15_15.01.54.png" alt="截屏2022-10-15 15.01.54.png" loading="lazy"></figure>
+<p>让重复,不必要的操作都快了不少</p>
+<figure data-type="image" tabindex="64"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-15_15.02.47.png" alt="merge中不断生成新linklist的时间大幅缩短" loading="lazy"></figure>
+<p>merge中不断生成新linklist的时间大幅缩短</p>
+<p>当关闭JIT后就可以发现MSD确实比Merge快<br>
+但也不是理论值那样的字符调用,因为还有各种创建数组,移动,判断等消耗</p>
+<figure data-type="image" tabindex="65"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-15_15.03.45.png" alt="截屏2022-10-15 15.03.45.png" loading="lazy"></figure>
+<h2 id="排序总结">排序总结</h2>
+<figure data-type="image" tabindex="66"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-15_16.02.11.png" alt="截屏2022-10-15 16.02.11.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="67"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-15_16.00.56.png" alt="截屏2022-10-15 16.00.56.png" loading="lazy"></figure>
+<h1 id="压缩-compression">压缩 Compression</h1>
+<p>压缩可以让一段信息减少体积,经过解压后的文件与原文件没有不同</p>
+<figure data-type="image" tabindex="68"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_14.57.08.png" alt="截屏2022-10-16 14.57.08.png" loading="lazy"></figure>
+<h2 id="prefix-free-codes"><strong><strong>Prefix Free Codes</strong></strong></h2>
+<h3 id="普通的无前缀编码">普通的无前缀编码</h3>
+<p>原本表现字母的方式比较占用空间</p>
+<figure data-type="image" tabindex="69"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_14.58.20.png" alt="截屏2022-10-16 14.58.20.png" loading="lazy"></figure>
+<p>我们可以使用其他的方式来替代原本字符的表达方式来压缩</p>
+<p>但是假如使用<strong>摩尔斯电码</strong>来代表的话,由于没有我们现实中使用时的那种停顿,同样的code可能代表不同的字符们</p>
+<p>所以需要有一种方法来避免这种情况</p>
+<figure data-type="image" tabindex="70"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_14.58.58.png" alt="截屏2022-10-16 14.58.58.png" loading="lazy"></figure>
+<p><strong>摩尔斯电码的tree</strong></p>
+<p>向左边是点右边是横</p>
+<p>也就是说z的摩尔斯电码是:<code>- - . .</code></p>
+<figure data-type="image" tabindex="71"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.01.59.png" alt="截屏2022-10-16 15.01.59.png" loading="lazy"></figure>
+<p>于是我们可以设想一个<strong><strong>Prefix Free</strong></strong> 的tree</p>
+<p>也就是没有一个字符码是另一个字符码的前缀</p>
+<figure data-type="image" tabindex="72"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.08.19.png" alt="I ATE为例就能看到是以数0的个数来区分字母的" loading="lazy"></figure>
+<p>I ATE为例就能看到是以数0的个数来区分字母的</p>
+<p>另一种更平衡的树</p>
+<p>可以发现有代表的字符全是leaf,也就是最后的节点,同样避免了前缀问题</p>
+<figure data-type="image" tabindex="73"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.16.17.png" alt="截屏2022-10-16 15.16.17.png" loading="lazy"></figure>
+<p>这第二种无前缀的tree相较于第一种,更加稳定</p>
+<p>可以看到第一种越是后面的字符越长</p>
+<p>而第二种却比较平衡</p>
+<figure data-type="image" tabindex="74"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.18.34.png" alt="截屏2022-10-16 15.18.34.png" loading="lazy"></figure>
+<h3 id="香农-范诺编码-shannon-fano-codes">香农-范诺编码 <strong><strong>Shannon Fano Codes</strong></strong></h3>
+<blockquote>
+<p>香农-范诺编码（Shannon–Fano coding）是一种基于一组符号集及其出现的或然率（估量或测量所得），从而构建前缀码的技术。</p>
+</blockquote>
+<p>也就是按照字符出现的频次来建立一个tree,比如“我”和“爸”的频率加起来有一半,就放在左边</p>
+<figure data-type="image" tabindex="75"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.35.21.png" alt="图里的“我爸是李刚”只是个非常小的字符集" loading="lazy"></figure>
+<p>图里的“我爸是李刚”只是个非常小的字符集</p>
+<p>这样一直按照频率分下去就得到了完整的tree</p>
+<figure data-type="image" tabindex="76"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.39.27.png" alt="截屏2022-10-16 15.39.27.png" loading="lazy"></figure>
+<h3 id="哈夫曼编码-huffman-coding">哈夫曼编码 Huffman Coding</h3>
+<p>与香农的相似,只是从由自上而下变成了自下而上</p>
+<figure data-type="image" tabindex="77"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.50.11.png" alt="截屏2022-10-16 15.50.11.png" loading="lazy"></figure>
+<p>比如李和刚是出现频率最低的两个,就给他创建一个父节点(频率为他们相加)</p>
+<p>这样不断的向上就得到了最终的tree</p>
+<figure data-type="image" tabindex="78"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.48.44.png" alt="截屏2022-10-16 15.48.44.png" loading="lazy"></figure>
+<p>计算后得出平均每个字符只需要2.3个bits</p>
+<figure data-type="image" tabindex="79"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.53.27.png" alt="截屏2022-10-16 15.53.27.png" loading="lazy"></figure>
+<p>中文字符一般使用32位的unicode来表示</p>
+<p>如果一共有1000个汉字组成的文章话(在这里,字符集只有我爸是李刚五个字)</p>
+<p>结果就如图所示,使用huffman的编码可以减少十几倍占用!</p>
+<figure data-type="image" tabindex="80"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-16_15.56.18.png" alt="截屏2022-10-16 15.56.18.png" loading="lazy"></figure>
+<h3 id="使用什么数据结构存储哈夫曼编码">使用什么数据结构存储哈夫曼编码</h3>
+<p><strong>压缩时</strong></p>
+<p>由字符→code:</p>
+<figure data-type="image" tabindex="81"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_13.10.33.png" alt="截屏2022-10-17 13.10.33.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="82"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_13.10.24.png" alt="截屏2022-10-17 13.10.24.png" loading="lazy"></figure>
+<p>有两种选择,一直很自然地就想到各种map,给他键值存入map</p>
+<p>但也许数组也不错,我们可以使用字符作为index并存入对应的code</p>
+<p>(注意字符其实也是整数,比如ASCII中“A” = 65,“a”</p>
+<figure data-type="image" tabindex="83"><img src="https://nhuji.github.io/post-images/Untitled.png" alt="ASCII编码表" loading="lazy"></figure>
+<p>ASCII编码表</p>
+<p>数组实际上就是一种由整数→其他对象的Map,他的效率更高一点.不过如果字符集太大的话也会浪费很多空间就是了</p>
+<p><strong>解码时</strong></p>
+<p>也就是code→字符</p>
+<p><strong>Trie也就是所谓的前缀树,字典树就很合适,使用</strong>binary trie**就可以很好的保存这些信息了<br>
+(这样似乎也让我理解了判断字符的问题,只要把编码一个一个到trie里找到字符后就开始找下一个字就行了,trie里存储的字符就相当于那些蓝色节点帮助断句)</p>
+<p>我们拿到比如“1101”的编码后向左→左→右→左就找到了字符“T”</p>
+<p>(从前面的编码也能看出来使用了某一种树来记录)</p>
+<figure data-type="image" tabindex="84"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_13.27.51.png" alt="截屏2022-10-17 13.27.51.png" loading="lazy"></figure>
+<h3 id="压缩时的编码方式选择">压缩时的编码方式选择</h3>
+<p>我们可以有两种方式来选择编码以压缩</p>
+<p>1.对于不同的信息使用不同的编码集,比如英语文本使用英语的压缩)</p>
+<p>这样做的好处就是不需要额外存储编码,但肯定也会影响压缩效率 毕竟不可能一篇英语文章就用掉了所有ASCII字符(也就是次优的编码)</p>
+<p>2.我们可以被压缩的文件创建一个编码(语料库),然后和压缩后的内容存在一起.<br>
+好处是适用范围广,但会额外占用一部分存储</p>
+<figure data-type="image" tabindex="85"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_14.11.56.png" alt="截屏2022-10-17 14.11.56.png" loading="lazy"></figure>
+<p><strong>现实中采用了第二种方法</strong></p>
+<p>因为对于大量的文件一般语料库占用不了多少位置,但适用范围却光得多,不需要专门建立英语,中文等语料库</p>
+<h3 id="哈夫曼编码压缩与解压缩例子">哈夫曼编码压缩与解压缩例子</h3>
+<p>压缩:计算字符出现频率→建立一个压缩数组和解压字典树→将字典树加入压缩文件→讲压缩后的信息也放入压缩文件</p>
+<p><img src="https://docs.google.com/presentation/d/1DWuSkE9MxQPUTjbSJCMe54rCim4eAwM4aFRvhqq5_Hs/edit?usp=sharing" alt="Demo" loading="lazy"><br>
+Codewords的部分就是由我(https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_14.54.27.png)</p>
+<p><a href="https://docs.google.com/presentation/d/1DWuSkE9MxQPUTjbSJCMe54rCim4eAwM4aFRvhqq5_Hs/edit?usp=sharing">Demo</a><br>
+Codewords的部分就是由我(0)我(0)刚(111)刚(111)……等组成的,因为没有相同的前缀,所以解压时也不用担心断句问题,比如11在trie上没内容,1111更没有内容 到111就只能停下并找到对应的“刚”了</p>
+<p>解压:<br>
+先读取语料库(trie)→然后在codewords里寻找最长前缀并输出字符<br>
+这样一个过程完成后就成功解压了</p>
+<p>![****<a href="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_15.14.56.png">Demo</a></p>
+<p><strong><strong><a href="https://docs.google.com/presentation/d/1x7WXK5-X0bvxk6Q1IBuYXGibZzyRDgr8IIb30YiR4iU/edit?usp=sharing">Demo</a></strong></strong></p>
+<p>总结:</p>
+<p>![<a href="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_15.22.12.png">Huffman.java</a></p>
+<p><a href="http://algs4.cs.princeton.edu/55compression/Huffman.java">Huffman.java</a></p>
+<h2 id="压缩理论-compression-theory">压缩理论 <strong><strong>Compression Theory</strong></strong></h2>
+<p>除了哈夫曼这种方法以外还有根据压缩连续字符(这也是我以前看到压缩最先能想出的办法),重复部分省略等方法来进行压缩</p>
+<figure data-type="image" tabindex="86"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_15.25.25.png" alt="截屏2022-10-17 15.25.25.png" loading="lazy"></figure>
+<hr>
+<p><strong>有没有可能有一种能压缩50%以上体积的算法(通用的情况下)</strong></p>
+<p>当然不可能,因为可以做到的话就能一直压缩直到用1bit表达巨量的信息(一般情况下的压缩效率好像在70%左右)</p>
+<figure data-type="image" tabindex="87"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_15.30.20.png" alt="截屏2022-10-17 15.30.20.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="88"><img src="https://nhuji.github.io/post-images/%25E6%2588%25AA%25E5%25B1%258F2022-10-17_15.34.06.png" alt="截屏2022-10-17 15.34.06.png" loading="lazy"></figure>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://nhuji.github.io/tag/b3U5buPEp/" class="tag">
+                    CS61b
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/cs61b-part-2-shu-ju-jie-gou/">
+                  <h3 class="post-title">
+                    CS61b Part 2 数据结构
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

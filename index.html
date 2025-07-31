@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="It&#39;s me, huhu">
+    
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    
+
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://nhuji.github.io/post/L5B6pVEn-2/">
+                  <h2 class="post-title">No.4 强化学习（Reinforcement Learning）和人类反馈强化学习</h2>
+                </a>
+                <div class="post-date">
+                  2025-06-14
+                </div>
+                <div class="post-abstract">
+                  <p>之前介绍的预训练 + SFT，虽然已经能让 LLM 完成大部分工作，但在后训练阶段我们还能继续增强它，因此引入 <strong>强化学习(RL)</strong>, 简单来说，RL 给模型提供了另一种**“自我探索与优化”**的能力</p>
+
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://nhuji.github.io/post/rBO74WnpGS/">
+                  <h2 class="post-title">No.3 后训练 让 LLM 能和你连续对话</h2>
+                </a>
+                <div class="post-date">
+                  2025-05-25
+                </div>
+                <div class="post-abstract">
+                  <p>如之前所说,后训练成本相比预训练低得多, 并不需要再用到全部互联网数据。</p>
+<p>基座模型虽然能模仿互联网内容续写内容, 或者像 Copilit 那样补全代码, 但还不够有用 , <strong>如何让模型变得有用呢</strong>？尤其是，如何让它像 ChatGPT 一样能够与人进行多轮对话、回答问题？这就需要 <strong>SFT（监督微调）</strong></p>
+
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://nhuji.github.io/post/2op5GxNWKO/">
+                  <h2 class="post-title">No.2 预训练：让神经网络预测“下一个 token”</h2>
+                </a>
+                <div class="post-date">
+                  2025-05-10
+                </div>
+                <div class="post-abstract">
+                  <h3 id="什么是预训练">什么是预训练</h3>
+<p>GPT 中的 Generative Pre-trained Transformer 的 Pre-trained 就是指的这一步</p>
+
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://nhuji.github.io/post/tJhrug2j0d/">
+                  <h2 class="post-title">ChatGPT 终于能原生画图了，我们能用它做点什么？(GPT-4o 原生图片输出能力介绍)</h2>
+                </a>
+                <div class="post-date">
+                  2025-04-02
+                </div>
+                <div class="post-abstract">
+                  <p>4o 的生图工终于在公布差不多1 年后,终于开放使用了,看看我们能利用这个模型实际做一些什么 (因为这篇主要是为了向同事介绍这个模型,因此不少图用了公司 logo,所以这里的分享会对 logo打码)</p>
+<p>不过从简单的说就是和 SD 这样的扩散生图的模型不同, 4o 的生图采用了自回归的方式也是和生成对话一样有顺序的生成的,因此能获得比较精确的效果</p>
+
+                </div>
+              </div>
+              
+                <a class="right" href="https://nhuji.github.io/post/tJhrug2j0d/">
+                  <div class="feature-container" style="background-image: url('https://nhuji.github.io/post-images/tJhrug2j0d.png')">
+                  </div>
+                </a>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://nhuji.github.io/post/SFWDWHmM8K/">
+                  <h2 class="post-title">No.1 ChatGPT 的训练数据来源</h2>
+                </a>
+                <div class="post-date">
+                  2025-03-16
+                </div>
+                <div class="post-abstract">
+                  <p>LLM 究竟是什么呢? 一方面，它确实有一些非常神奇、令人惊叹的能力；另一方面，它在某些方面也并不擅长。所以, 在这个对话框背后究竟是什么？我们输入任何东西，按下回车，会出现一段文字——产生这些文字的原理是什么？我们到底在和什么“对话”？ 相信如果我们能大概了解它的能力,也对我们更好地使用它有很大的帮助(而不是说我们真的要去训练模型)</p>
+
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://nhuji.github.io/post/PbbB545riV/">
+                  <h2 class="post-title">Whisk: 不用写提示词的有趣生图工具</h2>
+                </a>
+                <div class="post-date">
+                  2025-02-14
+                </div>
+                <div class="post-abstract">
+                  
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://nhuji.github.io/post/HaZsvj7z62/">
+                  <h2 class="post-title">聊聊 Emoji</h2>
+                </a>
+                <div class="post-date">
+                  2025-01-04
+                </div>
+                <div class="post-abstract">
+                  <p>&quot;收到！👌&quot; &quot;好的呢～😊&quot; &quot;谢谢 🙏&quot;</p>
+<p>每天聊天的时候,无论是工作还是生活， 你是不是也像我一样， 总是习惯性地加上这些可爱的小表情来让话语显得不那么严肃? 有时候甚至觉得光发文字好像缺了点什么...不过你有没有想过，它们是从哪来的呢?</p>
+<p>今天想和介绍一下 <strong>Emoji</strong> ，这个我们每天都在用的小表情的历史和发展</p>
+<p>它不仅可爱,能丰富我们使用纯文字聊天时的表达,可以说是数字时代诞生的第一门通用语言, 那它是怎么出现和风靡全球的呢</p>
+
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://nhuji.github.io/post/VU2crnTXQx/">
+                  <h2 class="post-title">使用 MidJourney 制作 &#34;2025 年台历&#34; 素材经验分享!</h2>
+                </a>
+                <div class="post-date">
+                  2024-12-29
+                </div>
+                <div class="post-abstract">
+                  <p>今年图片和视频领域的发展比 LLM 有趣不少, 感觉很多文档都是在介绍这方面, 而这就是又一篇 😂  最近对图片生成的兴趣比较大</p>
+<p>而公司有制作年度台历的活动,于是参加了一下~ 最后在同事们投票下获得了第一名 挺让人高兴 于是想分享一下制作过程中素材的生成 另外涉及公司信息的部分就打码了 (比如我其实在每张图里都 p 入了不同风格的 logo 融合进画面作为彩蛋)</p>
+
+                </div>
+              </div>
+              
+                <a class="right" href="https://nhuji.github.io/post/VU2crnTXQx/">
+                  <div class="feature-container" style="background-image: url('https://nhuji.github.io/post-images/VU2crnTXQx.png')">
+                  </div>
+                </a>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://nhuji.github.io/post/xxsr8tCiCh/">
+                  <h2 class="post-title">视频生成模型 Sora 初次上手体验, 做了一个白噪音视频</h2>
+                </a>
+                <div class="post-date">
+                  2024-12-13
+                </div>
+                <div class="post-abstract">
+                  
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://nhuji.github.io/post/a5a7FHKlb5/">
+                  <h2 class="post-title">GPT-4o 模型介绍: 图片输出</h2>
+                </a>
+                <div class="post-date">
+                  2024-11-18
+                </div>
+                <div class="post-abstract">
+                  <p>之前和别人介绍 ChatGPT 的 DALLE 3 画图时, 似乎很多人对生成的图片里的文字很在意, 比如错误的拼写, 没办法放入一段长文字之类的问题, 但也许很快就不会再是问题了</p>
+<p>本篇将介绍 GPT-4o 的图片生成能力! 为什么会有个 o 在后面呢~ 其实“o”代表“omni”，源自拉丁语“omnis”，意为“全能”或“全部”。代表了 4o 的多模态能力，能够处理文本、音频和视觉等多种输入和输出形式，也就是说他可以真正接受你对他语音说的话, 能看懂你给他发的图片等, 不仅如此 他还能输出音频和图片, 是非常巨大的进步,目前还没有其他模型能做到这一点</p>
+
+                </div>
+              </div>
+              
+                <a class="right" href="https://nhuji.github.io/post/a5a7FHKlb5/">
+                  <div class="feature-container" style="background-image: url('https://nhuji.github.io/post-images/a5a7FHKlb5.png')">
+                  </div>
+                </a>
+              
+            </article>
+          
+
+          <div class="pagination-container">
+  
+  
+  
+    <div class="prev-placeholder"></div>
+  
+  
+  <div class="page-selector">
+    
+      <div class="page-dropdown">
+        <button class="page-current" type="button">
+          第 1 页 <i class="icon-arrow-ios-up-outline"></i>
+        </button>
+        <div class="page-list">
+          
+            
+              <span class="page-item current">第 1 页</span>
+            
+          
+            
+              
+              <a href="https://nhuji.github.io/page/2/" class="page-item">第 2 页</a>
+            
+          
+            
+              
+              <a href="https://nhuji.github.io/page/3/" class="page-item">第 3 页</a>
+            
+          
+            
+              
+              <a href="https://nhuji.github.io/page/4/" class="page-item">第 4 页</a>
+            
+          
+        </div>
+      </div>
+    
+  </div>
+  
+  
+    <a href="https://nhuji.github.io/page/2" class="next">下一页 <i class="icon-arrow-ios-forward-outline"></i></a>
+  
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+  </body>
+</html>

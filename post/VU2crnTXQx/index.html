@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>使用 MidJourney 制作 &#34;2025 年台历&#34; 素材经验分享! | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="今年图片和视频领域的发展比 LLM 有趣不少, 感觉很多文档都是在介绍这方面, 而这就是又一篇 😂  最近对图片生成的兴趣比较大
+而公司有制作年度台历的活动,于是参加了一下~ 最后在同事们投票下获得了第一名 挺让人高兴 于是想分享一下制作..." />
+    <meta name="keywords" content="" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">使用 MidJourney 制作 &#34;2025 年台历&#34; 素材经验分享!</h2>
+            <div class="post-date">2024-12-29</div>
+            
+              <div class="feature-container" style="background-image: url('https://nhuji.github.io/post-images/VU2crnTXQx.png')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <p>今年图片和视频领域的发展比 LLM 有趣不少, 感觉很多文档都是在介绍这方面, 而这就是又一篇 😂  最近对图片生成的兴趣比较大</p>
+<p>而公司有制作年度台历的活动,于是参加了一下~ 最后在同事们投票下获得了第一名 挺让人高兴 于是想分享一下制作过程中素材的生成 另外涉及公司信息的部分就打码了 (比如我其实在每张图里都 p 入了不同风格的 logo 融合进画面作为彩蛋)</p>
+<!-- more -->
+<p>--- 正文 ⬇️</p>
+<h2 id="midjourney-介绍">Midjourney 介绍</h2>
+<p>MJ (Midjourney) 和 DALL-E 以及 Stable Diffusion 一样, 都是非常流行的图像生成的 AI ,  MJ 不是开源的, 而是通过不同价格的<strong>订阅计划</strong> 提供在线的图像生成服务, 来获得收入和迭代产品的</p>
+<p>DALL-E → Midjourney → Stable Diffusion 上手难度逐渐增大, 但上手难度增加也提供了更多复杂的掌控能力</p>
+<p>如果说 ChatGPT 的 DALL-E 是最容易上手的图片生成方式的话, 那么 Midjourney 会稍微复杂一点, 但给予了我们更多控制生成图片结果的手段, MJ 相比 Stable Diffusion 这样的开源方案, 没有一堆复杂的插件要寻找和需要自己部署等门槛</p>
+<p>之所以要介绍它, 是因为这次 2025 年的台历就想尝试用 AI 来生成不同季节的图片作为素材 这样可能比在网上找图片更能统一主题, 于是首先尝试了 DALL-E , 虽然很方便 但分辨率和各种定制程度都还不够好,难以满足需求,  图片质量本身比起不断迭代的 Midjourney 也有些差距, 所以最终选择了<strong>使用 Midjourney 来生成全部台历素材</strong></p>
+<p>下面是我尝试分别使用 DALL-E (上) 和 Midjourney (下) 生成的多个四个季节的图片素材然后挑选后拼接后的草稿,  DALL-E 的虽然还不错 但画面空白的地方不够纯净 也缺少图片扩大等功能 难以满足质感,只使用图片的一部分时的分辨率等要求</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753855520606.png" alt="" loading="lazy"></figure>
+<p>DALL-E (上)  虽然像素风格还不错,但仔细看海边的云朵和雪山上就能看到这种本应该比较纯净的地方也有很多噪点,这也是放弃使用它的最大原因</p>
+<h2 id="价格">价格</h2>
+<p>既然是付费的订阅服务,那么也大概介绍一下价格</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1753855561679.png" alt="" loading="lazy"></figure>
+<p>从最便宜的 10 刀到120 刀不等,最大的区别就是提供了不同的 GPU 时间</p>
+<p>我们购买的本质上生图所需要的GPU的时间, Fast 模式下基础计划3.3小时/月，标准计划15小时/月，Pro会计划30小时/月，Relax 模式下标准和Pro会员则是无限时间(无限生成), 生成的图片<strong>都是可以商用的</strong></p>
+<p><strong>所以比较推荐的是购买 30 刀一月的标准计划,因为可以在 GPU 时间用完后Relax 模式排队生成图片</strong></p>
+<p>Fast 模式就是优先生成图片的模式,会很快就拿到结果</p>
+<p>Relax 模式可以无限制地生成图像 不消耗额度，但需要等待一段时间后拿到结果(相当于排队了), 但<strong>基础计划不支持这个模式</strong>, 但如果只是想尝试的话, 可以先订阅最便宜的基础计划, 随时可以升级到更贵的计划 (会折算剩余的生成额度)</p>
+<p>基础的是一个月 70 人民币 (10 刀) 左右的基础计划, 可以生成 200 次图片(一次四张), 然后因为接入的 stripe ,通过支付宝就可以轻松付款 (建议随便选个美国免税州地址) , <strong>记得不需要后取消订阅!</strong> 建议只是随便尝试的话订阅这个, 但做台历来说的话一张素材要生成很多次, 所以最后发现实际 200 次是远远不够用的!</p>
+<p>订阅后就可以在官网开始生图了, 它最开始是在 Disrocd 频道提供机器人上来生成的, 现在有官网后操作更加直观和方便了, 所以本文介绍也使用<strong>官网</strong>而不是 Disrocd 来说明 (如果需要的话网络上应该有一堆 Disrocd 上使用 MJ 的视频教程)</p>
+<p>不过不想升级计划的话 在 GPU 时间用完后也可以购买 <strong>Fast Hours</strong>, 1 hour 的额度大概可以生成 60 次图片</p>
+<h2 id="提示词">提示词</h2>
+<p>Midjourney的提示词风格介于 DALL·E 的自然语言描述和 Stable Diffusion 的参数化指令之间. <strong>我们可以使用自然语言描述图像内容, 同时通过添加特定参数来控制生成结果</strong></p>
+<p>所以如果不想自己写提示词的话,让 ChatGPT 代劳也是一样可以的</p>
+<p>提示词需要遵循的基本规则, 可以参考官方的说明, 另外它也<strong>只支持英语提示词</strong></p>
+<p><strong>提示技巧！</strong> Midjourney 最适合简短的描述性短语。避免冗长的要求和指令列表</p>
+<p>比如不要这样写:&quot;给我画很多盛开的玫瑰花,让它们明亮鲜艳的红色,用彩铅的插画风格来画&quot; (<em>Show me a picture of lots of blooming roses, make them bright, vibrant red, and draw them in an illustrated style with colored pencils</em>)</p>
+<p>而应该这样写:&quot;明亮红色的玫瑰,彩铅画风&quot; (<em>Bright red roses drawn with colored pencils</em>)</p>
+<p><strong>提示说明用词选择</strong> 提示词都是英语,所以用词很重要, 在许多情况下, 更具体的同义词效果更好。比如与其用&quot;大的(big)&quot;,不如用&quot;巨大的&quot;、&quot;庞大的&quot;、&quot;宏伟的&quot;或&quot;浩瀚的&quot; (huge, gigantic, enormous, or immense)</p>
+<p><strong>复数词和集合名词</strong> 复数词会带来很多不确定性。试着使用具体的数字。&quot;三只猫(Three cats)&quot;比&quot;猫(Cats)&quot;更具体。集合名词也很有用,比如用&quot;一群鸟(flock of birds)&quot;而不是&quot;鸟(birds)&quot;</p>
+<p><strong>专注于你想要的</strong> 描述你想要什么比描述你不想要什么更好。**如果你要求一个&quot;没有蛋糕&quot;的派对,你的图片可能反而会包含蛋糕。**要确保某个物体不出现在最终图像中,请尝试使用 <code>--no</code> 参数的高级提示</p>
+<p><strong>提示长度和细节</strong> 提示可以很简单。单个词或表情符号就够了。但是,简单的提示会依赖 Midjourney 的默认风格,让它发挥创意填充未指定的细节。在提示中包含对你来说重要的任何元素。<strong>细节越少意味着变化越多但控制越少</strong></p>
+<p><strong>请明确说明对你重要的任何背景或细节。考虑以下方面:</strong></p>
+<ul>
+<li><strong>主体:</strong> <em>人物、动物、角色、地点、物体 (person, animal, character, location, object)</em></li>
+<li><strong>媒介:</strong> <em>照片、绘画、插画、雕塑、涂鸦、挂毯 (photo, painting, illustration, sculpture, doodle, tapestry)</em></li>
+<li><strong>环境:</strong> <em>室内、室外、月球上、水下、城市中 (indoors, outdoors, on the moon, underwater, in the city)</em></li>
+<li><strong>光线:</strong> <em>柔和、环境光、阴天、霓虹、摄影棚灯光 (soft, ambient, overcast, neon, studio lights)</em></li>
+<li><strong>颜色:</strong> <em>鲜艳、柔和、明亮、单色、多彩、黑白、粉彩 (vibrant, muted, bright, monochromatic, colorful, black and white, pastel)</em></li>
+<li><strong>情绪:</strong> <em>平静、安宁、喧闹、充满活力 (sedate, calm, raucous, energetic)</em></li>
+<li><strong>构图:</strong> <em>肖像、头像、特写、鸟瞰图 (portrait, headshot, closeup, birds-eye view)</em></li>
+</ul>
+<p>Midjourney同样支持广泛的艺术风格,所以在提示词加入这些风格的要求也更容易达到你想要的效果</p>
+<p>更多请参考: https://docs.midjourney.com/docs/explore-prompting</p>
+<p>总之它支持非常广泛的艺术效果 (所以选择像素风 只是因为我比较喜欢这种)<br>
+<img src="https://nhuji.github.io/post-images/1753855593829.png" alt="" loading="lazy"></p>
+<h2 id="素材生成尝试"><strong>素材生成尝试</strong></h2>
+<p>先尝试生成了一些樱花的场景, 画风总感觉有些古早</p>
+<p>pixel art spring scene, cherry blossom trees, falling pink petals, soft pastel colors, clear light blue sky, gentle clouds, pixel style, 16-bit aesthetic, peaceful atmosphere --ar 16:9 --style raw --v 6.1</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/1753855609021.png" alt="" loading="lazy"></figure>
+<p>然后当然是调整提示词, 不过最重要的是 MJ 提供两类模型,一种是标准的Midjourney Model 另一种是在动漫方面表现比较好的 Niji Model, 简单的说就是更二次元, 对于我们想要的像素风来说肯定是比较好的选择</p>
+<p>在调整了提示词和模型为 Niji 后</p>
+<p><em>A pixel art scene representing spring, with soft pastel colors. The foreground features several cherry blossom trees with pink petals falling gently from the branches. The background shows a clear sky with a light blue hue, and some soft clouds drifting by. Scattered petals cover the ground, adding to the tranquil atmosphere. A few green hills are visible in the distance, and the overall setting is peaceful, evoking the fresh and gentle feeling of spring. --ar 16:9 --niji 6</em></p>
+<p>后终于得到了比较理想的效果</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/1753855641413.png" alt="" loading="lazy"></figure>
+<p>当然做台历肯定不能使用这样的大图,于是调整图片比例和进一步更改提示词得到了最终的理想图片</p>
+<p>比较成功的表现出了对应月份的氛围感 🩷</p>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/1753855662255.png" alt="" loading="lazy"></figure>
+<p>建议就是多尝试和修改, 可能需要相当多的尝试之后才能得到满意的图片</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/1753855671386.png" alt="" loading="lazy"></figure>
+<p>(一小部分的尝试⬆️)</p>
+<p>如果风格合适的话,就可以在对应的基础上细微地修改提示词,以及通过 MJ提供的变体功能来生成更多相似的图片,变体分为强和弱,强的变体会提供更大的变化的图片结果</p>
+<p>例如这样一张图,我比较满意,但细节不太对 可以通过变体功能得到相似的图片</p>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/1753855691903.png" alt="" loading="lazy"></figure>
+<p>然后在得到喜欢的图后,如果分辨率要求比较高也可以使用他的放大功能来得到更高分辨率的图片</p>
+<p>他还支持你对局部进行修改</p>
+<p>涂抹月亮后输入提示词,就得到了一张中秋🥮 和 万圣节🎃结合的图像 是不是挺有意思呢 (虽然最后没用)</p>
+<figure data-type="image" tabindex="8"><img src="https://nhuji.github.io/post-images/1753855702049.jpeg" alt="" loading="lazy"></figure>
+<h2 id="结语">结语</h2>
+<p>总之 MJ 能尝试的东西还蛮多, 也不是很难上手, 主要是想介绍一下现在的 AI 大概能做些什么/能做到什么程度, 另外 AI 更像是一个副驾驶, 需要有明确的想法 然后它才能帮你实现, 使用 AI 并不代表可以直接就出现结果, 依然需要构思想要的效果后多次的抽卡和调整提示词等才能得到满意的结果, 当然它的出现大大降低了我们做很多东西的门槛 让原本不可能或者难以做到的事情变成了可能</p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/xxsr8tCiCh/">
+                  <h3 class="post-title">
+                    视频生成模型 Sora 初次上手体验, 做了一个白噪音视频
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

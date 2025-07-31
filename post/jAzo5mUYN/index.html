@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>Git 是如何进行版本控制的？ | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="你有想过 Git 是怎么记录一个文件的不同版本的吗
+
+请只考虑它版本控制相关的基本功能（忽略协作、冲突解决，远程、分布式等特性），我们可以把 Git 的主要功能分为
+
+提交（Commits）：保存文件的特定版本
+分支（Branching）：..." />
+    <meta name="keywords" content="" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Git 是如何进行版本控制的？</h2>
+            <div class="post-date">2024-01-01</div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="你有想过-git-是怎么记录一个文件的不同版本的吗">你有想过 Git 是怎么记录一个文件的不同版本的吗</h2>
+<!-- more -->
+<p>请只考虑它版本控制相关的基本功能（忽略协作、冲突解决，远程、分布式等特性），我们可以把 Git 的主要功能分为</p>
+<ol>
+<li><strong>提交（Commits）</strong>：保存文件的特定版本</li>
+<li><strong>分支（Branching）</strong>：创建和切换不同的开发分支</li>
+<li><strong>检出（Checkout）</strong>：切换到不同的提交或分支</li>
+<li><strong>合并（Merging）</strong>：合并不同分支的改动</li>
+</ol>
+<p>可以发现 Git 做的其实就是帮我们保存一份文件在记录下的不同的状态/版本，所以 <strong>Commit</strong> 命令就像是一个相机一样记录下文件当前的状态，然后我们可以通过 <strong>Checkout</strong> 命令来回到这份文件的不同的时期</p>
+<p>如果让我们来实现这样一个文件的不同版本的记录 我们会怎么做呢？</p>
+<p>我们很自然地就可以想到 那每次记录的时候，直接存一份变化后的文件就好了，事实上 Git 也是这么做的（你可能会觉得这样做的话，不是会存储同一个文件的 n 个只有细微差别的版本吗，我们接下来会说到这一点）</p>
+<p>Git 会把我们每一份文件存储为一个对应的 blob 对象（你可以简单的理解为 Git 每次都会存储完整的一个文件到它的库中。虽然格式和原始文件不一样），这样当我们需要某个 commit 里的这个文件，直接把这个 blob 再次拿出来就好了</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1704114559656.png" alt="" loading="lazy"></figure>
+<p>比如图中我们有 3 个文件，顶层目录（也就是最顶部的 tree ）有两个文件**<code>README</code>** 和 **<code>Rakefile</code><strong>它们各自对应一个 blob，而子目录 lib 里的</strong><code>simplegit.rb</code>**同样也对应一个 blob</p>
+<p>当我们把上图抽象一下它就像一个 commit，那么我们扩展一下把多个这样的结构联系起来就成了 多个 commit 组合成的 history，就像下图一样</p>
+<p>其中黄色部分就代表了之前的图，整个部分作为一个 commit，而 tree 依然是目录结构，而它拥有的文件指向了它们各自对应的 blob，也就是米色的部分</p>
+<p>他们左上角都标注了它们各自的 ID</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1704114573571.png" alt="" loading="lazy"></figure>
+<p>让我们来看看图中的例子</p>
+<p>第一次提交我们创建了第一版的 <strong>test.txt</strong> 文件，于是 Git 有了一个对应 ID 为83baae的 blob</p>
+<p>第二次提交我们修改了刚刚的 <strong>test.txt</strong> 文件，于是 Git 又另外保存了一个 1f7a7a 的 blob 来对应修改后的 <strong>test.txt</strong><br>
+所以现在我们的 Git 存储库里有了两个完整的 <strong>test.txt</strong> 来对应它不同 commit 时的状态<br>
+接着我们继续在第二次提交时新创建了一个 <strong>new.txt</strong> 文件，因此也多了一个 ID 为 fa49b0 的 blob 来存储这个新创建的文件</p>
+<p>在第三次提交开始前，我们可以发现我们的存储库里有了 3 个 blob 分别对应两个不同版本的<strong>test.txt</strong> 和一个版本的  <strong>new.txt</strong></p>
+<p>接着我们进行第三次提交，这次我们没有修改文件了，而是决定创建一个 bak 子目录，并且在里面放一份和第一次提交一样的 <strong>test.txt</strong> 文件作为备份（虽然有 Git 后完全不需要这样手动备份）由于这个备份目录里的 <strong>test.txt</strong> 文件和第一次提交时的<strong>test.txt</strong> 完全一样所以这次 Git 不会存储任何新的 blob 而是直接把 bak 目录指向第一次提交的 tree 就好了</p>
+<p>所以来做个小结，Git 给每次变化的文件都存储一个对应的完整内容的 blob ，并且如果这个文件没有变化或者哪怕在不同目录存着和之前一样的文件， Git 也不会存新的 blob，Git 通过这样的方式完成第一次的去重 （哪怕文件名但内容一样也不会存多个 blob）</p>
+<h2 id="git-怎么知道文件内容是否一样呢">Git 怎么知道文件内容是否一样呢？</h2>
+<p>在上面提到 Git 会给每个东西都标记一个 ID，比如 commit、tree、blob 等，这也是 Git 用来判断文件内容是否相同的手段，Git 使用了SHA-1（Secure Hash Algorithm 1）加密哈希函数，它可以将任意长度的数据输入转换成一个固定长度的输出，也就是说它可以把一个数据/文件转换成固定长度的数字，而这个数字就是 Git 给 blob 的 ID</p>
+<p>让我们来做个小实验</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/1704114763568.png" alt="" loading="lazy"></figure>
+<p>创建了两个不同 <strong><code>hello.txt</code></strong> 和 <strong><code>world.txt</code></strong> 的文件并且都写入完全一样的内容<br>
+然后通过**<code>git hash-object</code>**这个底层命令得到了 Git 计算的 ID</p>
+<p>可以看到哪怕文件名字完全不同但计算出的 ID 是一样的，同样的接下来我把一个文件的内容稍微修改添加了一个点，可以看到计算的的 ID 完全不同了</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/1704114842481.png" alt="" loading="lazy"></figure>
+<p>所以 Git 就是通过这样的手段识别内容相同的文件并存储 blob 后给于对应的ID作为引用，所以哪怕我们在一个仓库内把同一个文件放一百万份也只会存储一个 blob</p>
+<h2 id="那么多同一个文件的不同版本怎么避免冗余呢">那么多同一个文件的不同版本怎么避免冗余呢？</h2>
+<p>上面提到哪怕是同一个文件，只要有轻微的不同，哪怕一个字符不一样那么也会为它存一个 blob，所以虽然 Git 通过 ID 的计算对内容相同的文件进行去重，但依然会有同一个文件的 n 个不同版本的完整文件存储在库里的问题，如果这么做那么仓库会变得非常巨大，而且明显很不合理</p>
+<p>这个时候 Git 就会使用另一种手段，也就是 zlib 压缩和增量储存技术，你在提交等操作时 Git 都可能会执行<code>git gc</code> 命令，将blob 通过压缩后再把类似的 blob通过增量技术打包成一个 packfile 文件，Git 打包时，会查找命名及大小相近的文件，来达到只保留差异部分的效果，比如它会选择一个基础版本然后再把其他版本的差异存储下来放入 packfile 中。</p>
+<p>另外其实你也可以手动执行<code>git gc</code> 命令，特别你做了一堆文件更改并且想要推送到远程想要节省时间时。</p>
+<p>所以虽然我们会觉得每个 commit 可能是下面这样的结构，每个 commit 里分别包含当前所有文件的引用（同一个文件不同颜色代表不同的版本）</p>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/1704114869828.png" alt="" loading="lazy"></figure>
+<p>但实际上是这样的看起来比较混乱的，但其实内容一样的文件和目录只存一份的结构</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/1704114875406.png" alt="" loading="lazy"></figure>
+<h2 id="commit-的结构">Commit 的结构</h2>
+<p>说完了单个的文件是怎么存储的，接下来说说 commit 的组织</p>
+<p>首先我们可以发现抛开 Git 各种复杂的特性，它本质上遵循了函数式数据结构的思想，通过这样<strong>不可变</strong>的特性保证了我们修改的稳定，这也是为什么有人说 “Git 永远不会真正丢失任何东西”</p>
+<p>为什么说 Git 的本质可以被看作一种数据结构呢 ****, 可以参考一下<a href="https://web.archive.org/web/20160324100429/http://www.jayway.com/2013/03/03/git-is-a-purely-functional-data-structure/">《Git is a purely functional data structure》</a></p>
+<p>可以说每次 commit，哪怕我们是修改或者重写之前的 commit 其实都是在之前的基础上新增信息而不是修改原有的信息，这一点和函数式数据结构非常类似</p>
+<p>这篇文章里其实对Git 怎么进行 commit、rebase、merge 介绍的原理介绍得比较清楚了，所以下面就简单的说一说 commit 本身的结构</p>
+<p>一个 commit 可以分为下面几个部分：</p>
+<ul>
+<li><strong>父提交（Parent Commit）的引用</strong><br>
+也就是指向它前面的那一个提交的引用，非常类似于单链表</li>
+<li><strong>元数据</strong><br>
+也就是这条提交的作者是谁，时间是多久、提交的信息（也在就git commit -m 里的写的东西）等等</li>
+<li><strong>对文件的引用</strong><br>
+也就是之前提到的 blob，一个 commit 里会包含对所有文件对应的 blob 的引用</li>
+</ul>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/1704114907874.png" alt="" loading="lazy"></figure>
+<p>比如如图，每个 commit 都有关引用指向他们的父提交，而他们本身也有对文件 blob 的引用，比如在 commit 2 里新增了 <strong>World.txt</strong> 但是没有修改 <strong>Hello.txt</strong> 所以它依然指向 blob 1</p>
+<p>当然分支和 head 这样的指针其实也是有对对应的 commit 的引用的</p>
+<h2 id="git-是怎么管理这些文件的">Git 是怎么管理这些文件的</h2>
+<p>现在我们知道了 Git 怎么高效地保存一个文件的不同版本，commit 的结构是怎么样的，那么它又是怎么组织这些东西呢</p>
+<p>让我我们以这个简化后的图作为说明仓库的说明</p>
+<figure data-type="image" tabindex="8"><img src="https://nhuji.github.io/post-images/1704114918353.png" alt="" loading="lazy"></figure>
+<p>我们可以把仓库分为三个区域：<strong><strong>暂存区、提交、文件存放</strong></strong></p>
+<h3 id="暂存区"><strong>暂存区</strong></h3>
+<p>在 Git 中，暂存区（Staging Area）用于记录下一次 commit 将包含哪些内容</p>
+<p>我们可以将暂存区视为两部分：一部分是准备添加到下一次提交中的文件（Staged for addition），另一部分是标记为删除的文件（Staged for removal）</p>
+<p>当你执行 <strong><code>git add</code></strong> 命令时，你实际上是在告诉 Git 将更改添加到暂存区的添加区域</p>
+<p>比如下面我们 init 了仓库，然后创建了一个文件并 <strong><code>git add hello.txt</code></strong></p>
+<p>这时就能看到我们把这个文件存储了一个 blob（也就是放在了文件存放区），并且设置了一个引用到 Blob 0</p>
+<figure data-type="image" tabindex="9"><img src="https://nhuji.github.io/post-images/1704114930917.png" alt="" loading="lazy"></figure>
+<p>如果我们进行 commit 的话，暂存区的部分就会作为我们 commit 的信息</p>
+<p>所以这个时候我们 commit 仓库就得到了 commit 1，仓库也就变成了下面这样</p>
+<figure data-type="image" tabindex="10"><img src="https://nhuji.github.io/post-images/1704114943025.png" alt="" loading="lazy"></figure>
+<h3 id="提交">提交</h3>
+<p>这个部分能就记录了我们各个提交具体内容，和提交之间的关系，还包括 HEAD 和分支还有他们指针的信息</p>
+<h3 id="文件存放"><strong>文件存放</strong></h3>
+<p>Blob 是 Git 用来存储文件数据的对象。每当你创建或修改文件并将其添加到暂存区时，Git 会为文件内容创建一个新的 blob。Blob 对象与文件名无关，只与文件内容相关。这意味着如果两个文件内容相同，它们会共享同一个 blob，即使它们的文件名不同</p>
+<h2 id="结语">结语</h2>
+<p>通过上面介绍的 Git 保存不同文件的版本的方式，以及怎么压缩管理这些文件，怎么组织 commit，怎么对 commit 进行各种操作（在引用的那篇博客里有详细介绍）和 Git 仓库的结构，也许 Git 可能不再那么像一个黑盒了吧</p>
+<p>当然依然有很多内容没能展开，比如Git 仓库里的文件太多了后怎么快速获得呢，新的 commit 具体怎么链接之前的 commit、为什么说 Git 有纯函数式数据结构的特点等等</p>
+<p>其实根据上面的原理，利用比如 Java 的对象 序列化等 我们也能很轻松的做一个进行版本控制的命令行工具 因为我们现在知道 Git 的本质就是一个纯函数式的数据结构，所以也不需要复杂的更改逻辑，只要新增信息来达到修改的效果就好了，而它对文件的版本控制其实就是每个改动的文件都存一份完整的 blob 然后再压缩，并且也清楚仓库的大概结构，所以虽然真正的 Git 有各种无比复杂的功能，但核心其实和我们在做的任何程序都没有本质区别，也没那么复杂。</p>
+<h2 id="参考资料">参考资料</h2>
+<p>结构图：</p>
+<p><a href="https://git-scm.com/book/en/v2">https://git-scm.com/book/en/v2</a></p>
+<p>仓库图：</p>
+<p><a href="https://cdn-uploads.piazza.com/attach/k5eevxebzpj25b/jqr7jm9igtc7l5/k97ipfmgmb3n/Gitlet_Slides.pdf">https://cdn-uploads.piazza.com/attach/k5eevxebzpj25b/jqr7jm9igtc7l5/k97ipfmgmb3n/Gitlet_Slides.pdf</a></p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/QxdMhV-gNu/">
+                  <h3 class="post-title">
+                    GPT 简介和原理
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

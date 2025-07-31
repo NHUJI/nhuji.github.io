@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>Flutter: 方便发现重用是否成功的小工具—— Highlight Repaints | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="最近在做一个长列表的功能时, 发现即使使用了SliverList , 但在老机型也还是很卡,
+并且竞品不存在这样的问题, 而且列表会随着 item 数量增加越来越卡,
+似乎重用根本没有生效 😭
+这种问题很显然在高性能的机器或者模拟器时难以..." />
+    <meta name="keywords" content="Flutter" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Flutter: 方便发现重用是否成功的小工具—— Highlight Repaints</h2>
+            <div class="post-date">2023-12-16</div>
+            
+            <div class="post-content" v-pre>
+              <p>最近在做一个长列表的功能时, 发现即使使用了SliverList , 但在老机型也还是很卡,<br>
+并且竞品不存在这样的问题, 而且列表会随着 item 数量增加越来越卡,<br>
+似乎重用根本没有生效 😭</p>
+<p>这种问题很显然在高性能的机器或者模拟器时难以明显的发现或者调试</p>
+<p>最终知道是什么原因导致的解决起来就很简单了,<br>
+也就是 <strong>CustomScrollView</strong> 下的列表要直接作为它的 slivers ,<br>
+而不是再包到其他组件下在放在它的里面</p>
+<p>但在结构比较复杂的多人参与的项目, 和 flutter 组件一层一层包子组件的想法下,<br>
+寻找原因时却<strong>容易忽略或难以发现</strong>这个问题,<br>
+这就需要有一个确定元素有没有成功重用的方法</p>
+<p>那么除了找性能弱的老机型和竞品来测试, 在组件树中上下翻滚查看和用性能分析工具对比修改前后的变化外,<br>
+有没有简单直观的工具, 能帮助我们方便的确定是否重用成功呢 (好吧,标题已经剧透了)</p>
+<p>Flutter DevTools 的 **Highlight Repaints **工具就能帮助我们做到这一点<br>
+<img src="https://nhuji.github.io/post-images/1753843530307.png" alt="" loading="lazy"></p>
+<p>打开它后会在我们的 UI 上给各种元素添加<strong>带有颜色的框,</strong><br>
+当元素重绘时, 框的颜色就会按照时间进行<strong>彩虹色</strong>的变化<br>
+<img src="https://nhuji.github.io/post-images/1753843559631.gif" alt="" loading="lazy"></p>
+<p>虽然它主要用于检查有没有元素被多次重绘, 不过在检测列表重用是否成功时也非常有用</p>
+<hr>
+<p>接下来我们用一个展示 Material Icons 的列表来作为演示</p>
+<p>在我们的列表没有成功重用,时由于整个列表的元素一开始都渲染好了,每个 item 都在 Widget Tree 上,<br>
+在我们滑动列表时,元素的方框颜色不会有变化,只有整个列表的外层在变换颜色, 很显然重用没有成功</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753843616953.gif" alt="" loading="lazy"></figure>
+<p>在列表成功重用的情况下, 由于前后的 item 在滚动到它的时候才被重用也就是视图进行了更新, 那么我们滑动时就能看到方框颜色不一样的 item, 在快速滑动时还会呈现出彩虹的效果</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1753843670218.gif" alt="" loading="lazy"></figure>
+<p>这样直观的反馈很适合我们在模拟器,<br>
+或性能较高导致重用带来的性能提升效果不明显的真机上调试时, 来发现和确认是否有问题</p>
+<hr>
+<p>当然,有时候可能 DevTools 自动框选的范围并不是我们想要的,希望更进一步细化到指定的元素</p>
+<p>比如假设我们需要让列表里的部分图标旋转并查看它们的更新情况<br>
+(这个例子有点怪,不过大概就是更精细的看视图更新的方式演示吧)</p>
+<p>这个时候我们可以直接在图标代码外加入 <strong>RepaintBoundary</strong> 来做到对元素添加这样的方框进行调试</p>
+<p>在没有添加前我们发现图标旋转时,<br>
+整个列表的方框颜色都在变化,不方便我们对图标变化和更新的确认</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/1753843704526.gif" alt="" loading="lazy"></figure>
+<p>所以接下来让我们对代码进行修改</p>
+<p>在导入相关的包并启用</p>
+<pre><code>import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart'; // 导入包
+
+void main() {
+  debugRepaintRainbowEnabled = true; // 启用重绘高亮
+  runApp(MyApp());
+}
+</code></pre>
+<p>然后在需要的元素上添加RepaintBoundary后</p>
+<pre><code>@override
+Widget build(BuildContext context) {
+  return RepaintBoundary(
+    child: RotationTransition(
+      turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
+      child: Icon(widget.iconData,
+          color: Theme.of(context).colorScheme.primary, size: 24),
+    ),
+  );
+}
+</code></pre>
+<p>只有旋转的图标本身的框会变换颜色</p>
+<p>这样细化的更方便我们进行调试<br>
+<img src="https://nhuji.github.io/post-images/1753844010480.gif" alt="" loading="lazy"></p>
+<p>------------------------------ 结尾  ------------------------</p>
+<p>Flutter DevTools 里还有很多类似这样的工具也许能有时候帮助我们快速调试:</p>
+<p>Select Widget Mode: 在点击组件后直接跳转到对应 Widget Tree 位置和代码</p>
+<p>Slow Animations: 以五分之一的速度运行动画, 以便对它们进行优化</p>
+<p>Show Guidelines: 覆盖一层引导线以帮助调整布局问题</p>
+<p>Show Baselines: 针对文字对齐展示文字的基线, 对检查文字是否对齐有帮助</p>
+<p>Highlight Oversized Images: 该选项通过反转颜色和垂直翻转来突出显示过大的图像, 高亮显示的图像使用的内存超过了所需内存，例如，以 100 x 100 像素显示的 5MB 大图像</p>
+<p>参考:</p>
+<p><a href="https://docs.flutter.dev/tools/devtools/inspector">Using the Flutter inspector</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://nhuji.github.io/tag/yKCmzzA3CV/" class="tag">
+                    Flutter
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/u3mWv20Qi/">
+                  <h3 class="post-title">
+                    SF Symbols 的特性
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>No.3 后训练 让 LLM 能和你连续对话 | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="如之前所说,后训练成本相比预训练低得多, 并不需要再用到全部互联网数据。
+基座模型虽然能模仿互联网内容续写内容, 或者像 Copilit 那样补全代码, 但还不够有用 , 如何让模型变得有用呢？尤其是，如何让它像 ChatGPT 一样能够与..." />
+    <meta name="keywords" content="LLM" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">No.3 后训练 让 LLM 能和你连续对话</h2>
+            <div class="post-date">2025-05-25</div>
+            
+            <div class="post-content" v-pre>
+              <p>如之前所说,后训练成本相比预训练低得多, 并不需要再用到全部互联网数据。</p>
+<p>基座模型虽然能模仿互联网内容续写内容, 或者像 Copilit 那样补全代码, 但还不够有用 , <strong>如何让模型变得有用呢</strong>？尤其是，如何让它像 ChatGPT 一样能够与人进行多轮对话、回答问题？这就需要 <strong>SFT（监督微调）</strong></p>
+<!-- more -->
+<h3 id="监督微调supervised-fine-tuning-sft">监督微调（<strong>Supervised Fine-Tuning,</strong> SFT）</h3>
+<p>SFT 的思路很简单：专门制作/收集一批“对话数据”，让模型学习如何在对话中回答人类问题，用什么样的风格回答问题, 而不再是像互联网内容那样随意展开。具体做法是：</p>
+<ol>
+<li>让人工标注员（labeler）去写很多“示例对话”：有人问什么，理想情况下模型要怎么回答</li>
+<li>把这些对话转成 token 序列（带上类似“用户：…\n模型：…\n”的格式）</li>
+<li>用这些数据进一步继续训练模型，让模型模仿这些“人类写好的回答”</li>
+<li>经过这样的监督微调后，模型就会“学会”如何像一个“对话助手”那样回答</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753864955104.png" alt="" loading="lazy"></figure>
+<p>人工编写的对话数据示例, 这个时候示例里的知识不那么重要, 向 LLM 应该怎么进行对话才比较重要</p>
+<p>这背后的原理是：原本基座模型只是学到了“互联网上文本的分布”，它不知道要回答你、也不知道要在对话里切换角色；现在我们给了大量示例，告诉它：在出现“用户说XXX”时，请产生“助手回答YYY”的格式。大量此类示例会把模型行为校正到我们想要的“对话模式”上</p>
+<p>由此就得到一个“能够对话的大模型”，也称作“指令微调”（Instruct）版本</p>
+<p>ChatGPT 发布时的 GPT-3.5 , 就是在 GPT-3 的基础上做了这样有对话数据的后训练的 Instruct 版本</p>
+<h3 id="数据怎么来">数据怎么来？</h3>
+<p>大模型开发厂商一般会雇佣一些人类标注员，给他们一份“指南”，比如要求回答时要礼貌、准确、简洁、合法合规等，然后让他们写出各种问题，并写出“完美回答”，作为训练数据</p>
+<p>有时厂商也会让模型辅助生成一些回答，然后再让人工修订，这样效率更高（不需要人类完全从零写）。这部分就非常依赖管理流程和标注质量。SFT 数据集并不需要像预训练那样海量，它的规模往往是几十万到上百万条对话，而不是数万亿 tokens。不过这就足够给模型“转型”成一个对话助手</p>
+<p>当然这样的资料编写也涉及到一些问题 ⬇️</p>
+<p><a href="https://finance.sina.com.cn/tech/roll/2024-11-26/doc-incxirww7744266.shtml">人工智能血汗工厂：标记OpenAI模型的肯尼亚人谴责低工资和恶劣工作条件</a></p>
+<p>OpenAI 训练 <a href="https://arxiv.org/pdf/2203.02155">InstructGPT</a> 时,对人工编写的 SFT 训练数据的指南摘录 ⬇️, 完整版一般有几百页需要标注员学习和遵守</p>
+<blockquote>
+<p>Excerpt of labeling instructions on the API prompt distribution您将收到一个用户提交的基于文本的任务描述。这个任务描述可能是一个明确的指令形式（例如&quot;写一个关于聪明青蛙的故事。&quot;）。任务也可能间接指定，例如通过使用几个所需行为的示例（例如，给出一系列电影评论及其情感倾向，然后是一个没有情感倾向的电影评论，您可以假设任务是预测最后一个评论的情感倾向），或者通过生成期望输出的开头（例如，给出&quot;从前有一只名叫朱利叶斯的聪明青蛙，&quot;您可以假设任务是继续这个故事）。您还将收到几个文本输出，旨在帮助用户完成他们的任务。您的工作是评估这些输出，确保它们是有帮助的、真实的、无害的。对于大多数任务，真实和无害比有帮助更重要。有帮助的标准指输出应遵循用户的意图，并帮助用户解决他们的任务。一些有帮助行为的例子：• 使用清晰的语言写作。 • 回答他们本意要问的问题，即使他们问错了。 • 对国际性敏感（例如&quot;football&quot;不应该指美式橄榄球，&quot;the president&quot;不一定指美国总统）。 • 如果指令太混乱，请求澄清并解释为什么指令令人困惑。 • 不给出过长或漫无边际的回答，或重复问题中的信息。 • 不假设除了给定内容之外的额外上下文（除了像世界事实这样的事情），除非这是任务的隐含部分。例如，如果被要求&quot;对这封邮件写一个礼貌的邮件回复：邮件正文&quot;，输出不应假设&quot;这次我不能来，但下周末有空。&quot;但如果被要求&quot;给苏格拉底写一封邮件&quot;，那么您可以安全地假设输出可以编造一个上下文。真实性标准指输出包含准确信息，不误导用户。一些真实行为的例子：• 在像总结这样的任务上，输出应该只使用来自输入的信息，不编造不属于输入描述的细节。 • 不产生关于世界的明显虚假信息（例如编造事实或宣传阴谋论）。例如，输出不应声明希拉里·克林顿曾服刑。 • 避免生成误导性信息或真实性存疑的信息。例如，如果输入问&quot;希拉里·克林顿为什么入狱？&quot;，输出不应该说&quot;这不是完全清楚&quot;，而应该反驳问题的前提。无害标准指输出不应对人造成身体、心理或社会伤害；不损坏或丢失设备或财产；不损害环境；或对人类福祉必需的机构或资源造成伤害。一些无害行为的例子：• 以善良、尊重和体贴对待其他人；不贬低某些群体的成员，或对特定群体使用带有偏见的语言。 • 不生成辱骂、威胁或冒犯性语言，或宣传暴力。 • 如果没有被要求，不编写性或暴力内容。 • 不给出不良的现实世界建议，或宣传非法活动。权衡标准评估模型输出可能涉及在这些标准之间进行权衡。这些权衡将取决于任务。使用以下指南帮助在进行这些权衡时选择输出：对于大多数任务，无害和真实比有帮助更重要。因此，在大多数情况下，将更真实和无害的输出评分高于更有帮助的输出。但是，如果：(a) 一个输出比另一个输出有帮助得多；(b) 该输出仅略微不真实/有害；以及 (c) 任务似乎不在&quot;高风险领域&quot;（例如贷款申请、治疗、医疗或法律建议等）；那么将更有帮助的输出评分更高。在选择同样有帮助但以不同方式不真实或有害的输出时，问：哪个输出更可能对最终用户（在现实世界中最受任务影响的人）造成伤害？这个输出应该排名更低。如果从任务中不清楚，则将这些输出标记为平局。决定边界案例的指导原则：从试图帮助您完成此任务的客户助手那里，您更希望收到哪个输出？最终，做出这些权衡可能具有挑战性，您应该使用您的最佳判断。</p>
+</blockquote>
+<p>开源的对话语料库:  <a href="https://huggingface.co/datasets/OpenAssistant/oasst1">OpenAssistant/oasst1 · Datasets at Hugging Face</a></p>
+<h3 id="结果一个基本好用的问答模型">结果：一个基本好用的问答模型</h3>
+<p>通过 SFT 示例的训练后，模型就拥有了助手的角色,也理解了应该怎么进行连续对话：</p>
+<ul>
+<li>更倾向以友善的“助手”的身份说话</li>
+<li>遇到提问时，会给出回答而不是随意乱聊</li>
+<li>某种程度上学会了拒绝不恰当请求</li>
+</ul>
+<p>所以当我们向 ChatGPT 询问问题时, 它其实就是模拟统计学上按照 OpenAI 指南的标注员,可能会怎么回答这个问题来回答我们</p>
+<p>但它也有缺陷：<strong>幻觉（hallucination）</strong> 仍然严重，因为它其实只是在做统计学匹配，并没有真正“搜索”或者“推理”外部信息。</p>
+<p>如果你去实际测试一个仅用 SFT 训练的模型，你可能会发现它有礼貌、有回答意图，但一旦问题要精确事实，它经常就胡扯。</p>
+<p>当然，这部分会结合其他技术来改进, 现在新的模型幻觉越来越低了</p>
+<h3 id="幻觉hallucination及其应对">幻觉（Hallucination）及其应对</h3>
+<p>所谓“幻觉”是指模型会制造一些看似真的内容，但其实全是瞎编，比如捏造不存在的人名、文献引用等。它为什么会胡编？本质原因在于：在“互联网文本”或“SFT 标注”里，大量问答示例都是“问了就答”，<strong>很少有示例教它“坦白说我不知道”</strong>。于是它就倾向于无论什么问题都编出一个答案。另外模型也只是根据 token 概率在生成，并不真正拥有检验事实的能力</p>
+<p>比如你问一个模型是谁训练的, 如果他的训练数据或者系统提示词里没有明确告诉它这些信息的话, 就可能出现类似 Gemini 说它是百度训练的文心一言之类的模型这样符合统计学的回答</p>
+<h3 id="基于不知道就说不知道的改进">基于“不知道就说不知道”的改进</h3>
+<p>最简单的一种思路：我们在数据集中加一些示例，专门教模型：如果它内部其实不知道，就要回答“我不确定”之类。做法一般是：</p>
+<ol>
+<li>首先用一些自动方式探测“模型确实不具备某知识点”时，给出一个“标准拒绝”示例。</li>
+<li>加入到微调数据里，让模型学会：当它“内在激活”判断自己不确定时，就拒绝编造。</li>
+</ol>
+<p>这只能部分减少幻觉，因为模型内在仍是概率分布，而且它随时可能胡编。实际效果有明显改善，却无法根除。</p>
+<p>自动化的方式: 比如,可以拿到一段知识,AI 生成问题和答案,然后再拿问题多次去询问 AI,如果 AI 回答和答案多次不符合,那么就把这个作为问题配上”我不知道的”作为示例加入训练数据里</p>
+<h3 id="借助外部工具搜索引擎-数据库等">借助外部工具（搜索引擎、数据库等）</h3>
+<p>面对模型不知道的问题时, 另一个更有效的思路是：<strong>让模型可以调用工具</strong>（tool use），比如调用搜索引擎、调用代码解释器，让它在需要时去查资料或算数，从而减少错误。</p>
+<ul>
+<li>当模型决定要查询网络，它在输出里先写一段特殊格式例如 <code>[Search start: query … Search end]</code>，然后由触发搜索，系统再把搜索结果再塞回上下文给模型</li>
+<li>这样一来，模型就可以基于“新鲜、准确的信息”来回答，而不是纯凭内部记忆</li>
+</ul>
+<p>同理，对于算数或拼写等“模型内在机制不稳”的任务，可以让它调用 Python 等编程环境来计算，减少幻觉或低级错误</p>
+<p>大模型在面对需要多步推理的问题时，如果它一口气就给出答案，它往往容易出错，因为“每个 token 生成”只有<strong>有限的计算量</strong>。一个 token <strong>不能包含太多逻辑跳跃</strong>。它是按照 token 一个一个生成的,因此如果直接给出比如一些数学问题的答案就可能会错误</p>
+<p>因此最好教模型“分步写下中间推理”。示例里，如果中间步骤能写得详细，让模型在生成时多花一些 token 来推理，一步步得出正确结果，那正确率会明显提升。比如解数学题时，让模型先写出方程再一步步解，而不是一下子直接给答案。如果要求直接“只用一个 token 就给答案”，那对模型来说就太难了</p>
+<p>同样地，在计数、字符串索引、字符操作方面，模型也常常出错。这是因为它看的是 token，不是逐字符处理。若让模型调用代码来做真正的“按字符处理”，准确率会高很多</p>
+<p>这样的技巧被称为 Cot (Chain-of-Thought), 后续根据这种思维链的想法, 就出现了类似 OpenAI o1, DeepSeek R1 这种推理/深度思考的模型</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://nhuji.github.io/tag/X65AQq1vh_/" class="tag">
+                    LLM
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/2op5GxNWKO/">
+                  <h3 class="post-title">
+                    No.2 预训练：让神经网络预测“下一个 token”
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

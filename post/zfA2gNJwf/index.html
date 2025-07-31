@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>SwiftUI: 将图案符号和文字结合 | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="在尝试给武器添加区分新旧的Sparkles图标图标时发现简单的在文字后添加图案会非常不和谐
+
+比如像这样:
+
+    
+
+  
+ HStack(spacing: 5) {
+    Text(guideItem.name)
+        ...." />
+    <meta name="keywords" content="SwiftUI" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">SwiftUI: 将图案符号和文字结合</h2>
+            <div class="post-date">2023-08-08</div>
+            
+            <div class="post-content" v-pre>
+              <p>在尝试给武器添加区分新旧的Sparkles图标图标时发现简单的在文字后添加图案会非常不和谐</p>
+<!-- more -->
+<p>比如像这样:</p>
+<div  style="height: 350px;" >
+    <img src="/post-images/1691487633138.png" style="display: block; height: 300px; margin: 20px auto;">
+</div>
+  <pre><code class="language-swift" >
+ HStack(spacing: 5) {
+    Text(guideItem.name)
+        .strokeText(color: colorScheme == .dark ? Color(hex: "76b6ff").opacity(0.3) : .clear, lineWidth: 0.1)
+        .shadow(color: colorScheme == .dark ? Color(hex: "A5CBF6").opacity(0.5) : .clear, radius: 4)
+        .font(UIDevice.current.userInterfaceIdiom == .phone ? .callout : .title3)
+        .foregroundColor(self.viewModel.getStatus(for: guideItem.id) ? Color.blue : Color.primary)
+
+    if guideItem.special != nil {
+        Image("special")
+            .resizable()
+            .renderingMode(.template)
+            .aspectRatio(contentMode: .fit)
+            .foregroundColor(.primary)
+            .frame(width: 20, height: 20)
+    }
+}
+</code></pre>
+<p>可以看到这样的话文字和图案被HStack分成了两块,并且有种对齐的感觉,导致了和其他item视觉上的不平衡</p>
+<p>虽然可以直接用类似下面这样转image为text再相加的方法,但图像大小和颜色都需要预先调整并且难以随着字体大小变化和适配不同屏幕大小的设备</p>
+<div  style="height: 350px;" >
+    <img src="/post-images/1691488771686.png" style="display: block; height: 300px; margin: 20px auto;">
+</div>
+  <pre><code class="language-swift" >
+    Text(LocalizedStringKey((guideItem.method != nil ? "item." : "") + guideItem.name), tableName: "Aeon")
+    +
+    Text(Image("special"))
+</code></pre>
+<p>要想把图片单纯的作为符号加入文字可以用两种方式作为字体和使用Symbol Image的方法把svg变成&quot;符号&quot;,我们使用第二种,可以参考下面的文档<br>
+<a href="https://developer.apple.com/cn/documentation/xcode/creating_custom_symbol_images_for_your_app/">为你的 App 创建自定符号图像</a><br>
+获得自定符号模板后在矢量绘图软件将需要的图案编辑并验证再导入Xcode作为<strong>Symbol Image Set</strong>使用</p>
+<div  style="height: 150px;" >
+    <img src="/post-images/1691488975224.png" style="display: block; width: 400px; margin: 20px auto;">
+</div>
+<p>之后就比较简单了,可以直接用Image(&quot;special&quot;) 使用添加的符号,注意一下细节就好了<br>
+比如在符号和文字之间添加空格个,但不要直接用&quot; &quot;这样的空格,不然很容易导致符号在字符比较长的时候符号换行到首尾,一个使用非换行空格避免符号<br>
+然后对于符号是否出现的判断也使用了'''guideItem.special != nil ? Image(&quot;special&quot;) : Image(&quot;transparentPlaceholder&quot;)'''这样的判断,因为不能直接用Text(&quot;&quot;)这样的文字和Image运算,也不能在里面对图片添加各种效果,所以使用了transparentPlaceholder这样1x1大小的透明图片作为替代</p>
+<pre><code class="language-swift" >
+    HStack(spacing: 0) {
+        Text(guideItem.name)
+            + Text(guideItem.special != nil ? "\u{00A0}" : "") 
+            + Text(guideItem.special != nil ? Image("special") : Image("transparentPlaceholder")) 
+    }
+    .strokeText(color: colorScheme == .dark ? Color(hex: "76b6ff").opacity(0.3) : .clear, lineWidth: 0.1)
+    .shadow(color: colorScheme == .dark ? Color(hex: "A5CBF6").opacity(0.5) : .clear, radius: 4)
+    .font(UIDevice.current.userInterfaceIdiom == .phone ? .callout : .title3)
+    .foregroundColor(self.viewModel.getStatus(for: guideItem.id) ? Color.blue : Color.primary)
+</code></pre>
+<p>总之最后获得和文字适配同一个颜色的符号,并且需要的时候始终出现在文字最后无论是否换行,</p>
+<div  style="height: 350px;" >
+    <img src="/post-images/1691490252897.png" style="display: block; height: 300px; margin: 20px auto;">
+</div>
+并且会始终和文字保持一个字号和颜色,哪怕文字大小有变化也能完美适配,哪怕字号夸张到下面这样:
+<div  style="height: 400px;" >
+    <img src="/post-images/1691490479460.png" style="display: block; height: 400px; margin: 20px auto;">
+</div>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://nhuji.github.io/tag/0Ya7VGqsa/" class="tag">
+                    SwiftUI
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/WcZ_G4l0X/">
+                  <h3 class="post-title">
+                    TOTK Companion Privacy Policy
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

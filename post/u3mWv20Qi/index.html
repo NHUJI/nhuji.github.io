@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>SF Symbols 的特性 | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="说到 SF Symbols 不知道大家有什么印象？
+我们可能觉得 SF Symbols 只是一个系统内置的图标库而已
+因为UI方面会提供我们开发需要的各种图标和符号，所以可能也没怎么接触它，但是它其实无处不在，从iPhone到Mac再到Ap..." />
+    <meta name="keywords" content="" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">SF Symbols 的特性</h2>
+            <div class="post-date">2023-11-25</div>
+            
+            <div class="post-content" v-pre>
+              <p>说到 SF Symbols 不知道大家有什么印象？</p>
+<p>我们可能觉得 SF Symbols 只是一个系统内置的图标库而已</p>
+<p>因为UI方面会提供我们开发需要的各种图标和符号，所以可能也没怎么接触它，但是它其实无处不在，从iPhone到Mac再到Apple Watch等，现在可以说你在使用苹果设备时无时无刻都能看到SF Symbols</p>
+<!-- more -->
+<p>比如这个控制中心的页面，可以说从上到下全是SF Symbols</p>
+<p>从飞行模式，到音乐的切换按钮，再到亮度调节</p>
+<p>甚至手电筒图标的变化</p>
+<p><img src="https://nhuji.github.io/post-images/2023-11-21_at_11.57.55.png" alt="2023-11-21 at 11.57.55.png" loading="lazy"><br>
+甚至到收藏，切换英语时的图标变化动画等等都是SF的使用</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/wecom-temp-203328-94fe14f19c1f2895a75101c87213ce8f.jpg" alt="wecom-temp-203328-94fe14f19c1f2895a75101c87213ce8f.jpg" loading="lazy"></figure>
+<h2 id="问题">问题</h2>
+<p>让我们先从一个我以前遇到的问题和怎么用SF Symbol解决开始</p>
+<p>假如我们要做一个游戏的图鉴，其中一个武器有两个版本，区分了是否受到污染</p>
+<p>![Untitled](https://nhuji.github.io/post-images/Untitled 1.png)</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/Untitled%201.png" alt="Untitled" loading="lazy"></figure>
+<p>而游戏中用一个类似✨sparkles的标志，来表示武器没有被污染</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/2023-11-17_at_17.40.23.png" alt="2023-11-17 at 17.40.23.png" loading="lazy"></figure>
+<p>我想要在app的图鉴列表里模仿这种效果，那么一般怎么才能在SwiftUI做到？在其他技术里呢？</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/e7f9485c2ed5a76688e3db6b77de931b.png" alt="e7f9485c2ed5a76688e3db6b77de931b.png" loading="lazy"></figure>
+<p>可能最先想到的是直接在文字旁加一个视图</p>
+<p>一个HStack就解决了</p>
+<pre><code class="language-swift">HStack(spacing: 5) {
+    **Text(guideItem.name)**
+        .strokeText(color: colorScheme == .dark ? Color(hex: &quot;76b6ff&quot;).opacity(0.3) : .clear, lineWidth: 0.1)
+        .shadow(color: colorScheme == .dark ? Color(hex: &quot;A5CBF6&quot;).opacity(0.5) : .clear, radius: 4)
+        .font(UIDevice.current.userInterfaceIdiom == .phone ? .callout : .title3)
+        .foregroundColor(self.viewModel.getStatus(for: guideItem.id) ? Color.blue : Color.primary)
+
+    if guideItem.special != nil {
+        **Image(&quot;special&quot;)**
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 20, height: 20)
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/Untitled%202.png" alt="Untitled" loading="lazy"></figure>
+<p>这样不是不行，但在多行文字的时候很难看，并没有在文字的末尾跟随着换行</p>
+<p>而且由于图片的高度和文字不一致导致不同武器文字之间的基线也对不齐</p>
+<p>另外这个图片本身的颜色变化也和武器拥有的状态不匹配，我们可能又需要额外的对不同状态使用不同的图片</p>
+<hr>
+<p>接下来我们很自然就可能会想到把文字和图片组合<br>
+比如我们可以把图像转换为Text视图再和前面的文字Text视图组合</p>
+<pre><code class="language-swift">Text(LocalizedStringKey(guideItem.name), tableName: &quot;default&quot;)
++
+**Text(Image(&quot;special&quot;))**
+</code></pre>
+<p>这样可以并排并且换行了</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/Untitled%203.png" alt="Untitled" loading="lazy"></figure>
+<p>但是，这样做就会导致新的问题，首先是我们需要控制这个图片的宽高，并且由于要支持不同平台的设备（比如iPad）还需要设置不同的宽高，也许我们可以读取字号再计算，但这样很麻烦</p>
+<p>同时之前提到的根据武器拥有状态不同而要进行对应的图片颜色变化的问题依然需要解决</p>
+<p>而更重要的问题是这样做在需要换行的时候，组合视图总是倾向于把图片放到第二行</p>
+<p>虽然有点吹毛求疵，但目的主要是介绍SF Symbols 的特性，好像有一点萝卜坑的感觉，但我们继续解决吧</p>
+<hr>
+<p>我们按照游戏内的风格制作了一个<strong>自定义</strong>的SF Symbols，具体怎么制作后面再介绍</p>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/Untitled%204.png" alt="Untitled" loading="lazy"></figure>
+<p>总之我们有了这个符号，就可以开始在项目里使用了，由于SF Symbols拥有和文字一样的特性，可以方便的和文字一起使用，放入项目后直接<code>Image(&quot;special&quot;)</code>就可以用这个符号了，简单和文字组合就好了</p>
+<pre><code class="language-swift">HStack(spacing: 0) {
+    Text(guideItem.name)
+        + Text(guideItem.special != nil ? &quot;\u{00A0}&quot; : &quot;&quot;) // 和符号之间的空格
+        + Text(guideItem.special != nil ? **Image(&quot;special&quot;)** : Image(&quot;transparentPlaceholder&quot;)) 
+}
+.strokeText(color: colorScheme == .dark ? Color(hex: &quot;76b6ff&quot;).opacity(0.3) : .clear, lineWidth: 0.1)
+.shadow(color: colorScheme == .dark ? Color(hex: &quot;A5CBF6&quot;).opacity(0.5) : .clear, radius: 4)
+.font(UIDevice.current.userInterfaceIdiom == .phone ? .callout : .title3)
+.foregroundColor(self.viewModel.getStatus(for: guideItem.id) ? Color.blue : Color.primary)
+</code></pre>
+<figure data-type="image" tabindex="8"><img src="https://nhuji.github.io/post-images/Untitled%205.png" alt="Untitled" loading="lazy"></figure>
+<p>我们可以看到第一行即便加入了符号，这个武器的名字的基线和其他武器名也在一条线上</p>
+<p>而第二行在文字换行后符号也跟着换行了</p>
+<p>当然由于SF Symbols的“文字”的特性，我们也无需额外的处理，也能让它直接和文字一起在不同的拥有状态下变色了</p>
+<p>甚至如果有老年用户需要把字号调到无比巨大也没问题 （但老年用户应该不会玩游戏…吧？）</p>
+<figure data-type="image" tabindex="9"><img src="https://nhuji.github.io/post-images/Untitled%206.png" alt="Untitled" loading="lazy"></figure>
+<p>希望通过上面这个例子可以改变我们以前可能觉得SF Symbols就是一堆系统内置的图片的想法</p>
+<p>接下来让我正式开始介绍它有哪些特性以及怎么制作自定义的SF Symbols吧</p>
+<h1 id="sf-symbols-的特性">SF Symbols 的特性</h1>
+<p>SF 符号 （SF Symbols）提供了数千个风格一致且可配置性高的符号，这些符号可与 San Francisco 系统字体无缝整合且可自动适配所有粗细和字号的文本。可以在显示界面图标的任何地方，例如导航栏、工具栏、标签页栏、上下文菜单和文本中，使用符号来表达物体或概念。</p>
+<p>SF Symbols 设计上考虑了排版，包含不同的权重、尺度、轮廓和填充变体、封装形状和对齐等特性。</p>
+<p>从2019的iOS13发布起来已经进行了很多改变，下面大概是按照时间线介绍的，所以越后面的特性对系统版本的要求越高</p>
+<p>它很重要的一个特性就是可以被当做文字来处理，SF Symbols 是一套与文本协调的矢量符号库，符号可以缩放并与文本的粗细协调，支持自定义。</p>
+<p>比如放到文字里，它可以很好的与文本协调显示</p>
+<figure data-type="image" tabindex="10"><img src="https://nhuji.github.io/post-images/2023-11-14_at_15.57.36.png" alt="一条水平线" loading="lazy"></figure>
+<p>一条水平线</p>
+<p>在根据字体粗细大小变化时也不是简单的放大，描边而是有对应的变化和处理</p>
+<figure data-type="image" tabindex="11"><img src="https://nhuji.github.io/post-images/2023-11-14_at_15.58.54.png" alt="不同粗细表现都很好" loading="lazy"></figure>
+<p>不同粗细表现都很好</p>
+<figure data-type="image" tabindex="12"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.02.30.png" alt="所以无论字体大小如何都能很好的配合" loading="lazy"></figure>
+<p>所以无论字体大小如何都能很好的配合</p>
+<p>不需要我们手动进行图片大小的计算</p>
+<hr>
+<p>它还会自动对齐布局</p>
+<figure data-type="image" tabindex="13"><img src="https://nhuji.github.io/post-images/2023-11-14_at_15.57.53.png" alt="互相对齐" loading="lazy"></figure>
+<p>互相对齐</p>
+<h2 id="与文字对齐">与文字对齐</h2>
+<p>比如我们在做这样的一个列表时，我们希望无论怎么换行，图片始终和第一行对齐</p>
+<figure data-type="image" tabindex="14"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.27.21.png" alt="2023-11-14 at 16.27.21.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.27.55.png" alt="2023-11-14 at 16.27.55.png" loading="lazy"></figure>
+<p>在UIkit中也许我们会设定一些约束，而在SwiftUI中可能用Spacer()之类的东西把它顶到上面去</p>
+<p>而SF就很容易了，我们可以直接在IB里为它设置<code>baselineOffsetFromBottom</code>让它和第一行文字的基线对齐</p>
+<figure data-type="image" tabindex="16"><img src="https://nhuji.github.io/post-images/Untitled%207.png" alt="Untitled" loading="lazy"></figure>
+<p>在在 SwiftUI 中，可以这样做</p>
+<figure data-type="image" tabindex="17"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.35.49.png" alt="sf自带的基线" loading="lazy"></figure>
+<p>sf自带的基线</p>
+<p>不过如果是<strong>普通图片</strong>，UIKit中我们还是可以手动计算一下图片基线相关的值并将这个值传递给 <code>withBaselineOffsetFromBottom</code> 方法来创建一个新的 <code>UIImage</code> 实例来做到</p>
+<p>而在SwiftUI里也可以用类似的方式计算并和基线对齐</p>
+<figure data-type="image" tabindex="18"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.37.24.png" alt="需要手动指定" loading="lazy"></figure>
+<p>需要手动指定</p>
+<p>所以通过这种方式，即使不是SF符号也能解决这个对齐问题</p>
+<p>比如我们要把符号换成真是的头像，就可以用上面的方式做到</p>
+<figure data-type="image" tabindex="19"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.46.14.png" alt="2023-11-14 at 16.46.14.png" loading="lazy"></figure>
+<h2 id="与文字混合使用">与文字混合使用</h2>
+<p>所以SF Symbols的这种“文字”的特性让它可以很好的插入文本里</p>
+<figure data-type="image" tabindex="20"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.54.17.png" alt="UIKit" loading="lazy"></figure>
+<p>UIKit</p>
+<figure data-type="image" tabindex="21"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.55.08.png" alt="2023-11-14 at 16.55.08.png" loading="lazy"></figure>
+<hr>
+<p>要改变颜色也很轻松，不需要格式化作为模板什么的了</p>
+<figure data-type="image" tabindex="22"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.57.07.png" alt="UIKit" loading="lazy"></figure>
+<p>UIKit</p>
+<figure data-type="image" tabindex="23"><img src="https://nhuji.github.io/post-images/2023-11-14_at_16.56.31.png" alt="要加颜色也很简单" loading="lazy"></figure>
+<p>要加颜色也很简单</p>
+<p>通过配置和动态类型支持，符号可以自动适应不同的环境和内容大小</p>
+<h2 id="本地化">本地化</h2>
+<p>有很多本地化的字符，也会自动适应，无需在代码中指定本地化变体</p>
+<figure data-type="image" tabindex="24"><img src="https://nhuji.github.io/post-images/Untitled%208.png" alt="Untitled" loading="lazy"></figure>
+<h1 id="渲染模式">渲染模式</h1>
+<p>一般我们可能以为SF Symbols只支持单色，或者像文字那样被赋予颜色，但其实一个SF Symbols里也可以有多种颜色存在</p>
+<p>SF 符号 3 及更高版本提供了四种渲染模式：单色、分层、调色盘和多色</p>
+<p>比如在天气的组件里，就使用了<strong>多色</strong>的模式下的SF Symbols，这是预设的颜色，我们只需要指定他为Multicolor模式就好了</p>
+<figure data-type="image" tabindex="25"><img src="https://nhuji.github.io/post-images/2023-11-14_at_18.22.00.png" alt="2023-11-14 at 18.22.00.png" loading="lazy"></figure>
+<p>渲染模式有多重要呢？适当的颜色和层次选择可以给App带来很不一样的观感</p>
+<figure data-type="image" tabindex="26"><img src="https://nhuji.github.io/post-images/2023-11-15_at_10.31.44.png" alt="2023-11-15 at 10.31.44.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="27"><img src="https://nhuji.github.io/post-images/2023-11-15_at_10.31.53.png" alt="2023-11-15 at 10.31.53.png" loading="lazy"></figure>
+<p>接下来来介绍一下SF的四种渲染模式</p>
+<figure data-type="image" tabindex="28"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.48.37.png" alt="2023-11-16 at 17.48.37.png" loading="lazy"></figure>
+<h3 id="单色渲染模式monochrome">单色渲染模式（Monochrome）</h3>
+<figure data-type="image" tabindex="29"><img src="https://nhuji.github.io/post-images/Untitled%209.png" alt="Untitled" loading="lazy"></figure>
+<p>将一种颜色应用到符号中的所有层。符号中的路径以你指定的颜色渲染或者作为颜色填充路径中的透明形状</p>
+<p>反映 SF Symbols 的排版本质，颜色中性，适用于追求视觉统一性的场景（不会让某一个图标特别显眼）</p>
+<p>比如在这个长按的菜单里，我们不会想看到上面那样五颜六色的符号，而是和文字颜色统一的符号</p>
+<p>当统一性是首要考虑因素时，单色模式是理想选择</p>
+<p>另外它也支持不同的透明度设置</p>
+<figure data-type="image" tabindex="30"><img src="https://nhuji.github.io/post-images/2023-11-16_at_14.46.44.png" alt="2023-11-16 at 14.46.44.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="31"><img src="https://nhuji.github.io/post-images/2023-11-16_at_15.01.42.png" alt="2023-11-16 at 15.01.42.png" loading="lazy"></figure>
+<p>我们知道同一个系统色会在不同的模式下显示不同，SF同样也是这样</p>
+<h3 id="分层渲染模式hierarchical">分层渲染模式（Hierarchical）</h3>
+<figure data-type="image" tabindex="32"><img src="https://nhuji.github.io/post-images/Untitled%2010.png" alt="Untitled" loading="lazy"></figure>
+<p>将一种颜色应用到符号中的所有层，颜色的不透明度因每一层的分层级别而异</p>
+<p>同样和单色一样是一个色调，但是会使用不同不透明度创建视觉层次，让单一色调带动整体美感</p>
+<figure data-type="image" tabindex="33"><img src="https://nhuji.github.io/post-images/2023-11-15_at_10.58.37.png" alt="2023-11-15 at 10.58.37.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="34"><img src="https://nhuji.github.io/post-images/2023-11-15_at_10.33.39.png" alt="2023-11-15 at 10.33.39.png" loading="lazy"></figure>
+<p>这种效果的实现是因为在设计SF是就为它区分了不同的层次</p>
+<figure data-type="image" tabindex="35"><img src="https://nhuji.github.io/post-images/2023-11-15_at_10.56.01.png" alt="Tertiary只在少数情况下需要，比如下雨" loading="lazy"></figure>
+<p>Tertiary只在少数情况下需要，比如下雨</p>
+<p>当我们在分层模式下为SF设置颜色时，这个颜色会作为基色自动套用在不同层次</p>
+<figure data-type="image" tabindex="36"><img src="https://nhuji.github.io/post-images/2023-11-15_at_10.57.00.png" alt="2023-11-15 at 10.57.00.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="37"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.30.23.png" alt="使用方式" loading="lazy"></figure>
+<p>使用方式</p>
+<figure data-type="image" tabindex="38"><img src="https://nhuji.github.io/post-images/2023-11-16_at_18.33.35.png" alt="UIKit中使用配置来统一给图标设置" loading="lazy"></figure>
+<p>UIKit中使用配置来统一给图标设置</p>
+<p>这么做有什么用呢？</p>
+<p>可以用于强化界面中符号的可读性和辨识度。比如多个图标并排的情况下，重点就很重要了  这样可以减少视觉干扰（通过调整不透明度而非移除元素，减少视觉噪音）</p>
+<figure data-type="image" tabindex="39"><img src="https://nhuji.github.io/post-images/2023-11-15_at_10.54.41.png" alt="2023-11-15 at 10.54.41.png" loading="lazy"></figure>
+<h3 id="调色板渲染模式palette">调色板渲染模式（Palette）</h3>
+<figure data-type="image" tabindex="40"><img src="https://nhuji.github.io/post-images/Untitled%2011.png" alt="Untitled" loading="lazy"></figure>
+<p>将两种或更多种颜色应用到符号，每层使用一种颜色。为定义三个分层级别的符号仅指定两种颜色意味着第二层和第三层使用相同颜色</p>
+<p>这个模式呢就比较自由了，之前提到SF本身是被分配了不同的层次的</p>
+<p>在这个模式下我们可以手动的独立控制各个颜色</p>
+<figure data-type="image" tabindex="41"><img src="https://nhuji.github.io/post-images/2023-11-20_at_11.17.13.png" alt="2023-11-20 at 11.17.13.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="42"><img src="https://nhuji.github.io/post-images/2023-11-20_at_11.17.28.png" alt="2023-11-20 at 11.17.28.png" loading="lazy"></figure>
+<p>为什么要这么做呢？因为颜色可以标记功能组或区分不同功能的符号，你想要指定什么品牌色或者主题色的情况下也可以使用它</p>
+<p>另外这种模式下如果不指定第三层的颜色那么他会继承第二层的颜色</p>
+<figure data-type="image" tabindex="43"><img src="https://nhuji.github.io/post-images/2023-11-16_at_14.40.51.png" alt="2023-11-16 at 14.40.51.png" loading="lazy"></figure>
+<ul>
+<li>
+<p>控制符号各层的多种颜色，最多三种，支持自定义和材料样式。</p>
+<figure data-type="image" tabindex="44"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.32.32.png" alt="2023-11-16 at 17.32.32.png" loading="lazy"></figure>
+</li>
+<li>
+<p>甚至可以指定次要的颜色为模糊或者材料</p>
+<figure data-type="image" tabindex="45"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.33.14.png" alt="2023-11-16 at 17.33.14.png" loading="lazy"></figure>
+</li>
+<li>
+<p>可以。。但很少用的渐变覆盖</p>
+</li>
+</ul>
+<figure data-type="image" tabindex="46"><img src="https://nhuji.github.io/post-images/Untitled%2012.png" alt="Untitled" loading="lazy"></figure>
+<pre><code class="language-swift">Image(systemName: &quot;person.3.sequence.fill&quot;)
+    .symbolRenderingMode(.palette)
+    .foregroundStyle(
+        **.linearGradient**(colors: [.red, .black], startPoint: .top, endPoint: .bottomTrailing),
+        .linearGradient(colors: [.green, .black], startPoint: .top, endPoint: .bottomTrailing),
+        .linearGradient(colors: [.blue, .black], startPoint: .top, endPoint: .bottomTrailing)
+    )
+    .font(.system(size: 144))
+</code></pre>
+<p>调色盘模式允许你对SF符号进行各种复杂而准确的颜色指定</p>
+<h3 id="多色渲染模式multicolor">多色渲染模式（Multicolor）</h3>
+<figure data-type="image" tabindex="47"><img src="https://nhuji.github.io/post-images/Untitled%2013.png" alt="Untitled" loading="lazy"></figure>
+<p>为部分符号应用有内涵的颜色以增强含义。例如，<code>leaf</code> 符号使用绿色反映现实世界中树叶的外观，而 <code>trash.slash</code> 符号使用红色提示数据丢失。部分多色符号包括可接收其他颜色的层</p>
+<p>这种显示符号的固有或原生颜色，反映物理世界中的对象或将颜色与概念相关联。</p>
+<p>比如叶子应该是绿色的，硬盘的添加标注应该是绿色，移除标志应该是红色的，这些都是<strong>预设</strong>的</p>
+<figure data-type="image" tabindex="48"><img src="https://nhuji.github.io/post-images/2023-11-16_at_14.41.56.png" alt="2023-11-16 at 14.41.56.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="49"><img src="https://nhuji.github.io/post-images/2023-11-16_at_14.42.07.png" alt="2023-11-16 at 14.42.07.png" loading="lazy"></figure>
+<ul>
+<li>
+<p>支持全彩、部分彩和无多彩信息的单色渲染。</p>
+<figure data-type="image" tabindex="50"><img src="https://nhuji.github.io/post-images/2023-11-16_at_14.44.09.png" alt="比如只有全上色，多层，或者没有色彩时使用单色" loading="lazy"></figure>
+<p>比如只有全上色，多层，或者没有色彩时使用单色</p>
+<figure data-type="image" tabindex="51"><img src="https://nhuji.github.io/post-images/2023-11-16_at_14.45.26.png" alt="2023-11-16 at 14.45.26.png" loading="lazy"></figure>
+</li>
+</ul>
+<p>猜猜crt显示器蓝屏的图标叫什么？</p>
+<figure data-type="image" tabindex="52"><img src="https://nhuji.github.io/post-images/2023-11-20_at_10.54.36.png" alt="2023-11-20 at 10.54.36.png" loading="lazy"></figure>
+<p>另外符号现在具有<strong>首选渲染模式</strong>，可自动选择最能突出每个符号独特特性的渲染模式（根据符号的性质提供自动的首选渲染模式），渲染模式仍可以明确指定以确保统一外观</p>
+<h1 id="符号的多变">符号的多变</h1>
+<h2 id="符号变体">符号变体</h2>
+<p>说完几种渲染模式后，我们可以看到有很多类似的SF符号，它们很多时候都是一个符号的变体</p>
+<p>同一个SF符号有多种变体以适应不同使用场景，比如简单的house就可以有很多种不同类型的变体来适配各种使用场合</p>
+<figure data-type="image" tabindex="53"><img src="https://nhuji.github.io/post-images/2023-11-20_at_14.04.16.png" alt="2023-11-20 at 14.04.16.png" loading="lazy"></figure>
+<h2 id="自动适应">自动适应</h2>
+<p>而我们在不同的地方使用<code>[Label](https://developer.apple.com/documentation/swiftui/label)</code> 视图来结合标题和图标，它也会自动根据场景来决定显示的方式，并自动获得辅助功能支持 比如你如果放到下方的页面切换的栏里，它就会仔细选择fill的变体</p>
+<figure data-type="image" tabindex="54"><img src="https://nhuji.github.io/post-images/2023-11-16_at_16.46.21.png" alt="SwiftUI会根据情况自动决定怎么进行显示（你也可以进行指定）" loading="lazy"></figure>
+<p>SwiftUI会根据情况自动决定怎么进行显示（你也可以进行指定）</p>
+<ul>
+<li>
+<p>自定义符号通过改变初始化器在 <code>Image</code> 和 <code>Label</code> 中使用</p>
+<figure data-type="image" tabindex="55"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.02.39.png" alt="使用自定义符号的时候" loading="lazy"></figure>
+<p>使用自定义符号的时候</p>
+</li>
+<li>
+<p>符号在 <code>Text</code> 中通过字符串插值嵌入，与文本一起重排</p>
+<figure data-type="image" tabindex="56"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.07.21.png" alt="2023-11-16 at 17.07.21.png" loading="lazy"></figure>
+</li>
+</ul>
+<p>让我们再详细一点了解它的变体，比如在列表时我们默认会使用没有填充的版本</p>
+<figure data-type="image" tabindex="57"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.20.21.png" alt="2023-11-16 at 17.20.21.png" loading="lazy"></figure>
+<p>但也可以自己指定来获得fill的版本</p>
+<figure data-type="image" tabindex="58"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.20.24.png" alt="2023-11-16 at 17.20.24.png" loading="lazy"></figure>
+<h2 id="修改符号的表现">修改符号的表现</h2>
+<ul>
+<li>
+<p>之前说过可以通过<code>foregroundStyle</code> 修改符号颜色</p>
+<figure data-type="image" tabindex="59"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.12.59.png" alt="2023-11-16 at 17.12.59.png" loading="lazy"></figure>
+</li>
+<li>
+<p><code>font</code> 修改符号大小，文本样式会随动态类型改变 （可以看到符号大小和文字大小一起改变）</p>
+<figure data-type="image" tabindex="60"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.14.36.png" alt="2023-11-16 at 17.14.36.png" loading="lazy"></figure>
+</li>
+<li>
+<p>另外SF还有三种缩放来应对不同的使用场景（并不是单纯的等比放大，而是设计时就有考虑）<code>imageScale</code> 修改符号相对于文本的比例大小。（不改变文字的大小）</p>
+<figure data-type="image" tabindex="61"><img src="https://nhuji.github.io/post-images/2023-11-16_at_17.15.25.png" alt="2023-11-16 at 17.15.25.png" loading="lazy"></figure>
+</li>
+</ul>
+<h1 id="可变颜色特性variable-color">可变颜色特性（Variable Color）</h1>
+<p>这是一个比较新的特性，所以放到后面。</p>
+<p>无论使用何种渲染模式，SF 符号 4 都可通过可变颜色这种方式来表现可随时间而变化的特征，例如容量或强度。为了在视觉上体现这种变化，可变颜色会根据值到达 0%~100% 的不同阈值将颜色应用到符号的不同层</p>
+<p>我想最能感受到不同的地方应该是在分享屏幕时，无论是Mac还是iPhone，新版本的系统中分享屏幕时符号都会闪烁了。这就是可变颜色的使用</p>
+<figure data-type="image" tabindex="62"><img src="https://nhuji.github.io/post-images/2023-11-17_at_16.21.30.gif" alt="2023-11-17 at 16.21.30.gif" loading="lazy"></figure>
+<p>之前说过SF本身有分层，而现在这种分层也可以被用来制作变化的符号了</p>
+<figure data-type="image" tabindex="63"><img src="https://nhuji.github.io/post-images/2023-11-17_at_14.30.19.png" alt="2023-11-17 at 14.30.19.png" loading="lazy"></figure>
+<p>比如Wi-Fi，信号改变，加载等等</p>
+<figure data-type="image" tabindex="64"><img src="https://nhuji.github.io/post-images/2023-11-17_at_14.25.06.gif" alt="2023-11-17 at 14.25.06.gif" loading="lazy"></figure>
+<p>可变颜色允许突出表示不同强度级别或时间序列的路径</p>
+<p>比如这个音量符号，会随着百分比的改变调整外观</p>
+<figure data-type="image" tabindex="65"><img src="https://nhuji.github.io/post-images/2023-11-20_at_12.27.41.gif" alt="2023-11-20 at 12.27.41.gif" loading="lazy"></figure>
+<figure data-type="image" tabindex="66"><img src="https://nhuji.github.io/post-images/2023-11-20_at_12.27.21.png" alt="2023-11-20 at 12.27.21.png" loading="lazy"></figure>
+<p><strong>通过百分比值</strong>改变符号的外观，反映随时间变化的值</p>
+<figure data-type="image" tabindex="67"><img src="https://nhuji.github.io/post-images/2023-11-17_at_14.57.31.gif" alt="2023-11-17 at 14.57.31.gif" loading="lazy"></figure>
+<p>会均匀分配，对于不能平分的会四舍五入，然后从下一个百分百开始进入下个阶段</p>
+<p>变色适用于所有渲染模式，没有关于符号受影响部分数量的规则，也就是说可以加很多很多个变化的层，比如加载图标那样</p>
+<h1 id="动画">动画</h1>
+<p>在2022年可变色彩的基础上，今年的WWDC上推出了SF动画的预设 （SF 符号 5）</p>
+<ul>
+<li>提供多种可配置的动画预设，适用于所有规模和渲染模式的符号。</li>
+<li>动画通过分层进行，每层都能一次动画，使得符号的编排清晰准确。</li>
+<li>也可以选择让所有层同时动画。</li>
+<li>动画空间是指符号在应用运动时创造深度感的维度。不同的平面有不同的视觉效果，比如中间平面是参考点，前平面使符号看起来更大，后平面则相反。</li>
+</ul>
+<h2 id="动画库的不同预设">动画库的不同预设</h2>
+<ul>
+<li>
+<p><strong>出现（Appear）</strong>：符号渐渐进入视野时使用。</p>
+<figure data-type="image" tabindex="68"><img src="https://nhuji.github.io/post-images/2023-11-21_at_17.58.31.gif" alt="2023-11-21 at 17.58.31.gif" loading="lazy"></figure>
+</li>
+<li>
+<p><strong>消失（Disappear）</strong>：符号从界面中移除时使用。</p>
+<figure data-type="image" tabindex="69"><img src="https://nhuji.github.io/post-images/2023-11-21_at_17.59.15.gif" alt="2023-11-21 at 17.59.15.gif" loading="lazy"></figure>
+</li>
+<li>
+<p><strong>弹跳（Bounce）</strong>：模拟物体弹跳的动态效果，反馈交互成功或动作发生。<br>
+比如进行书签标记或者反馈亮度的调节</p>
+<figure data-type="image" tabindex="70"><img src="https://nhuji.github.io/post-images/2023-11-17_at_16.14.39.gif" alt="2023-11-17 at 16.14.39.gif" loading="lazy"></figure>
+</li>
+<li>
+<p><strong>缩放（Scale）</strong>：通过改变符号大小提供视觉反馈，强调符号重要性或确认交互。比如变小时表示被按下了，或者比如在iPad用鼠标操作时图像的变大表示被关注点<br>
+另外缩放还具有状态，只有取消时才会恢复</p>
+<figure data-type="image" tabindex="71"><img src="https://nhuji.github.io/post-images/2023-11-17_at_16.18.11.png" alt="弹跳和缩放的主要区别在于弹跳表示一个动作已经发生或者需要发生，而缩放可以在选择一个东西时提供焦点或反馈" loading="lazy"></figure>
+<p>弹跳和缩放的主要区别在于弹跳表示一个动作已经发生或者需要发生，而缩放可以在选择一个东西时提供焦点或反馈</p>
+</li>
+<li>
+<p><strong>脉冲（Pulse）</strong>：通过改变不透明度传达持续活动的状态，强化符号表达的概念。<br>
+比如新系统的随航就跟着变化了</p>
+<figure data-type="image" tabindex="72"><img src="https://nhuji.github.io/post-images/2023-11-17_at_16.21.30.gif" alt="2023-11-17 at 16.21.30.gif" loading="lazy"></figure>
+</li>
+<li>
+<p>可变颜色**（Variable Color）**：之前提到的可变颜色，今年也包含在动画库中了，现在有累积（Cumulative）和迭代（Iterative）两种表现形式，更加灵活了</p>
+<figure data-type="image" tabindex="73"><img src="https://nhuji.github.io/post-images/2023-11-17_at_16.23.23.gif" alt="2023-11-17 at 16.23.23.gif" loading="lazy"></figure>
+<p>比如开启Wi-Fi时用累积，寻找Wi-Fi时用迭代</p>
+<figure data-type="image" tabindex="74"><img src="https://nhuji.github.io/post-images/2023-11-17_at_16.25.50.gif" alt="2023-11-17 at 16.25.50.gif" loading="lazy"></figure>
+</li>
+<li>
+<p><strong>替换（Replace）</strong>：符号状态变化时，一个符号替换另一个，传达符号状态变化。<br>
+至于变成什么符号可以自己指定，也可以分层或整个变化</p>
+<figure data-type="image" tabindex="75"><img src="https://nhuji.github.io/post-images/2023-11-17_at_16.29.13.gif" alt="2023-11-17 at 16.29.13.gif" loading="lazy"></figure>
+<p>比如音乐播放按钮就可以使用它，或者在选择文字时键盘的变化</p>
+<figure data-type="image" tabindex="76"><img src="https://nhuji.github.io/post-images/2023-11-17_at_16.34.47.gif" alt="2023-11-17 at 16.34.47.gif" loading="lazy"></figure>
+</li>
+</ul>
+<h1 id="接下来的发展">接下来的发展？</h1>
+<p><strong>SF Symbols</strong>推出以来从数量增加（现在已经有5000+个了），到多种渲染模式提供更加多彩的表达再到可变颜色和预设动画，越来越灵活了，让我们可以方便的对它调用和修改出不同的表现 用在不同的场景</p>
+<p>在 iOS 的17.2 Beta 3里，这种灵动的趋势被进一步发展了</p>
+<p>和刚刚介绍的简单的那些动画效果不一样，这一版beta里闹钟符号的动画更加灵动了甚至有点动态模糊的效果，和真实的闹钟非常相似</p>
+<p>而系统里切换歌曲的SF也有着不一样的动画表现</p>
+<p>也许明年WWDC我们就能看到更多符号拥有更复杂的预设动画，甚至我们也可能自定义出如此灵动动画的SF了</p>
+<h1 id="总结">总结</h1>
+<p>现在回过头来看在苹果各种不同系统和各种应用上我们都能看到SF的大量使用，为用户提供了一种一致性和多变而灵活的体验，更重要的是作为开发者，我们也可以通过创建自己的SF符号使用各种特性来让我们开发的App也能轻松获得更好的符号表现</p>
+<figure data-type="image" tabindex="77"><img src="https://nhuji.github.io/post-images/2023-11-21_at_12.05.00.png" alt="2023-11-21 at 12.05.00.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="78"><img src="https://nhuji.github.io/post-images/incoming-32907C84-4CDF-4097-919D-B34CFE4140D5.png" alt="incoming-32907C84-4CDF-4097-919D-B34CFE4140D5.PNG" loading="lazy"></figure>
+<figure data-type="image" tabindex="79"><img src="https://nhuji.github.io/post-images/2023-11-22_at_10.10.54.gif" alt="2023-11-22 at 10.10.54.gif" loading="lazy"></figure>
+<p>最后再吐槽一下，这么多图片后面发乐享时会累死吧？😂</p>
+<h1 id="demo">Demo</h1>
+<p>一个简单的SwiftUI的SF符号使用展示</p>
+<p>展示了各种渲染模式和文字组合、Label的使用等，其中调色盘模式的SF<br>
+符号颜色是随机的</p>
+<figure data-type="image" tabindex="80"><img src="https://nhuji.github.io/post-images/2023-11-22_at_10.24.11.gif" alt="2023-11-22 at 10.24.11.gif" loading="lazy"></figure>
+<h1 id="资料">资料</h1>
+<p>如果想进一步深入，以下是官方相关的资料</p>
+<ul>
+<li><a href="https://developer.apple.com/sf-symbols/">官网</a></li>
+<li><a href="https://developer.apple.com/cn/design/human-interface-guidelines/sf-symbols">《人机界面指南》- SF 符号</a></li>
+</ul>
+<p><strong>WWDC：</strong></p>
+<ul>
+<li><a href="https://developer.apple.com/videos/all-videos/?q=SF%20sy#:~:text=Introducing%20SF%20Symbols">Introducing SF Symbols</a></li>
+<li><a href="https://developer.apple.com/videos/play/wwdc2020/10207/">SF Symbols 2</a></li>
+<li><a href="https://developer.apple.com/videos/play/wwdc2021/10097/">What’s new in SF Symbols</a></li>
+<li><a href="https://developer.apple.com/videos/play/wwdc2021/10349/">SF Symbols in SwiftUI</a></li>
+<li><a href="https://developer.apple.com/videos/all-videos/?q=SF%20sy#:~:text=SF%20Symbols%20in%20UIKit%20and%20AppKit">SF Symbols in UIKit and AppKit</a></li>
+<li><a href="https://developer.apple.com/videos/play/wwdc2021/10250/">Create custom symbols</a></li>
+<li><a href="https://developer.apple.com/videos/all-videos/?q=SF%20sy#:~:text=What%27s%20new%20in%20SF%20Symbols%204">What's new in SF Symbols 4</a></li>
+<li><a href="https://developer.apple.com/videos/all-videos/?q=SF%20sy#:~:text=Adopt%20Variable%20Color%20in%20SF%20Symbols">Adopt Variable Color in SF Symbols</a></li>
+<li><a href="https://developer.apple.com/videos/all-videos/?q=SF%20sy#:~:text=What%E2%80%99s%20new%20in%20SF%20Symbols%205">What’s new in SF Symbols 5</a></li>
+<li><a href="https://developer.apple.com/videos/play/wwdc2023/10257/">Create animated symbols</a></li>
+</ul>
+<p><strong>文档：</strong></p>
+<ul>
+<li><a href="https://developer.apple.com/documentation/symbols/">Symbols</a></li>
+<li><a href="https://developer.apple.com/documentation/uikit/uiimage/creating_custom_symbol_images_for_your_app">Creating custom symbol images for your app</a></li>
+</ul>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/y7iHuN8K9l/">
+                  <h3 class="post-title">
+                    如何评价单元测试
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

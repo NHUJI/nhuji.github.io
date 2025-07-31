@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>终于完成了我的第一个iOS App! 塞尔达传说王国之泪的攻略 | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="动森的小程序
+说这个app之前先谈谈以前的经历吧
+很早之前就一直想做塞尔达传说相关的app,上一次做这种东西还是疫情时的动森图鉴的小程序
+应该是2020年初因为疫情被关在家里,那会动森也快发布了,非常喜欢这个系列然后又因为隔离没事干(还记得..." />
+    <meta name="keywords" content="" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">终于完成了我的第一个iOS App! 塞尔达传说王国之泪的攻略</h2>
+            <div class="post-date">2023-07-31</div>
+            
+              <div class="feature-container" style="background-image: url('https://nhuji.github.io/post-images/-9p5lrfb4.png')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <h1 id="动森的小程序">动森的小程序</h1>
+<p>说这个app之前先谈谈以前的经历吧<br>
+很早之前就一直想做塞尔达传说相关的app,上一次做这种东西还是疫情时的动森图鉴的小程序<br>
+应该是2020年初因为疫情被关在家里,那会动森也快发布了,非常喜欢这个系列然后又因为隔离没事干(还记得那时候因为任天堂迟迟不开直面会以为他们对这游戏没什么期望2333,没想到后面国内居然爆火了,被封禁就是另外一回事了)</p>
+<p>就开始做动森的小程序,作为一个基本上算是展示一些列表的小程序技术上并没多难,服务器也直接用了云开发,所以很多时间都花在了UI和数据整理上,刚好那时候也认识了做过之前3DS版动森的民间汉化的螳螂虾,他也打算做个集合森的表格,在数据收集方面真的是轻松了不少(但也有整理数据到凌晨3点的时候...)然后还被秘书子拉着一起去做了<a href="https://wiki.biligame.com/dongsen">动森的bwiki</a>(也就是设计了下界面,数据整理,制作banner,做了些管理之类的工作)</p>
+<p>总之算是奇迹?在他们的帮助下,成功的在游戏发售的当天推出了小程序得到了不少的关注!<br>
+当然发售后也更新了不少数据,特别是之后两三年,每次动森更新的时候我都要自己整理更新的数据以至于后面听到更新就害怕😂<br>
+<img src="https://nhuji.github.io/post-images/1690796519165.png" alt="" loading="lazy"><br>
+总之一方面确实做得还行,另一方面做得很早(毕竟同步发售日确实很难哈哈哈)<br>
+最后一共有三十多万人用过!算是新手的好运吗?到现在每天还有两三百的访问和几十的新增用户,当然如果还是那么多人使用我应该付不起涨价后的云开发费用(现在大概是一个月开屏广告收入10块而服务器要50块左右)</p>
+<h1 id="为什么要做王泪的ios攻略app">为什么要做王泪的iOS攻略App</h1>
+<p>然后到了今年,我一直想要做个iOS App不过一直没下手(太懒了),而我也算是塞尔达传说系列死忠吧,还记得小时候一次玩风之棍时后的就爱上了这个系列,不过非要说最喜欢的系列....还是马力欧吧,毕竟有银河1&amp;2这种游戏...扯远了</p>
+<p>至于为什么不接着做微信小程序,一方面是试试新的技术(特别是iOS),另一方面就是微信真的恶心,因为恶意举报被下架过几次,然后就要浪费时间去申诉,而且对个人开发者的限制也很大.另一方面呢就是云开发的翻倍的涨价也让我不可能再能负担起一个像&quot;游戏地图&quot;这样需要大量图片的小程序,当然最重要一点的是在上面做一个地图的体验肯定不会太好,这也是我没有选择做一个网站或者在app内内置网页的原因,leaflet的使用体验真的不怎么好,这个时候可以免费支持云同步和存数据在本地不需要服务器,体验还不错的iOS App就可以说是最佳选择了,虽然一年99刀的开发者费用也不便宜,但至少预期可控嘛</p>
+<p>我知道在旷野之息的爆火后,做这种地图或者攻略的肯定少不了,我不指望能重复动森的成功,也没有精力去做什么攻略来竞争,并且我也不想因为开发这种东西就失去了对游戏本身的第一次纯粹的体验(本本子因为做游戏媒体就不得不一边玩一边写攻略,好惨)</p>
+<p>事实证明王泪确实非常好,虽然游戏框架基本没啥变化,而空岛做得比较一般,地下的探索引导也不够好,立体的地图让原本的三角法则设计的地图失效而地图本身地形改变不大等,但还是很好玩,毕竟在旧的已经做得很好的东西上要做出新意真的不容易,也有很多老塞尔达的元素和味道,比如炸弹花什么的<br>
+所以在我算是比较快的第一次通关王国之泪后,大概是5月末吧,才开始着手开发这个app,当然那个时候已经有一大堆同类的互动地图之类的,所以我就更不急了😜不过最后需要的时间还是超出了我的预期,最后花了两个多月才弄出觉得可以发布了的版本</p>
+<h1 id="开发过程和想法">开发过程和想法</h1>
+<p>这次做这个有很多第一次,第一次做iOS App, 做地图, 做云同步数据, 做多语言的本地化等等,总之对我自己算是比较大的挑战吧</p>
+<p>首先就是要选地图用什么技术,考虑很多之后打算用mapkit,毕竟原生体验比较好,搜了一下也能满足我大部分的需求,不过它必须基于现实地图,所以我想起了野炊纪录片里开发者说他们通过京都来感知海拉鲁地点之间的距离,于是我就把App的地面地图也基于在了京都(也就是现在的游戏地面地图实际是覆盖在京都上的!)<br>
+我提取了最简单的呀哈哈位置转换成现实的位置,尝试加载在了地图上,效果还不错<br>
+<img src="https://nhuji.github.io/post-images/1690798647238.png" alt="" loading="lazy"><br>
+然后后面就是进行各种定制了,在地图上我想应该花了超过一半的开发时间</p>
+<p>大概做了这些工作:<br>
+SwiftUI的图形标注性能太差所以UIkit的方式实现,对callout进行定制现在更多信息和功能,提取游戏的地图图片并基于现实位置转换成mapikit需要的瓦片地图,地图切换,标注的筛选,标注的icon显示和点击改变的效果,根据分类和状态过滤显示的标注,怎么加载和删除标注,接收云同步的数据后更新标注,详情页,标注功能,显示和游戏内风格类似的地名并且根据缩放改变等等....<br>
+总之真的是做了非常非常多的工作才让它算是以比较理想的方式工作</p>
+<p>然后图鉴部分也算是遭受了一些折磨吧,一开始头铁非要做一个可以自动识别位置的一整个的列表,但SwiftUI在这方面表现真的很差,差不多改了一周发现完全行不通放弃了,然后那会今年的WWDC也刚好宣布了对滚动列表的更新支持位置识别和滚动什么的,不用自己费力监测了,看到的时候总感觉有种白干了很久的感觉<br>
+<img src="https://nhuji.github.io/post-images/1690799721584.gif" alt="" loading="lazy"><br>
+在把切换分类的栏换了好几个位置和尽量改动让UI符合游戏风格后,总算也比较满意的完成了图鉴的列表,真的要吐槽swiftUI真的太多问题了!<br>
+<img src="https://nhuji.github.io/post-images/1690801106551.png" alt="" loading="lazy"></p>
+<p>这两个月的几乎所有空闲时间被填满: 做各种功能,收集整理数据,优化性能,弄UI(包括iPad适配,light和dark模式),云同步合并和更新逻辑,搜索,详情页,本地化后等等的140多个commit后终于算是完成基本可用的版本后发布了!</p>
+<p>说起来这次也算我第一次自己解包来收集各种数据,比如地图的地点,游戏图片什么的等等,但真的太困难了,特别是还要一边开发一边做这种东西的时候,只能放弃什么都自己做这个不可行的想法,不然可能到年末都还没做好.纠结了半天鼓起勇气去问了Aeon,还好他人真的非常非常好,同意让我使用他为他<a href="https://totk-map.aeonsake.com/">自己的地图</a>准备的数据,不然我可能就只能继续死磕数据挖掘或者找其他来源了.说起来我一直觉得自己不怎么聪明,特别是和他这样的人比较时😂希望我下次再做什么东西时能自己挖掘数据吧.</p>
+<p>另外这次GPT4也帮了我不少忙,比如我的本地化,上架时随便写的介绍,介绍一些我没做过的功能,数据处理等方面,虽然靠他写程序是不太可能不过感觉还是离不开了哈哈哈,这大半年之所以这么AI狂热也是因为真的能感受到技术发展带来的变化</p>
+<p>虽然现在上架了但后面还是有很多需要优化和添加的功能,比如这两天开始尝试写烹饪的计算器,但那么多规则要注意,做出来肯定也要很久,然后地图标记了的点数量统计也还没做,还有很多东西没图标,估计的自己画才行,另外UI上感觉也还需要很多优化才行,我还算蛮注重审美,但在大量代码需要写的情况下,这个App的UI并没有太多时间去考虑,现在只算差强人意吧,另外还有很多数据得靠我自己整理添加等<br>
+PS: 这也是为什么我的上两个博客是什么奇怪的隐私政策和技术支持,是因为App Store必须要开发者提供这两个的网页链接2333</p>
+<p>这一切也不用急,毕竟说实话这个App更像是我自我满足的产物,很多东西可能只是为了符合自己的要求,而且在游戏发布快3个月后,同类攻略的网站,APP如此多的情况下也不太可能有多少用户,所以打算慢慢朝着理想的方面改进(当然,也不是说如果有用户提出建议也不重要的意思),所以很多改进估计会慢慢来而不是像过去两个月那样一直在做,很累人哈哈哈</p>
+<p>总之,非常高兴能终于做了这一个想做了很久的App,能上架我还蛮激动的,希望以后也能继续做各种东西(不限于攻略或者App),而不是再过三年才开始想做另一个玩意.</p>
+
+            </div>
+            
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

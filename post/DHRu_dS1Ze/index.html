@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>Flutter on the Web 的一些分享 | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="最近有需求问能不能把当前的 Flutter App 扩展个 web 来替代当前比较老旧的网站啥的
+听其他同事说他们在做的项目尝试过这么做
+总之因此进行了一些相关的调查, 下面分享一下调查后的一些观点吧
+
+优点
+
+
+一个代码库带来的好处
+
+开..." />
+    <meta name="keywords" content="Flutter" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Flutter on the Web 的一些分享</h2>
+            <div class="post-date">2024-03-18</div>
+            
+            <div class="post-content" v-pre>
+              <p>最近有需求问能不能把当前的 Flutter App 扩展个 web 来替代当前比较老旧的网站啥的<br>
+听其他同事说他们在做的项目尝试过这么做</p>
+<p>总之因此进行了一些相关的调查, 下面分享一下调查后的一些观点吧</p>
+<!-- more -->
+<h2 id="优点">优点</h2>
+<ul>
+<li>
+<p><strong>一个代码库带来的好处</strong></p>
+<ul>
+<li>开发成本降低, 就像我们在 iOS/ Android 上做的一样,可以预见的有大量代码可以复用</li>
+<li>因为同一个团队维护同一套适应不同端的代码, 所以更利于维护, 降低沟通成本, 在功能新增上也能统一不同平台的进度</li>
+<li>可以重新调整之前开发的代码、UI 元素和逻辑，为现有的项目增加 Web 作为目标平台,以实现更快的新 Web 应用程序开发。(虽然会进行大量代码和设计改动以适应桌面的体验)</li>
+</ul>
+</li>
+<li>
+<p><strong>丰富的组件集</strong>： 在 Web 依旧可以使用 Flutter 提供的各种基础组件以加快开发速度</p>
+</li>
+<li>
+<p><strong>统一的用户体验</strong></p>
+<ul>
+<li>由于使用一套代码, 对于用户来说各个平台的视觉和操作体验一致 且 FotW 的渲染机制也减少了不同浏览器和版本之间的差异</li>
+<li>在移动端访问网站也能获得不错的体验</li>
+<li>对 PWA 的支持</li>
+<li>对于平板电脑这样一个经常被忽略的平台, 在进行了不同尺寸 layout 的支持后也会获得不错的体验</li>
+</ul>
+</li>
+<li>
+<p>Flutter 在创建自定义 UI/UX 方面表现出色，容易制作出独特,设计出色的 web 应用</p>
+</li>
+<li>
+<p>动画支持： 提供完善的动画库，增强用户互动体验</p>
+</li>
+<li>
+<p>FotW 正在持续完善中<br>
+Flutter 旨在提供一个可移植的框架，帮助开发人员为任何平台构建漂亮的、原生编译的应用程序。因此，Flutter 将继续改善跨平台的体验。</p>
+</li>
+</ul>
+<h2 id="缺点">缺点</h2>
+<ul>
+<li>第一次加载较慢</li>
+</ul>
+<p>由于第一次打开网页需要下载 FotW 的渲染器等,会有较长的加载时间,所以一般会制作一个加载页面</p>
+<p>但这并不代表操作时会缓慢,性能是不错的,且加载速度也在持续优化,以后会逐渐过渡到 <a href="https://docs.flutter.dev/platform-integration/web/wasm">WebAssembly</a> 相关技术 可以参考这个 Wasm 作为编译目标的 FotW Demo 体验速度的改进</p>
+<p>[Flutter Wasm Material 3 Demo](https://flutterweb-wasm.web.app/</p>
+<p>HTML 和 Wasm 的区别大概就是图中说的这样<br>
+<img src="https://nhuji.github.io/post-images/1753847221822.png" alt="" loading="lazy"></p>
+<h3 id="难以做出传统意义上的网页">难以做出传统意义上的网页</h3>
+<p>因为使用了全新的技术, 很多传统 Web 能做到的事情难以实现,比如一些浏览器特性的支持</p>
+<h3 id="seo-支持">SEO 支持</h3>
+<ul>
+<li>由于网页中的文字不是在 HTML 里的文本而是渲染出来的(有点类似于图像), 对 SEO 不友好,具体可以看看 <a href="https://docs.flutter.dev/platform-integration/web/faq#search-engine-optimization-seo">Flutter official Web FAQ</a></li>
+<li>字符渲染机制导致另外的问题就是浏览器的搜索字符和自动翻译功能不可用 (也可以用这个方式看看某个网页是不是使用 flutter 的)</li>
+<li>还有一个也不知道算不算是缺点的, 就是它其实不支持 IE 浏览器, 如果非常非常看重老设备和老浏览器能不能用的话 这方面也需要注意</li>
+</ul>
+<h2 id="使用-flutter-on-the-web-开发的网站">使用 Flutter on the Web 开发的网站</h2>
+<p>然后也找了一些用 FotW 开发的网站, 不过确实在商业项目上采用它的并不多</p>
+<p>由于 FotW 开发的网站从设计和体验来说都和现有的网页技术开发的网站有较大区别, 希望以下使用 FotW 开发的例子能帮助了解, 如果我们用 Flutter 进行网页开发, 制作出的网页应用的感觉, 会是什么样的</p>
+<h3 id="谷歌地球"><a href="https://earth.google.com/">谷歌地球</a></h3>
+<p>这几乎是唯一的采用 Flutter Web 的知名大型项目, 它使用了 Flutter 技术重写了 iOS、Android、Web 版 (除桌面版以外) 但它更像是一个内嵌的3D游戏(由C++ 引擎驱动) 而不是复杂的网站, 他们使用 Flutter 让 UI 代码统一了</p>
+<p>作为参考,这篇博客还不错, 对 FotW 的支持能让用户在各种设备下都能获得不错的体验</p>
+<p><a href="https://medium.com/flutter/extreme-ui-adaptability-in-flutter-how-google-earth-supports-every-use-case-on-earth-6db4661e7a17">Extreme UI Adaptability in Flutter — How Google Earth supports every use case on earth</a></p>
+<h3 id="rive"><a href="https://editor.rive.app/">Rive</a></h3>
+<p>一个多端的交互式动画制作编辑器</p>
+<p>通过使用 Flutter 得到更易于维护的代码库和同步更新,统一体验的编辑器</p>
+<h3 id="demo"><a href="https://flutter-gallery-archive.web.app/">Demo</a></h3>
+<p>一个用 FotW 开发的展示 Flutter 组件的网站,里面有一些网站 Demo 例子可以参考使用 FotW 大概能做什么样风格的网站</p>
+<p>更多 FotW 应用请参考 https://itsallwidgets.com/ 的 Web 分类</p>
+<p>至于在现有的网页中插入 flutter 组件, 就几乎没有找到什么例子了, 比较一般也难有这种需求</p>
+<p>唯一能找到的例子是 Google Classroom 的 Practice sets 功能里, 为了更容易实现和触控笔协同和展示笔画, 在网页里插入了 Flutter 制作的组件<br>
+<img src="https://nhuji.github.io/post-images/1753847407643.png" alt="" loading="lazy"></p>
+<h2 id="现有-app-增加-web-端时的挑战">现有 App 增加 Web 端时的挑战</h2>
+<h3 id="在-web-端-flutter-并没有被较多知名大型项目采用">在 Web 端, Flutter 并没有被较多知名/大型项目采用</h3>
+<p>正如之前介绍的,唯一一个大型项目是谷歌地球, 意味着开发时遇到问题可能难以找到解决方式 ,需要开发者进行探索, 可能因此带来项目时间上的不确定性</p>
+<h3 id="现有的为移动端制作的适合触摸的-ui-不一定适合网页这样用于点击的-ui">现有的为移动端制作的适合触摸的 UI 不一定适合网页这样用于点击的 UI</h3>
+<p>所以在一个代码库中构建一个完全自适应的用户界面意味着额外的复杂性,需要我们从设计和修改现有代码以适配不同端进行考虑</p>
+<p>比如一个长的 bet 列表,在宽屏幕下也许需要修改他的展示方式,如双排显示或者不同的展示方式等, 当然这样主要是对 UI 方面的修改,而逻辑不需要太多的更改</p>
+<h3 id="浏览器和桌面端的特性适配">浏览器和桌面端的特性适配</h3>
+<p>和上一个问题类似, 但比如鼠标悬浮时外观的改变,URL 的显示,滚动条等等区别都需要我们进行增加适配</p>
+<h3 id="第三方库支持">第三方库支持</h3>
+<p>绝大部分第三方库常用库都支持 FotW, 但可能同样的, 遇到意外的情况</p>
+<p>对于我们的项目其实也尝试进行了增加 web 端, 改了一堆代码屏蔽不能用的东西算是勉强运行起来了, 不过只能看看 UI, 不太能就直接运行,各种功能也没问题</p>
+<h2 id="结论">结论</h2>
+<p>使用 Flutter on the Web 开发的网站与传统网站截然不同，它们更接近于移动应用的网络版。虽然在表面上，FotW 开发似乎能让我们在不同平台间复用代码，省去重复劳动，但实际上，要让现有的代码和界面（UI）适应多平台，往往需要投入大量的精力。</p>
+<p>然而，这种开发方式在减少开发成本方面也有好处，统一代码库可以避免组建多个团队分别确认式样(客户好像就是觉得 App 改了网页又要改很麻烦)或为不同平台重写相似的逻辑。更重要的是，统一后在后续维护和扩展功能方面也很方便，要改 bug,加新功能的话都一起加了</p>
+<p>对于那些想要其网站提供类似应用的体验，或希望将现有应用扩展至 web 版而不想面对传统网站开发的复杂性的人来说，FotW 是一个理想选择。它保证了不同设备间的风格和体验的一致性。尽管 Flutter 并不适合所有类型的网页，但对于那些以应用程序为中心的体验来说，它是一个格外合适的选择。</p>
+<p>不过对于项目来说, 可能更看重商业上使用这种没广泛使用的技术带来的风险. 还有与其他传统网页使用体验的区别,</p>
+<p>而且很多东西 Flutter on the Web 做不到或者很难做, 其实如果要支持 Web 的话,最好一开始就考虑,不然很多代码更改来适配响应式布局和浏览器运行之类的, 并不太容易</p>
+<p>另外还想补充的是需要适配多平台的话, 最好不要用平台判断来区分功能,这样维护会很困难,可以把它解耦成功能来判断, 比如是否支持 xxxx 这种 ,而不是直接判断是 iOS 还是安卓, 这样新增平台或者系统更新了 就不用适配一堆if else 了</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://nhuji.github.io/tag/yKCmzzA3CV/" class="tag">
+                    Flutter
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/jAzo5mUYN/">
+                  <h3 class="post-title">
+                    Git 是如何进行版本控制的？
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

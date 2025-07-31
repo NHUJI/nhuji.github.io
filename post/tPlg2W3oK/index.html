@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>使用 GPT-4 协助本地化iOS/Mac应用 | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="通过把xlcoc转换为JSON让AI帮助翻译成多种语言并转换回xliff格式
+
+本文将会以Apple 2021/2020 WWDC的示例程序 Fruta: Building a Feature-Rich App with SwiftUI 来..." />
+    <meta name="keywords" content="" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">使用 GPT-4 协助本地化iOS/Mac应用</h2>
+            <div class="post-date">2023-05-23</div>
+            
+              <div class="feature-container" style="background-image: url('https://nhuji.github.io/post-images/tPlg2W3oK.png')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <p>通过把xlcoc转换为JSON让AI帮助翻译成多种语言并转换回xliff格式</p>
+<!-- more -->
+<p>本文将会以Apple 2021/2020 WWDC的示例程序 <a href="https://developer.apple.com/documentation/swiftui/fruta_building_a_feature-rich_app_with_swiftui">Fruta: Building a Feature-Rich App with SwiftUI</a> 来作为用GPT4来多语言本地化的例子<br>
+由于买API比较麻烦所以本文使用的是半自动的通过粘贴JSON到ChatGPT Plus的方式进行翻译<br>
+(特别是将来GPT4 32k版推出的话应该支持绝大多数翻译的字数要求了)<br>
+你也可以修改成使用API的完全自动化流程避免手动粘贴</p>
+<h2 id="xlcoc转换成json">xlcoc转换成JSON</h2>
+<p>我们知道Xcode可以直接用<code>LocalizedStringKeys</code>来抽取需要翻译的文本,然后导出为各种语言的xlcoc文件,而这个文件夹本身是包含xliff的,所以我们可以用xml的相关支持来读取修改<br>
+于是编写了一段Python代码来让Xcode导出的翻译文件夹生成一个适用于类似GPT4这样的AI翻译的JSON文件</p>
+<pre><code class="language-python" >
+import os
+import json
+import xml.etree.ElementTree as ET
+
+# 这是你的xcloc文件所在的文件夹
+input_dir = "/Users/nhuji/Desktop/Fruta Localizations"
+
+# 这是你想要将解析出的数据保存为JSON的文件夹
+output_dir = "/Users/nhuji/Desktop/Fruta Localizations JSON"
+
+# 创建一个字典来保存所有的数据
+data = {}
+
+# 遍历文件夹中的所有文件
+for filename in os.listdir(input_dir):
+    # 检查文件是否是xcloc文件
+    if filename.endswith(".xcloc"):
+        # 获取语言代码
+        language_code = filename[:-6]  # 去掉".xcloc"后缀
+
+        # 找到xcloc文件中的xliff文件
+        for root, dirs, files in os.walk(os.path.join(input_dir, filename)):
+            for file in files:
+                if file.endswith(".xliff"):
+                    # 解析xliff文件
+                    tree = ET.parse(os.path.join(root, file))
+                    root = tree.getroot()
+
+                    # 遍历xliff文件中的所有file元素
+                    for file in root.iter('{urn:oasis:names:tc:xliff:document:1.2}file'):
+                        # 获取original属性值
+                        original = file.get('original')
+
+                        # 如果这个original还没有在数据字典中，就添加一个新的条目
+                        if original not in data:
+                            data[original] = {}
+
+                        # 遍历file元素中的所有trans-unit元素
+                        for trans_unit in file.iter('{urn:oasis:names:tc:xliff:document:1.2}trans-unit'):
+                            # 获取id、source、target和note元素的文本
+                            id = trans_unit.get('id')
+                            source = trans_unit.find(
+                                '{urn:oasis:names:tc:xliff:document:1.2}source').text
+                            target_element = trans_unit.find(
+                                '{urn:oasis:names:tc:xliff:document:1.2}target')
+                            target = target_element.text if target_element is not None else ""
+                            note = trans_unit.find(
+                                '{urn:oasis:names:tc:xliff:document:1.2}note').text
+
+                            # 如果这个id还没有在数据字典中，就添加一个新的条目
+                            if id not in data[original]:
+                                data[original][id] = {
+                                    'source': source, 'note': note}
+
+                            # 将这种语言的翻译添加到数据字典中
+                            data[original][id][language_code] = target
+
+# 将字典转换为JSON格式，并保存到文件中
+os.makedirs(output_dir, exist_ok=True)
+with open(os.path.join(output_dir, 'translations.json'), 'w', encoding='utf-8') as f:
+    json.dump(data, f, ensure_ascii=False, indent=4)
+</code></pre>
+<hr>
+<p>这个代码运行完毕后我们应该得到类似下面的JSON文件</p>
+<pre><code class="language-JSON" >{
+    "Shared/Resources/en.lproj/InfoPlist.strings": {
+        "CFBundleDisplayName": {
+            "source": "Fruta",
+            "note": "Bundle display name",
+            "ru": "Фрута",
+            "zh-Hant": "Fruta",
+            "en": "Fruta",
+            "zh-Hans": "Fruta",
+            "ja": "Fruta"
+        },
+        "CFBundleName": {
+            "source": "Fruta",
+            "note": "Bundle name",
+            "ru": "Фрута",
+            "zh-Hant": "Fruta",
+            "en": "Fruta",
+            "zh-Hans": "Fruta",
+            "ja": "Fruta"
+        },
+        "NSHumanReadableCopyright": {
+            "source": "Copyright © 2020-2021 Apple. All rights reserved.",
+            "note": "Copyright (human-readable)",
+            "ru": "© 2020–2021 Apple. Все права защищены.",
+            "zh-Hant": "Copyright © 2020-2021 Apple. All rights reserved.",
+            "en": "Copyright © 2020-2021 Apple. All rights reserved.",
+            "zh-Hans": "Copyright © 2020-2021 Apple. All rights reserved.",
+            "ja": "Copyright © 2020-2021 Apple. All rights reserved."
+        }
+    },
+    "Shared/Resources/en.lproj/Ingredients.strings": {
+        "Almond Milk": {
+            "source": "Almond Milk",
+            "note": "Ingredient name",
+            "ru": "Миндальное молоко",
+            "zh-Hant": "",
+            "en": "Almond Milk",
+            "zh-Hans": "",
+            "ja": ""
+        },
+    ...
+}
+</code></pre>
+<hr>
+<h2 id="用ai翻译json">用AI翻译JSON</h2>
+<p>使用类似下面这样的Prompts(提示词)然后就可以发送需要翻译的文本了</p>
+<blockquote>
+<p>我接下来会给你提供一个JSON格式的本地化文本,请你帮助翻译,,其中英语和俄语不需要翻译了,你可以用source作为翻译的来源,note作为翻译的说明,你还可以参考已经翻译的en和ru但不能修改它们,这些要翻译的语言可能被预先占位符占住,你可以直接替换调它,另外还有一部分字符是属于程序中支持插入文本的占位符,请也把它们放到合适的位置,你也可以根据情况决定是否要翻译某个东西,另外我的翻译文件支持markdown语法,你可以根据语境调整修饰的词等,各个语言都要尽量自然和贴合note中说明的使用场景, 明白了吗?<br>
+<img src="https://nhuji.github.io/post-images/1684825339811.png" alt="" loading="lazy"></p>
+</blockquote>
+<p>在本文发布的时候ChatGPT Plus只对极小部分用户开发了32k版本,而大部分用户还是8k版本,所以需要分段粘贴(可以用修改发送文字的方式给出新的文本,避免提示词的上下文丢失)<br>
+然后得到的翻译结果如下:</p>
+<pre><code class="language-JSON" >{
+    "Shared/Resources/en.lproj/InfoPlist.strings": {
+        "CFBundleDisplayName": {
+            "source": "Fruta",
+            "note": "Bundle display name",
+            "ru": "Фрута",
+            "zh-Hant": "Fruta",
+            "en": "Fruta",
+            "zh-Hans": "Fruta",
+            "ja": "フルータ"
+        },
+        "CFBundleName": {
+            "source": "Fruta",
+            "note": "Bundle name",
+            "ru": "Фрута",
+            "zh-Hant": "Fruta",
+            "en": "Fruta",
+            "zh-Hans": "Fruta",
+            "ja": "フルータ"
+        },
+        "NSHumanReadableCopyright": {
+            "source": "Copyright © 2020-2021 Apple. All rights reserved.",
+            "note": "Copyright (human-readable)",
+            "ru": "© 2020–2021 Apple. Все права защищены.",
+            "zh-Hant": "Copyright © 2020-2021 蘋果公司。保留所有權利。",
+            "en": "Copyright © 2020-2021 Apple. All rights reserved.",
+            "zh-Hans": "Copyright © 2020-2021 苹果公司。保留所有权利。",
+            "ja": "Copyright © 2020-2021 Apple. 保留所有權利。"
+        }
+    },
+    "Shared/Resources/en.lproj/Ingredients.strings": {
+        "Almond Milk": {
+        "source": "Almond Milk",
+        "note": "Ingredient name",
+        "ru": "Миндальное молоко",
+        "zh-Hant": "杏仁奶",
+        "en": "Almond Milk",
+        "zh-Hans": "杏仁奶",
+        "ja": "アーモンドミルク"
+    },
+    "Avocado": {
+        "source": "Avocado",
+        "note": "Ingredient name",
+        "ru": "Авокадо",
+        "zh-Hant": "鱷梨",
+        "en": "Avocado",
+        "zh-Hans": "鳄梨",
+        "ja": "アボカド"
+    },
+    ...
+}
+</code></pre>
+<hr>
+<h2 id="json转换回xliff">JSON转换回xliff</h2>
+<p>需要的文本都被翻译完成后,我们就可以用这个JSON再转换回xlcoc并导入Xcode了,当然在导入前还需要人工检查一下,虽然GPT4加上翻译说明应该已经能比较准确的翻译应用了,但准确用语,复数支持,文本格式等复杂情况可能还需要人工校验一下,避免出现问题<br>
+接下来我们再使用下面的代码将JSON转换回xliff</p>
+<pre><code class="language-python" >
+import os
+import json
+import xml.etree.ElementTree as ET
+
+# 这是你的JSON文件的位置
+input_file = "/Users/nhuji/Desktop/Fruta Localizations JSON/translations.json"
+
+# 这是你想要将新的xliff文件保存到的文件夹
+output_dir = "/Users/nhuji/Desktop/Fruta Localizations XLIFF"
+
+# 从JSON文件中读取数据
+with open(input_file, 'r', encoding='utf-8') as f:
+    data = json.load(f)
+
+# 确保输出文件夹存在
+os.makedirs(output_dir, exist_ok=True)
+
+# 获取所有的语言代码
+language_codes = set()
+for translations in data.values():
+    for translation in translations.values():
+        language_codes.update(translation.keys())
+language_codes.discard('source')
+language_codes.discard('note')
+
+# 为每种语言创建一个新的xliff文件
+for language_code in language_codes:
+    # 创建一个新的xliff根元素
+    root = ET.Element(
+        'xliff', {'version': '1.2', 'xmlns': 'urn:oasis:names:tc:xliff:document:1.2'})
+
+    # 为每个文件添加一个新的file元素
+    for original, translations in data.items():
+        # 创建一个新的file元素
+        file = ET.SubElement(root, 'file', {'original': original,
+                                            'source-language': 'en', 'target-language': language_code, 'datatype': 'plaintext'})
+
+        # 创建一个新的body元素
+        body = ET.SubElement(file, 'body')
+
+        # 为每个翻译添加一个新的trans-unit元素
+        for id, translation in translations.items():
+            # 创建一个新的trans-unit元素
+            trans_unit = ET.SubElement(body, 'trans-unit', {'id': id})
+
+            # 创建一个新的source元素
+            source = ET.SubElement(trans_unit, 'source')
+            source.text = translation['source']
+
+            # 创建一个新的target元素
+            target = ET.SubElement(trans_unit, 'target')
+            target.text = translation.get(
+                language_code, "")  # 使用get方法，如果键不存在，返回空字符串
+
+            # 创建一个新的note元素
+            note = ET.SubElement(trans_unit, 'note')
+            note.text = translation['note']
+
+    # 将新的xliff文件保存到文件中
+    tree = ET.ElementTree(root)
+    tree.write(os.path.join(
+        output_dir, f'{language_code}.xliff'), encoding='utf-8', xml_declaration=True)
+</code></pre>
+<hr>
+<p>这样我们就得到了转换回来各种语言的xliff文件<br>
+<img src="https://nhuji.github.io/post-images/1684838371375.png" alt="" loading="lazy"><br>
+由于xlcoc的本质是<code>Xcode Localization Catalog</code>文件夹,所以不能直接转换,我们可以继续写程序让它放入对应的文件夹中,不过这里就不展示了,也可以直接把翻译好的xliff放入对应语言的xlcoc<br>
+接着我们将翻译好的xlcoc文件再次导入Xcode,就可以看到我们的翻译成果了!<br>
+可以看到多种语言都顺利的支持了!包括需要插入的占位符等<br>
+<img src="https://nhuji.github.io/post-images/1684850420676.png" alt="" loading="lazy"></p>
+<h2 id="相关资源和说明">相关资源和说明</h2>
+<ul>
+<li><a href="https://github.com/NHUJI/iOS-Localization-With-AI">文字代码的Github仓库</a></li>
+<li>示例程序 <a href="https://developer.apple.com/documentation/swiftui/fruta_building_a_feature-rich_app_with_swiftui">Fruta: Building a Feature-Rich App with SwiftUI</a></li>
+<li>使用了AI生成的封面图</li>
+<li>目前8K版本的GPT4需要注意token限制,不然可能出现问题,使用更完善的API和自定义prompt来自动处理较小分段的翻译可能可以获得更好的效果(比如转换成JSON时按.strings文件分割,翻译都完成后再合并转换)</li>
+<li>专业名词可以尝试先输入给GPT后再让它翻译来保持准确性</li>
+<li>在GPT3.5使用的话,可能需要说明代号对应的文字,比如<code>zh-Hant</code>为繁体中文</li>
+<li>如果出现只翻译需要的部分的文字的问题可以要求&quot;请在下面的文字基础上替换要翻译的文字&quot;</li>
+<li>ChatGPT May 12 Version更新中官方表示&quot;users can now choose to continue generating a message beyond the maximum token limit. Each continuation counts towards the message allowance.&quot;也就是说当生成的文字超出tokens限制时可以按<code>Continue generating</code>继续生成</li>
+</ul>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/5BOI6Afqi/">
+                  <h3 class="post-title">
+                    SwiftUI: sheet出现后导致导航栏按扭不能用的问题解决
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

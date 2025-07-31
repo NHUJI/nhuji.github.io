@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>如何评价单元测试 | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="1 单元测试的编写原则
+单元测试的编写遵循几个关键原则，其中最为人熟知的是F.I.R.S.T.原则。这个原则包括：快速（Fast）、独立（Independent）、可重复（Repeatable）、自验证（Self-validating）和及..." />
+    <meta name="keywords" content="" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">如何评价单元测试</h2>
+            <div class="post-date">2023-11-19</div>
+            
+            <div class="post-content" v-pre>
+              <h3 id="1-单元测试的编写原则">1 单元测试的编写原则</h3>
+<p>单元测试的编写遵循几个关键原则，其中最为人熟知的是<strong>F.I.R.S.T.原则</strong>。这个原则包括：快速（Fast）、独立（Independent）、可重复（Repeatable）、自验证（Self-validating）和及时（Timely）。遵循这些原则有助于编写高效且易于维护的单元测试。</p>
+<!-- more -->
+<p>在实际应用中，单元测试通常被定义为针对软件各个组件（如结构、类或函数）的独立测试。但由于组件间常常相互关联，实现完全隔离的测试可能比较困难。<br>
+<a href="https://book.douban.com/subject/2248759/">《修改代码的艺术》</a>一书作者Michael Feathers指出，单元测试的定义可以有多种定义。有效的单元测试应当快速执行（小于100毫秒/一个测试），以便快速定位问题。为了维持其执行速度，它们应避免与数据库交互、进行网络通信、访问文件系统或在特殊配置环境下运行。</p>
+<p>这些原则的目的是创建<strong>整洁的代码</strong>（Clean Code），进而创建整洁的测试。整洁的测试有助于保持生产代码的灵活性、可维护性和可重用性。我们的软件架构依赖于单元测试，因为它们使得代码的变更变得可靠。</p>
+<blockquote>
+<p>&quot;整洁的代码&quot;指的是易于理解、重用、维护、扩展和测试的代码。</p>
+</blockquote>
+<h4 id="11-快速fast">1.1 快速（Fast）</h4>
+<p>单元测试的<strong>快速执行</strong>对于保持高效的开发流程至关重要。它们不仅需要快速执行以便于频繁运行，而且还应该及时发现问题，从而提高开发效率并减少等待时间。</p>
+<ul>
+<li><strong>频繁运行</strong>：快速执行的测试鼓励开发者更频繁地运行它们，从而及时发现和修正错误</li>
+<li><strong>提高效率</strong>：测试的快速反馈可以显著提升开发和维护的效率</li>
+<li><strong>易于维护</strong>：快速的测试通常更简单，因此更易于维护和更新</li>
+</ul>
+<details><summary>如果测试执行缓慢，可能会引发的连锁反应</summary>
+<ol>
+<li>
+<p>测试的速度慢，导致不频繁运行测试，导致bug被漏检</p>
+</li>
+<li>
+<p>bug漏检，花更多时间去寻找bug，维护测试代码缺少时间</p>
+</li>
+<li>
+<p>测试维护困难导致修复bug消耗更多时间</p>
+</li>
+<li>
+<p>时间消耗过长可能导致开发团队跳过/放弃测试</p>
+</li>
+<li>
+<p>放弃测试可能难以确定代码是否按照预期工作</p>
+</li>
+<li>
+<p>如果代码和预期不一致可能引入更多bug</p>
+</li>
+<li>
+<p>bug增多可能使开发团队害怕对现有代码进行更改</p>
+</li>
+<li>
+<p>如果害怕进行更改，代码就不再可靠</p>
+</li>
+</ol>
+<p>总之，如果我们不能让测试足够快速，就会导致放弃测试，可以说缓慢的测试等于没有进行测试，各方面的快速是构建整洁、高效测试的第一步。</p>
+</details>
+<hr>
+<h5 id="如何编写快速的单元测试代码">如何编写快速的单元测试代码</h5>
+<ul>
+<li><strong>单一断言</strong>：尽可能在每个测试中只使用一个断言，最小化断言的数量，这有助于快速明确测试的焦点。专注于单一概念的测试往往含有较少的断言，也就是尽量符合软件开发中的单一职责原则</li>
+<li><strong>清晰命名</strong>：变量和函数应该命名简洁且具描述性，以提高可读性和开发者间的沟通。简洁准确命名引导我们编写更具体的测试用例。如果命名不当，反而可能对其他开发者造成误解（比如显示函数A测试有问题，但实际测试的却是B，就会浪费大量时间）</li>
+<li><strong>使用领域特定语言（Domain-Specific Language, DSL）</strong>：整洁、简洁和密度适宜的代码使得测试更易于阅读。所以可以使用DSL写出更加高效、直观且易于理解、维护测试代码</li>
+<li><strong>依赖注入</strong>：依赖注入是软件开发中最关键的问题之一。高耦合会影响编写速度、维护时间和测试速度。解耦是关键，因为它可以提高组件的可测试性。依赖注入有助于控制代码依赖，使组件可以独立部署</li>
+</ul>
+<h5 id="领域特定语言dsl是什么">领域特定语言（DSL）是什么？</h5>
+<p>DSL指的是专门为特定问题领域设计的编程或脚本语言。举例来说，在Web开发中，HTML和CSS专门用于网页内容和样式设计，在数据库管理中，SQL专门用于数据查询和操作，它们这种完全独立的语言就属于外部DSL，而JUnit这种基于Java语法但添加了特定领域的功能就是一种内部DSL。</p>
+<p>这些DSL都是为特定任务或领域设计的，以简化和提高在该领域内的工作效率。</p>
+<p>在软件测试中，DSL被设计用来简化和抽象化测试代码，使其更加直观和易于理解。通过提供专门针对特定测试场景优化的语法和功能，DSL降低了编写复杂测试逻辑的复杂性，提高了代码的可读性和维护性。这样，开发者可以更专注于业务逻辑的验证，而不是纠结于繁杂的测试细节。</p>
+<h4 id="12-独立隔离independentisolated">1.2 独立/隔离（Independent/Isolated）</h4>
+<p>单元测试应该保持<strong>独立和隔离</strong>的状态，以确保测试结果的准确性和方便问题的定位。某个测试不应为下一个测试设定条件。应该可以单独运行每个测试，及以任何顺序运行测试。当测试互相依赖时，头一个没通过就会导致一连串的测试失败，使问题诊断变得困难，隐藏了下级错误。</p>
+<ul>
+<li><strong>测试独立性</strong>：每个测试应独立运行，无需依赖其他测试。测试的顺序不应影响其结果，以保证测试的一致性</li>
+<li><strong>隔离环境</strong>：测试不应依赖于外部环境或状态，如数据库、文件系统等。隔离确保了测试的稳定性，使其在任何环境中都能一致地运行</li>
+</ul>
+<hr>
+<h5 id="如何编写独立隔离的单元测试代码">如何编写独立/隔离的单元测试代码</h5>
+<ul>
+<li>
+<p><strong>构造-操作-检验（BUILD-OPERATE-CHECK）模式</strong>：</p>
+<ul>
+<li>使用它将将测试分为独立的阶段，以提高清晰度和可维护性</li>
+</ul>
+</li>
+<li>
+<p><strong>使用依赖注入（Dependency Injection）</strong>：</p>
+<ul>
+<li>使用依赖注入可以减少代码间的耦合，使单元测试更加独立和可控</li>
+<li>尽量避免在测试中直接创建依赖对象，而是通过构造函数、设置方法或工厂方法将依赖注入</li>
+<li>这种方法有助于隔离测试，确保测试的独立性</li>
+</ul>
+<p>正如之前在“快速”中提到的一样（在快速里依赖注入主要是为了提高测试速度），使用依赖注入能让测试更隔离和无共享状态。</p>
+</li>
+<li>
+<p><strong>保持测试简洁明了</strong>：</p>
+<ul>
+<li>每个测试应只关注一个特定的行为或条件</li>
+<li>避免在一个测试中验证多个断言，这可能导致测试间的依赖和结果混淆</li>
+</ul>
+<p>和快速中的“单一断言”要求类似，每个测试应该遵循单一职责原则，不要在一个测试函数里进行复杂的流程测试，这样可以保证测试运行的快速和独立。</p>
+</li>
+</ul>
+<hr>
+<h5 id="构造-操作-检验build-operate-check模式是什么">构造-操作-检验（BUILD-OPERATE-CHECK）模式是什么？</h5>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753842185045.png" alt="" loading="lazy"></figure>
+<ul>
+<li><strong>构造</strong>：在每个测试中独立构造所需的输入数据，避免测试之间的数据共享</li>
+<li><strong>操作</strong>：清晰地执行要测试的操作或方法，确保测试目标明确</li>
+<li><strong>检验</strong>：进行断言以验证操作的结果，确保结果符合预期</li>
+</ul>
+<p>这种模式通过将测试分为三个清晰阶段，帮助我们集中精力在测试的核心功能上并提升测试的质量。结构化强调了测试的每一个关键部分，从而确保测试的目的和操作都被清楚地表达和执行。<br>
+这样，测试不仅易于理解和维护，而且还能保持独立性，减少外部因素的干扰。一致的结构使得新增和修改测试更为直接和明确，极大地提高了测试代码的整体可维护性。</p>
+<p>例如<strong>构造</strong>阶段的重点是创建一个与其他测试独立的环境（这包括初始化测试所需的对象、配置必要的参数以及设置任何所需的预条件），有助于使测试更加可靠和可重复，因为它减少了外部因素对测试的影响。<br>
+在<strong>操作</strong>阶段实际执行被测试的功能或方法，操作阶段的关键是清晰地表达出测试的主要目标，确保每个测试都专注于特定的功能或行为。（通常涉及调用一个或多个方法，并传递在构造阶段准备好的输入数据）<br>
+<strong>检验</strong>阶段是验证操作的结果，确保它符合预期，一般涉及断言来检查返回值、对象的状态或者是系统的某个部分是否与预期一致，正确的检验是评估测试成功与否的关键，这有助于快速定位问题，并确保代码的正确性</p>
+<h5 id="依赖注入dependency-injection是什么">依赖注入（Dependency Injection）是什么？</h5>
+<p>在软件开发中，管理组件间的依赖关系是至关重要的。依赖注入是一种设计模式，用于减少代码间的耦合。它允许将组件的依赖项（如数据库、网络服务等）动态地提供，而不是由组件自己创建。降低了组件间的直接依赖，使得每个组件更容易独立测试和维护。</p>
+<p>在测试时，依赖注入使我们能够轻松替换实际依赖为<strong>测试替身</strong>，避免了耗时任务加速测试执行，聚焦于单一组件的行为。依赖注入增加了代码的灵活性和可测试性，是现代软件工程中的一个关键实践。</p>
+<p>试想一下如果一个类直接创建和使用另一个类的实例，那么在测试第一个类时，同时也会牵涉到第二个类。这不仅减慢了开发和测试的速度，还增加了引入错误的风险。</p>
+<h4 id="613-可重复repeatable">6.1.3 可重复（Repeatable）</h4>
+<p>测试的<strong>可重复性</strong>是确保软件质量的关键。这意味着测试应在任何环境下重复执行，且始终产生一致的结果。</p>
+<p>测试应该能够在生产环境、质检（QA）环境中运行测试，甚至能够在无网络的列车上用笔记本电脑运行测试。 如果测试不能在任意环境中重复，你可能会找到一个与环境相关的借口来解释其失败。这可能掩盖了代码中的真正问题。也会导致依赖环境条件不具备时，无法运行测试。</p>
+<ul>
+<li><strong>环境独立性</strong>：测试应在任何环境（如开发、测试、生产环境）下都能重复执行，并产生一致的结果</li>
+<li><strong>一致性和可靠性</strong>：无论何时何地运行测试，无论环境条件如何，测试结果应始终保持一致，以确保软件的稳定性和可靠性</li>
+</ul>
+<hr>
+<h5 id="如何编写可重复的单元测试代码">如何编写可重复的单元测试代码</h5>
+<ul>
+<li><strong>测试替身（Test Doubles）</strong>：使用来控制外部依赖，如数据库和网络请求，是确保测试可重复性的关键策略。通过在构造阶段设置测试替身的输入，可以避免依赖于外部系统的不稳定性和变化</li>
+<li><strong>依赖注入（Dependency Injection）</strong>：通过依赖注入将测试替身引入测试中，可以模拟外部条件和特殊情况（如缺失数据和请求超时时程序的运行会不会有问题）。这样做有助于测试在不同环境中保持一致性</li>
+<li><strong>独立于环境的设置</strong>：确保测试不依赖于特定的环境设置或初始状态。例如，当处理本地数据源时，测试不应依赖于特定的初始状态，也不应在执行后留下任何痕迹，影响再次运行测试时的状态</li>
+</ul>
+<p>和之前介绍其他原则时类似，<strong>构造-操作-检验模式</strong>和<strong>依赖注入</strong>在实现可重复的方面依然重要，因为数据源（本地数据库、网络请求等）不可靠，它们可能会发生变化。可重复测试的目标不是测试外部系统。<br>
+这里需要明确一点的是单元测试应该关注于代码本身，它是最底层的测试，专注于验证代码的最基本单位，即单个函数或方法的正确性。单元测试应该集中于内部逻辑的检查，而不是外部交互，所以比如API返回结果是否有效之类的测试不应该在单元测试中进行。</p>
+<h4 id="14-自验证self-validating">1.4 自验证（Self-validating）</h4>
+<p>单元测试的自验证特性意味着每个测试都能自动判断其通过与否，无需人工干预。不应该查看日志文件来确认测试是否通过。不应该手工对比两个不同文本文件来确认测试是否通过。如果测试不能自验证，对失败的判断就会变得依赖主观，而运行测试也需要更长的手工操作时间。</p>
+<ul>
+<li><strong>明确的结果</strong>：测试应产生明确的、自动化的通过或失败结果。避免需要手动检查日志或执行其他手动步骤来判断测试结果</li>
+<li><strong>使用自动化工具</strong>：使用断言等机制自动验证测试结果，减少手工验证的需要，提高测试效率</li>
+</ul>
+<hr>
+<h5 id="如何编写自验证的单元测试代码">如何编写自验证的单元测试代码</h5>
+<p>按照构造-操作-检验模式编写，使用断言来自动验证测试结果。正确使用断言可以确保测试的自验证特性，即每次运行后能立即知道测试是<strong>通过</strong>还是<strong>失败</strong>。</p>
+<p>在不同的平台上，还有有多种工具和框架可以支持编写自验证的单元测试：</p>
+<ul>
+<li><strong>Android</strong>：使用JUnit框架，提供断言方法如 <code>assertEquals</code> 和 <code>assertTrue</code></li>
+<li><strong>iOS</strong>：XCTest框架提供断言方法，如 <code>XCTAssertEqual</code> 和 <code>XCTAssertTrue</code></li>
+<li><strong>Flutter</strong>：Dart的test包提供断言方法 <code>expect</code>，用于验证Flutter应用中的单个函数、方法或类的行为​</li>
+</ul>
+<p>此外，还有一些工具可以方便的生成可视化的测试结果、覆盖率报告，这些工具和实践有助于确保测试的自动化和一致性，减少开发者的手动检查负担，并提供清晰的反馈。使用这些工具，可以确保每个单元测试都是自验证的，能够快速准确地提供测试结果。</p>
+<h4 id="15-及时timely">1.5 及时（Timely）</h4>
+<p>及时编写测试意味着在开发过程的早期阶段或与编写生产代码<strong>同时</strong>进行测试编写（也就是测试驱动开发，TDD）。如果在编写生产代码之后编写测试，可能会发现生产代码难以测试。你可能会认为某些生产代码本身难以测试，因此可能不会去设计测试的代码。另外易于测试的代码通常也是解耦的代码，所以及时编写测试也能提高代码质量。</p>
+<ul>
+<li><strong>鼓励测试优先</strong>：开发过程中尽早编写测试，甚至在编写实际功能代码之前，有助于确保代码设计的可测试性</li>
+<li><strong>及时反馈</strong>：及时编写的测试为开发提供快速反馈，有助于及早发现和修复问题，确保代码质量</li>
+</ul>
+<hr>
+<h5 id="如何编写及时的单元测试代码">如何编写及时的单元测试代码</h5>
+<p>将单元测试放在开发周期的末尾进行会限制开发者的选择，可能导致测试编写或重构成本增加。<br>
+遵循测试驱动开发的循环是实现及时测试的有效方法。TDD的核心原则来源于Kent Beck的<a href="https://book.douban.com/subject/1230036/">《测试驱动开发》</a>，而Robert C. Martin的<a href="https://book.douban.com/subject/4199741/">《代码整洁之道》</a>也有补充，他们认为的规则如下：</p>
+<ul>
+<li><strong>测试先行</strong>：在有失败的自动化测试前不编写新代码（先写测试还没写代码，所以开始测试一定失败）</li>
+<li><strong>避免重复</strong>：消除代码中的重复元素</li>
+<li><strong>遵循TDD的三大法则</strong>：三大法则将你限制在大概30秒一次的循环中。测试与生产代码一起编写，测试只比生产代码早写几秒钟</li>
+</ul>
+<hr>
+<h5 id="测试驱动开发tdd的三大法则">测试驱动开发（TDD）的三大法则</h5>
+<ol>
+<li>在编写不能通过的单元测试前，不可编写生产代码</li>
+<li>只可编写刚好无法通过的单元测试，不能编译也算不通过</li>
+<li>只可编写刚好足以通过当前失败测试的生产代码</li>
+</ol>
+<p>这些法则帮助开发者保持专注，并在短迭代中持续进步。测试驱动开发（Test-Driven Development，TDD）强调及时反馈和持续改进，从而提升软件质量和开发效率。</p>
+<p>但《测试驱动开发》中也提到“这样写程序，我们每天就会编写数十个测试，每个月编写数百个测试，每年编写数千个测试。这样写程序，测试将覆盖所有生产代码。测试代码量足以匹敌生产代码量，导致令人生畏的管理问题。”<br>
+所以我们不能盲目的写测试，通过遵循上面提到的那些F.I.R.S.T原则，我们可以有效地管理这些测试。这样，TDD不仅提高了代码的质量和可维护性，而且通过持续的测试保持了软件的稳定性，使得代码更加健壮和可靠。</p>
+<details><summary>关于TDD法则2的解释</summary>
+<p>在TDD中，你应该只编写刚刚够的测试代码来检验一个特定功能的失败。例如，在开发一个计算器时，如果你正在添加一个新的“加法”功能，会先写一个测试案例，如“检查2加2是否等于4”。由于加法功能尚未实现，这个测试将失败。这是预期内的，因为它指向了你接下来需要实现的功能。你的任务是编写刚好足够的代码来通过这个测试，而不是一次性完成整个功能。同时，如果测试代码本身存在问题，如语法错误导致无法编译，也视为测试失败。这确保了测试的质量和可靠性。<br>
+这个法则保证了测试本身的质量（因为测试语法错误等导致测试编译失败的会被及时发现）让测试和生成代码受到一样的重视，有助于快速地反馈和迭代。<br>
+目标是通过不断重复这个小循环（写测试、让测试失败、写代码、通过测试）来逐步构建和完善程序。</p>
+</details>
+<details><summary>TDD遵循"红-绿-重构"的方法论</summary>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1753842235309.png" alt="" loading="lazy"></figure>
+<ul>
+<li>&quot;红&quot;代表失败的测试</li>
+<li>&quot;绿&quot;表示测试通过</li>
+<li>&quot;重构&quot;指的是改进代码设计的过程</li>
+</ul>
+<p>TDD的目标<strong>不是</strong>实现100%的代码覆盖率，而是在增强对测试套件的信任的同时，确保代码变更是可靠的。这种信任来自于测试的频繁运行和及时反馈，帮助及时识别和修复潜在的问题。因此，随着测试的不断增加和迭代，我们可以确信，即使代码发生变更，也不会因此引入新的问题或缺陷，保障了生产代码的稳定性和质量。</p>
+</details>
+<h4 id="16-其他重要原则">1.6 其他重要原则</h4>
+<p>除了F.I.R.S.T原则外，以下补充原则对于确保单元测试的高效性和有效性也非常重要：</p>
+<p>清晰性：确保测试代码逻辑清晰、易于理解，这有助于其他开发者快速把握测试目的和方法<br>
+参数化测试（Parametrization）：通过对测试用例进行参数化，可以高效地测试不同的输入条件，减少重复代码，并提高测试的全面性<br>
+自动化：除了自验证的测试结果外，还应尽可能自动化测试执行过程，例如在CI/CD管道中自动运行测试套件<br>
+避免魔法值：使用明确的命名或常量来替换硬编码的数字，使测试更易于理解和管理<br>
+覆盖面广泛：测试不仅要涵盖正常的用例，还要包括边界条件和异常情况。这有助于确保代码在各种情况下都能正常工作。</p>
+<h4 id="617-编写原则的使用示例">6.1.7 编写原则的使用示例</h4>
+<p>接下来我们以一个在线图书商店系统为例，其中包含书籍、订单和用户等多个实体。测试目标是验证用户是否能够成功创建并检索订单。希望能够通过这个示例展示F.I.R.S.T原则的使用对于提升单元测试质量的重要性。</p>
+<p><strong>未使用DSL和未遵守原则的Java单元测试示例：</strong></p>
+<pre><code class="language-Java">@Test
+public void testOrderCreationAndRetrievalWithoutDSL() {
+    User user = new User(&quot;yushengjun@example.com&quot;, &quot;余胜军&quot;);
+    User anotherUser = new User(&quot;mazi@example.com&quot;, &quot;王麻子&quot;); // 不必要的额外用户创建
+    Book book = new Book(&quot;123456&quot;, &quot;Java语言规范&quot;, &quot;James Gosling&quot;);
+    Book anotherBook = new Book(&quot;654321&quot;, &quot;错误的书籍&quot;, &quot;未知作者&quot;); // 创建一个不会被使用的书籍对象
+
+    // 不良实践：使用系统时间来模拟有时效限制的操作，比如特价促销（影响可重复性）
+    if (System.currentTimeMillis() % 2 == 0) {
+        order.applyDiscount(&quot;FLASHSALE50&quot;);
+        System.out.println(&quot;特价促销已应用.&quot;);
+    } else {
+        System.out.println(&quot;非促销时间，未应用特价.&quot;);
+    }
+
+    ShoppingCart cart = new ShoppingCart(user);
+    ShoppingCart anotherCart = new ShoppingCart(anotherUser); // 另一个不需要的购物车实例
+    cart.addBook(book);
+    cart.addBook(anotherBook); // 添加一个不相关的书籍到购物车
+    cart.removeBook(anotherBook); // 然后又将它移除
+
+    OrderService orderService = new OrderService();
+    OrderService redundantService = new OrderService(); // 多余的服务实例
+    Order order = orderService.createOrder(cart);
+    Order anotherOrder = redundantService.createOrder(anotherCart); // 创建一个不需要的订单
+
+    // 混乱且冗长的断言（应该避免这种情况）
+    if (order != null &amp;&amp; order.getUser().equals(user)) {
+        assertNotNull(order, &quot;订单不应为空&quot;);
+        assertEquals(user, order.getUser(), &quot;订单用户应与预期相符&quot;);
+        if (order.getBooks() != null &amp;&amp; order.getBooks().size() == 1) {
+            assertEquals(1, order.getBooks().size(), &quot;订单应包含一本书&quot;);
+            assertEquals(book, order.getBooks().get(0), &quot;订单中的书籍应与预期相符&quot;);
+        }
+    }
+
+    Order retrievedOrder = orderService.getOrderById(order.getId());
+    // 不良实践：缺乏断言，使用控制台输出进行手动验证
+    if (retrievedOrder != null) {
+        System.out.println(&quot;检索到订单，订单ID: &quot; + retrievedOrder.getId());
+        if (retrievedOrder.equals(order)) {
+            System.out.println(&quot;检索到的订单与创建的订单相同.&quot;);
+        } else {
+            System.out.println(&quot;检索到的订单与创建的订单不同.&quot;);
+        }
+    } else {
+        System.out.println(&quot;未能检索到订单.&quot;);
+    }
+}
+
+</code></pre>
+<p>在这个例子中，我们直接创建测试，较为冗长，包含了多个实体的创建和操作，故意没有遵守“快速”要求的单一断言，大量的流程混杂在一个测试不够”独立“等，得测试的主要目的不够突出，对阅读和维护都不是很友好。</p>
+<p><strong>使用DSL且遵守原则的Java单元测试示例：</strong></p>
+<pre><code class="language-Java">// @Before注解的方法在每个测试方法之前重置和运行。这里设置了测试用例的共同环境，减少重复代码
+// 然而如果测试完全不同的功能或流程时，应避免使用共享设置，以保持测试之间的独立性
+@Before
+public void setup() {
+    User user = aUser(&quot;yushengjun@example.com&quot;, &quot;余胜军&quot;);
+    Book book = aBook(&quot;123456&quot;, &quot;Java语言规范&quot;, &quot;James Gosling&quot;);
+    cart = aShoppingCart().withUser(user).withBook(book);
+    order = anOrder().from(cart).create();
+}
+
+// 测试订单是否成功创建并且不为空
+@Test
+public void testOrderIsNotNull() {
+    assertOrder(order).isNotNull();
+}
+
+// 测试订单是否正确关联到了特定用户
+@Test
+public void testOrderHasCorrectUser() {
+    assertOrder(order).hasUser(user);
+}
+
+// 测试订单是否包含了添加的书籍
+@Test
+public void testOrderHasBooks() {
+    assertOrder(order).hasBooks(book);
+}
+</code></pre>
+<p>在这个例子中，我们通过引入DSL方法和遵守F.I.R.S.T原则使得代码变得更加简洁和易读。DSL的使用隐藏了某些实现细节，使测试更专注于业务逻辑的验证，而非对象的创建和配置。这样不仅提高了测试代码的可读性，还简化了编写和维护的过程。</p>
+<blockquote>
+<p>注意：<code>aUser、aBook、aShoppingCart、anOrder 、 assertOrder</code> 这样的方法展示了内部DSL的应用。开发者需要根据特定的测试需求和业务逻辑来实现这些方法，另外类似&quot;订单对象为空&quot;这样的错误消息也在这些方法里集成了，不需要再编写在具体的测试代码中，<br>
+<code>@Before</code>注解的方法在每个测试方法运行之前都会被执行。因此，即使前一个测试改变了某个对象的状态，也不会影响到下一个测试。</p>
+</blockquote>
+<h3 id="2-执行结果">2 执行结果</h3>
+<ul>
+<li><strong>通过/不通过</strong>：最基本的评估标准是测试是否通过。通过的测试表示相应的功能在当前代码版本下工作正常，而不通过则意味着存在问题需要修复</li>
+<li><strong>覆盖率报告</strong>：覆盖率报告显示代码中被测试覆盖的百分比。高覆盖率并不一定意味着完美的测试，但低覆盖率可能表示存在未测试的代码路径。因此，查看覆盖率报告可以帮助确定测试的全面性</li>
+<li><strong>错误的类型和数量</strong>：检查测试结果中报告的错误类型和数量。这可以帮助了解代码中存在的问题的种类，并且可以指导开发人员进行修复</li>
+<li><strong>失败的测试用例</strong>： 查看测试报告，特别关注哪些测试用例失败。这有助于迅速定位和修复问题，并确保修改不会引入新的错误</li>
+<li><strong>执行时间</strong> 单元测试应该能够在短时间内执行完毕。较长的执行时间可能会减缓开发流程。因此，评估测试的执行时间可以帮助确定测试的效率</li>
+<li><strong>历史趋势</strong>： 考虑测试结果的历史趋势。如果测试覆盖率和通过率持续改善，这可能表示开发过程中的代码质量在提高。相反，如果有不断的测试失败，可能需要更仔细地审查代码变更</li>
+<li><strong>附加信息</strong>：测试结果通常包含附加信息，如堆栈跟踪、日志信息等。仔细查看这些信息可以提供有关失败的测试用例背后原因的线索</li>
+<li><strong>边界条件和特殊情况</strong>：确保测试覆盖了边界条件和特殊情况。如果测试结果中没有涵盖这些情况，可能需要修改测试用例以确保代码在各种情况下都能正常工作</li>
+</ul>
+<h3 id="3-代码覆盖">3 代码覆盖</h3>
+<p>代码覆盖率表示被测试的代码占总代码的百分比。较低的覆盖率通常意味着较低的代码质量，但高覆盖率并不代表高质量代码。更多应该查看单体测试的语句覆盖率、分支覆盖率、路径覆盖率：</p>
+<ul>
+<li><strong>语句覆盖率</strong>： 衡量被测试代码中有多少语句被至少执行一次。高语句覆盖率表明测试已经涵盖了- 大部分代码路径，但并不保证所有分支和条件都已被测试</li>
+<li><strong>分支覆盖率</strong>：  衡量代码中所有可能的分支（例如，if语句中的条件）是否都被测试过。分支覆盖率帮助发现在不同条件下代码的行为是否正确</li>
+<li><strong>路径覆盖率</strong>： 考虑所有可能的代码执行路径，确保每个路径至少被测试一次。路径覆盖率是最严格的一种覆盖率，因为它要求每个可能的执行路径都要被测试</li>
+</ul>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/os9fDSyme/">
+                  <h3 class="post-title">
+                    在 Swift 中生成随机值的方法
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

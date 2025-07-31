@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>iOS 隐私清单的 Q&amp;A | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="正如苹果 关于 App Store 提交的隐私更新 中提到的那样
+**自 3 月 13 日起：**如果你上传新 App 或更新 App 到 App Store Connect，且该 App 使用了需要声明批准原因的 API，但你未在 App..." />
+    <meta name="keywords" content="" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">iOS 隐私清单的 Q&amp;A</h2>
+            <div class="post-date">2024-04-02</div>
+            
+            <div class="post-content" v-pre>
+              <p>正如苹果 关于 App Store 提交的隐私更新 中提到的那样</p>
+<p>**自 3 月 13 日起：**如果你上传新 App 或更新 App 到 App Store Connect，且该 App 使用了需要声明批准原因的 API，但你未在 App 的隐私清单中提供批准原因，我们会通过电子邮件告知你。这是对 App Store Connect 中现有通知的补充。</p>
+<p>**自 5 月 1 日起：**你需要就你的 App 代码使用的所列 API 提供批准原因，才能将新 App 或更新 App 上传到 App Store Connect。如果你没有合理的原因使用某个 API，请寻找替代的方案。如果你添加了常用第三方 SDK 列表中所列的新版第三方 SDK，那么这些 API、隐私清单和签名要求将应用于该 SDK。请务必使用包含其隐私清单的 SDK 版本，并注意在将该 SDK 添加为二进制依赖项时也需要提供签名。</p>
+<p>下月初开始就必须要适配隐私清单了</p>
+<p>但还是有疑问需要解答或确认,因此我预约了苹果 App Review 团队的一对一咨询以得到更加确定的答案.</p>
+<p>总之我整理了一下我问的问题和收到的答复</p>
+<p>Q: 用尝试上传看是否收到邮件的方式验证是否可行</p>
+<p>A: 我自己的理解是可行的, 首先能确定的就是, 现有的尝试将App 上传到 App Store Connect 并看有没有收到邮件来确认是 ok 的, 因为这个隐私清单相关的审核是由 App Store Connect 自动进行的, 也就是说后续的应用审核团队的人工审核部分不会管这方面。</p>
+<p>因此在真正发布前自行上传试试看会不会收到邮件可能是最可验证和稳妥的做法</p>
+<p>Q: 这个审核机制后面会有变化吗?</p>
+<p>A: 特别问了一下如果现在没有收到邮件, 那么下个月之后也是一样的机制, 也就能是依然能过审,<br>
+但是有可能后续 API 的名单还会继续增加,所以也需要我们持续关注和添加相关API 声明</p>
+<p>Q: 直接在 APP 的隐私清单文件里加声明, 不管 SDK 可不可行</p>
+<p>A: 我直球的询问了&quot;有人现在这样直接在 APP 的隐私清单里添加要用到的 API,而不在 SDK 里加,依然通过了 App Store Connect 审核, 这种方式是否可靠&quot;</p>
+<p>原回答:</p>
+<p>&quot;这个我没有办法回答,我不知道是不是一个可执行的方式, 因为我刚刚也说过,这不是应用审核团队所处理的, 而是在AppStore Connect,在你上传之前过系统的时候, 那通常来讲,我们需要一份你自己的代码层面的Manifest和第三方的, 如果你有用第三方的话. 那有些时候, 他们如果是第三方的,用了一个对外开放的SDK, 但是是 first party 自己本身开发的话,那有可能情况会不一样, 所以我没有办法了解清楚究竟有人说的这个情况到底是什么情况, 所以没有办法回答您这个问题&quot;</p>
+<p>感觉可以约等于他们其实不太管这个, 没收到邮件应该就 ok 👌</p>
+<p>因为这次给 SDK 也要加隐私清单的本意是开发者使用第三方 SDK 时也能清楚的知道引入这些 SDK 可能有哪些隐私要求,也就是苹果说的&quot;开发者应对自己App 中包含的所有代码负责&quot;,所以回答的时候才说 APP 和 SDK 都需要添加, 但是为什么只给 APP 的隐私清单加 API 声明可行呢, 因为最后会把APP和 SDK 的声明合成一个报告来给 App Store Connect 自动审查, 所以如果不改变审核方式的话 这么做就没问题</p>
+<p>Q: 就是我们到底有没有必要升级&quot;即将发布的第三方 SDK 要求&quot;列出来 SDK</p>
+<p>A: review团队的回答: &quot;这个的话,目前还没有最后有publish的资讯,但是据我们目前所知,你需要使用最新的版本的SDK&quot;</p>
+<p>所有我继续问&quot;那就是哪怕我自己手动加这个隐私清单文件到SDK里面也是不行的? 有的老项目的话,可能太老了,就没办法升级SDK了,那这种情况怎么办呢? &quot;</p>
+<p>回答&quot; 我们目前没有任何更多的资料有关这方面的问题。如果您有任何的问题没有办法提交,或者是有任何的新的approved reason的话, 那您可以通过 App Store Connect 联系我们,或者发布一个申请新 reason 的 request&quot;</p>
+<p>所以我觉得苹果可能自己也没想好是不是一定要我们升级 SDK, 所以可以先不用管, 如果提交后验证不通过, 必须要我们升级 SDK 了的话 到时候再对应就好了, 毕竟这也是不太现实的要求.</p>
+<p>总之最后看上去要对应隐私清单的要求, 不会像我们一开始想的那么困难, 可以按照 &quot;上传到 App Store Connect  -&gt; 收到邮件 -&gt; 添加 API 声明 -&gt; 继续上传直到不再收到邮件提示&quot; 的流程来确认, 但也不是一劳永逸的, 后续还是可能添加更多的隐私相关的 API声明要求</p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/DHRu_dS1Ze/">
+                  <h3 class="post-title">
+                    Flutter on the Web 的一些分享
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

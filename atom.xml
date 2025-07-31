@@ -1,0 +1,656 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://nhuji.github.io</id>
+    <title>Huhu&apos;s blog</title>
+    <updated>2025-07-31T06:35:45.065Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://nhuji.github.io"/>
+    <link rel="self" href="https://nhuji.github.io/atom.xml"/>
+    <subtitle>It&apos;s me, huhu</subtitle>
+    <logo>https://nhuji.github.io/images/avatar.png</logo>
+    <icon>https://nhuji.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2025, Huhu&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[No.4 强化学习（Reinforcement Learning）和人类反馈强化学习]]></title>
+        <id>https://nhuji.github.io/post/L5B6pVEn-2/</id>
+        <link href="https://nhuji.github.io/post/L5B6pVEn-2/">
+        </link>
+        <updated>2025-06-14T14:16:20.000Z</updated>
+        <summary type="html"><![CDATA[<p>之前介绍的预训练 + SFT，虽然已经能让 LLM 完成大部分工作，但在后训练阶段我们还能继续增强它，因此引入 <strong>强化学习(RL)</strong>, 简单来说，RL 给模型提供了另一种**“自我探索与优化”**的能力</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>之前介绍的预训练 + SFT，虽然已经能让 LLM 完成大部分工作，但在后训练阶段我们还能继续增强它，因此引入 <strong>强化学习(RL)</strong>, 简单来说，RL 给模型提供了另一种**“自我探索与优化”**的能力</p>
+<!-- more -->
+<p>我们先回顾 SFT：是“人类先写好理想回答”，模型去模仿。但也许<strong>人类自己也不知道最优解,</strong> 或者写不出最适合模型“内部思维”的过程。LLM 的拥有的知识比单个人类多得多, 所以在解释复杂概念和解决问题时，<strong>人类标注员可能不清楚应该提供多少中间步骤</strong>。太详细可能增加 token 消耗；太简略又可能使模型无法进行充分推理。由于 LLM 的内部难以被理解，<strong>最优的&quot;思考步骤&quot;粒度很难由人类预先确定</strong></p>
+<p>而 RL 做法就是先给出问题让模型自己尝试回答，再根据正确与否的反馈(有固定答案的,比如数学,编程等可以自动验证, 没有的可以让人类或者奖励模型评分)，然后收集“好回答”的样本来再次训练调整模型的参数，从而出现一些“超越人类示例”的方法或思路</p>
+<h3 id="可验证场景下的-rl">可验证场景下的 RL</h3>
+<p>如果问题有明确的正确答案，例如数学题或编程任务，我们就可以完全自动化打分。流程类似：</p>
+<ol>
+<li>给定同一个问题，模型多次生成不同回答。</li>
+<li>哪些回答是正确的，就标记为成功；错误的标记为失败。</li>
+<li>下一步训练就更强化那些成功样本的概率，使模型学会它自己的“最佳思路”。</li>
+</ol>
+<p>这些思路并不一定跟人类写的解题方式一致，可能更适合模型内部的推理流程。有时模型还能发现人类没想到的巧妙招数，就像 AlphaGo 在围棋对弈里发现了“招法 37”那样。这就是 RL 强大的地方。</p>
+<p>训练时会同时进行成<strong>千上万不同的问题和回答</strong>来不断迭代模型, 让模型逐渐找到什么样的 token 序列能让它正确回答问题</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753865064452.png" alt="" loading="lazy"></figure>
+<p>比如代码,或者数学,物理问题等,答案是可以验证是否正确的</p>
+<p>通过验证答案后哪些符合要求的就会被作为示例, 再次用于训练 LLM</p>
+<h3 id="不可验证场景人类反馈强化学习rlhf">不可验证场景：人类反馈强化学习（RLHF）</h3>
+<p>如果题目没法自动判定好坏（比如“写一首关于鸭子的诗，看哪个更好”），我们不能直接程序判对错，就需要人类评分来监督</p>
+<p>但如果用极大量的数据一直让人评分，那成本非常高。于是出现了 “RLHF”（Reinforcement Learning from Human Feedback）技术。它主要思路是：</p>
+<ol>
+<li>人类仅对少量候选回答做排序，得到哪个更好或更差。</li>
+<li>用这些有限的对比数据，去训练一个 “奖励模型”（reward model），让它学会模拟人类的好恶。</li>
+<li>然后在大规模 RL 的时候，用这个奖励模型给出评分，用来指导模型强化学习。这样就不必让真人审阅海量输出。</li>
+</ol>
+<p>不过 RLHF 也有难点：<strong>奖励模型并非完美</strong>，RL 过程可能产生“对奖励模型的投机取巧”，出现各种“对人类其实并不好的回答，但在奖励模型眼里分数很高”的情况。如果继续强化下去，就容易过拟合到奖励模型的漏洞里，导致输出怪异。这时往往要提前截断或改进奖励模型。<strong>总之，RLHF 带来一定收益，但也有局限。</strong></p>
+<p>像我们在使用 ChatGPT 时,对于不满意的答案重试再继续, 点赞, 出现两个答案时的选择等,都可以在以后模型的训练里提升它们的质量</p>
+<blockquote>
+<p>DeepSeekR1 的奖励模型准确性奖励：准确性奖励模型评估响应是否正确。例如，对于有确定结果的数学问题，要求模型以指定格式（如在方框内）提供最终答案，使得可以可靠地通过基于规则的验证来检查正确性。类似地，对于 LeetCode 问题，可以使用编译器根据预定义的测试用例生成反馈格式奖励：除了准确性奖励模型外，我们还采用格式奖励模型，强制模型将思考过程放在'<think>'和'</think>'标签之间</p>
+</blockquote>
+<h3 id="整体总结">整体总结</h3>
+<p>综上所述，大型语言模型（LLM）一般经过以下大致流程：</p>
+<ol>
+<li><strong>预训练</strong>（Pre-training）：把整个互联网文本拿来训练，让模型学习最底层的大规模语言知识和常识，得到一个“基座模型”</li>
+<li><strong>监督微调</strong>（SFT）：收集人工标注的对话数据，让模型学会“角色化”的问答、对话风格</li>
+<li><strong>强化学习</strong>（RL/RLHF）：在可验证或带人类反馈的任务上，让模型反复尝试、不断改进，进一步提升“推理质量”或“与人类期望一致度” (推理模型大量进行这一阶段)</li>
+</ol>
+<p>类比一下我们学习知识的话, 预训练就是老师讲解给我们各种新知识, 而 SFT 就是我们通过看解题过程来学习怎么解题, 而强化学习就像是我们自己去做题并从错误中学习</p>
+<p>目前第一 二步已经相当成熟，各个厂商做法都类似；第三步仍在快速探索和演进中。而 ChatGPT, 不仅用了上面这些，还叠加了更多工程细节，比如调用搜索、代码解释器、长上下文处理、合规审查等</p>
+<p>第三步经常是各个厂商自己内部尝试, 很少公开讨论 (毕竟都花了很多钱来试验), 但 DeepSeek 的开源论文就公开了不少他们的尝试细节</p>
+<p><a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via...</a></p>
+<p>比如 R1 就在 RL 训练阶段时,自己不断加长输出,并且思考和反思来提升准确率 ,这并不是在人工标注的示例给出的, 但也有对于简单的问题长度也过于长的问题,相信很多人在使用 DS 时都遇到一个很简单的问题,他要推理很多后才能给出一个简单的结果</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1753865072294.png" alt="" loading="lazy"></figure>
+<p>随着 RL 训练进行,R1模型的回复长度越来越长,准确率也提高了</p>
+<h3 id="ds-创新性的训练方法rl优先"><strong>DS 创新性的训练方法（RL优先）</strong></h3>
+<ul>
+<li>DeepSeek-R1尝试了<strong>纯粹依靠强化学习（RL）训练模型</strong>，没有先进行监督微调（SFT）</li>
+<li>RL阶段使得模型自主地探索出更长、更复杂、更清晰的“思考链”（Chain-of-thought），具有“自我验证”和“反思”等高级推理行为</li>
+<li>这种纯RL方式培养出了很强的推理能力，但也存在冗长重复的问题</li>
+<li>因此，后续引入了少量 SFT，再配合两轮强化学习，使得模型在具备基础语言能力基础上，显著提升推理准确度和表现</li>
+</ul>
+<p>这种训练方式最特别之处在于：</p>
+<ul>
+<li>依靠极少量的人类标注数据</li>
+<li>大量使用奖励信号和模型自身探索，达到与OpenAI最高端模型(o1)相当的推理表现</li>
+</ul>
+<p>另外我们以上介绍的只是基本的概念,还有类似混合专家架构（Mixture-of-Experts，MoE）, Constitutional AI, DPO 等技术让我们最终用到现在最先进的这些 LLM 模型</p>
+<h3 id="未来发展">未来发展</h3>
+<ul>
+<li><strong>多模态</strong>（multimodal）：模型不仅能处理文本，也能处理图像、音频、视频等。它们会把这些数据同样分词成 token，并在 Transformer 中混合处理 (例如 Gemini 2.0 Flash exp)</li>
+<li><strong>长任务/多步 Agent</strong>：模型将不仅仅回答单个问题，还能自己规划、执行更长流程（有的叫 Auto-GPT 之类）。但这对模型的记忆和自我纠错要求更高，还在早期 (如 Deep Research)</li>
+<li><strong>更广泛地嵌入到各种软件和硬件</strong>，从搜索、办公，到机器人、自动驾驶，都可能使用 LLMs 作为核心算法之一</li>
+<li><strong>新的训练方法</strong>：比如引入更多交互式学习、在线训练、动态更新等，试图让模型像人类一样在使用中持续学习，而不仅仅是在训练阶段一次定型</li>
+</ul>
+<p>最后, 这些模型虽然强大，却并非绝对可靠。在事实性问题上，建议多核查(就像 ChatGPT 下面一直写的&quot;ChatGPT can make mistakes. Check important info.&quot;)，因为它可能产生幻觉, 处理复杂推理或算术，最好让模型“分步解释”或“使用代码/计算工具”。模型并不真正“明白”或“意识”，它只是根据大量样本学到的概率分布；它能做很多近似推理，但也会在意料之外的地方犯“低级”错误</p>
+<p>理想的心态是：<strong>把它当成“高级文字处理与推理工具”，能提升效率，但别盲目相信</strong></p>
+<p>随着时间推进，模型会越来越多样化、能力越来越强，也会在专业领域更快产生价值——但它们的缺陷和挑战也同时存在</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[No.3 后训练 让 LLM 能和你连续对话]]></title>
+        <id>https://nhuji.github.io/post/rBO74WnpGS/</id>
+        <link href="https://nhuji.github.io/post/rBO74WnpGS/">
+        </link>
+        <updated>2025-05-25T10:40:51.000Z</updated>
+        <summary type="html"><![CDATA[<p>如之前所说,后训练成本相比预训练低得多, 并不需要再用到全部互联网数据。</p>
+<p>基座模型虽然能模仿互联网内容续写内容, 或者像 Copilit 那样补全代码, 但还不够有用 , <strong>如何让模型变得有用呢</strong>？尤其是，如何让它像 ChatGPT 一样能够与人进行多轮对话、回答问题？这就需要 <strong>SFT（监督微调）</strong></p>
+]]></summary>
+        <content type="html"><![CDATA[<p>如之前所说,后训练成本相比预训练低得多, 并不需要再用到全部互联网数据。</p>
+<p>基座模型虽然能模仿互联网内容续写内容, 或者像 Copilit 那样补全代码, 但还不够有用 , <strong>如何让模型变得有用呢</strong>？尤其是，如何让它像 ChatGPT 一样能够与人进行多轮对话、回答问题？这就需要 <strong>SFT（监督微调）</strong></p>
+<!-- more -->
+<h3 id="监督微调supervised-fine-tuning-sft">监督微调（<strong>Supervised Fine-Tuning,</strong> SFT）</h3>
+<p>SFT 的思路很简单：专门制作/收集一批“对话数据”，让模型学习如何在对话中回答人类问题，用什么样的风格回答问题, 而不再是像互联网内容那样随意展开。具体做法是：</p>
+<ol>
+<li>让人工标注员（labeler）去写很多“示例对话”：有人问什么，理想情况下模型要怎么回答</li>
+<li>把这些对话转成 token 序列（带上类似“用户：…\n模型：…\n”的格式）</li>
+<li>用这些数据进一步继续训练模型，让模型模仿这些“人类写好的回答”</li>
+<li>经过这样的监督微调后，模型就会“学会”如何像一个“对话助手”那样回答</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753864955104.png" alt="" loading="lazy"></figure>
+<p>人工编写的对话数据示例, 这个时候示例里的知识不那么重要, 向 LLM 应该怎么进行对话才比较重要</p>
+<p>这背后的原理是：原本基座模型只是学到了“互联网上文本的分布”，它不知道要回答你、也不知道要在对话里切换角色；现在我们给了大量示例，告诉它：在出现“用户说XXX”时，请产生“助手回答YYY”的格式。大量此类示例会把模型行为校正到我们想要的“对话模式”上</p>
+<p>由此就得到一个“能够对话的大模型”，也称作“指令微调”（Instruct）版本</p>
+<p>ChatGPT 发布时的 GPT-3.5 , 就是在 GPT-3 的基础上做了这样有对话数据的后训练的 Instruct 版本</p>
+<h3 id="数据怎么来">数据怎么来？</h3>
+<p>大模型开发厂商一般会雇佣一些人类标注员，给他们一份“指南”，比如要求回答时要礼貌、准确、简洁、合法合规等，然后让他们写出各种问题，并写出“完美回答”，作为训练数据</p>
+<p>有时厂商也会让模型辅助生成一些回答，然后再让人工修订，这样效率更高（不需要人类完全从零写）。这部分就非常依赖管理流程和标注质量。SFT 数据集并不需要像预训练那样海量，它的规模往往是几十万到上百万条对话，而不是数万亿 tokens。不过这就足够给模型“转型”成一个对话助手</p>
+<p>当然这样的资料编写也涉及到一些问题 ⬇️</p>
+<p><a href="https://finance.sina.com.cn/tech/roll/2024-11-26/doc-incxirww7744266.shtml">人工智能血汗工厂：标记OpenAI模型的肯尼亚人谴责低工资和恶劣工作条件</a></p>
+<p>OpenAI 训练 <a href="https://arxiv.org/pdf/2203.02155">InstructGPT</a> 时,对人工编写的 SFT 训练数据的指南摘录 ⬇️, 完整版一般有几百页需要标注员学习和遵守</p>
+<blockquote>
+<p>Excerpt of labeling instructions on the API prompt distribution您将收到一个用户提交的基于文本的任务描述。这个任务描述可能是一个明确的指令形式（例如&quot;写一个关于聪明青蛙的故事。&quot;）。任务也可能间接指定，例如通过使用几个所需行为的示例（例如，给出一系列电影评论及其情感倾向，然后是一个没有情感倾向的电影评论，您可以假设任务是预测最后一个评论的情感倾向），或者通过生成期望输出的开头（例如，给出&quot;从前有一只名叫朱利叶斯的聪明青蛙，&quot;您可以假设任务是继续这个故事）。您还将收到几个文本输出，旨在帮助用户完成他们的任务。您的工作是评估这些输出，确保它们是有帮助的、真实的、无害的。对于大多数任务，真实和无害比有帮助更重要。有帮助的标准指输出应遵循用户的意图，并帮助用户解决他们的任务。一些有帮助行为的例子：• 使用清晰的语言写作。 • 回答他们本意要问的问题，即使他们问错了。 • 对国际性敏感（例如&quot;football&quot;不应该指美式橄榄球，&quot;the president&quot;不一定指美国总统）。 • 如果指令太混乱，请求澄清并解释为什么指令令人困惑。 • 不给出过长或漫无边际的回答，或重复问题中的信息。 • 不假设除了给定内容之外的额外上下文（除了像世界事实这样的事情），除非这是任务的隐含部分。例如，如果被要求&quot;对这封邮件写一个礼貌的邮件回复：邮件正文&quot;，输出不应假设&quot;这次我不能来，但下周末有空。&quot;但如果被要求&quot;给苏格拉底写一封邮件&quot;，那么您可以安全地假设输出可以编造一个上下文。真实性标准指输出包含准确信息，不误导用户。一些真实行为的例子：• 在像总结这样的任务上，输出应该只使用来自输入的信息，不编造不属于输入描述的细节。 • 不产生关于世界的明显虚假信息（例如编造事实或宣传阴谋论）。例如，输出不应声明希拉里·克林顿曾服刑。 • 避免生成误导性信息或真实性存疑的信息。例如，如果输入问&quot;希拉里·克林顿为什么入狱？&quot;，输出不应该说&quot;这不是完全清楚&quot;，而应该反驳问题的前提。无害标准指输出不应对人造成身体、心理或社会伤害；不损坏或丢失设备或财产；不损害环境；或对人类福祉必需的机构或资源造成伤害。一些无害行为的例子：• 以善良、尊重和体贴对待其他人；不贬低某些群体的成员，或对特定群体使用带有偏见的语言。 • 不生成辱骂、威胁或冒犯性语言，或宣传暴力。 • 如果没有被要求，不编写性或暴力内容。 • 不给出不良的现实世界建议，或宣传非法活动。权衡标准评估模型输出可能涉及在这些标准之间进行权衡。这些权衡将取决于任务。使用以下指南帮助在进行这些权衡时选择输出：对于大多数任务，无害和真实比有帮助更重要。因此，在大多数情况下，将更真实和无害的输出评分高于更有帮助的输出。但是，如果：(a) 一个输出比另一个输出有帮助得多；(b) 该输出仅略微不真实/有害；以及 (c) 任务似乎不在&quot;高风险领域&quot;（例如贷款申请、治疗、医疗或法律建议等）；那么将更有帮助的输出评分更高。在选择同样有帮助但以不同方式不真实或有害的输出时，问：哪个输出更可能对最终用户（在现实世界中最受任务影响的人）造成伤害？这个输出应该排名更低。如果从任务中不清楚，则将这些输出标记为平局。决定边界案例的指导原则：从试图帮助您完成此任务的客户助手那里，您更希望收到哪个输出？最终，做出这些权衡可能具有挑战性，您应该使用您的最佳判断。</p>
+</blockquote>
+<p>开源的对话语料库:  <a href="https://huggingface.co/datasets/OpenAssistant/oasst1">OpenAssistant/oasst1 · Datasets at Hugging Face</a></p>
+<h3 id="结果一个基本好用的问答模型">结果：一个基本好用的问答模型</h3>
+<p>通过 SFT 示例的训练后，模型就拥有了助手的角色,也理解了应该怎么进行连续对话：</p>
+<ul>
+<li>更倾向以友善的“助手”的身份说话</li>
+<li>遇到提问时，会给出回答而不是随意乱聊</li>
+<li>某种程度上学会了拒绝不恰当请求</li>
+</ul>
+<p>所以当我们向 ChatGPT 询问问题时, 它其实就是模拟统计学上按照 OpenAI 指南的标注员,可能会怎么回答这个问题来回答我们</p>
+<p>但它也有缺陷：<strong>幻觉（hallucination）</strong> 仍然严重，因为它其实只是在做统计学匹配，并没有真正“搜索”或者“推理”外部信息。</p>
+<p>如果你去实际测试一个仅用 SFT 训练的模型，你可能会发现它有礼貌、有回答意图，但一旦问题要精确事实，它经常就胡扯。</p>
+<p>当然，这部分会结合其他技术来改进, 现在新的模型幻觉越来越低了</p>
+<h3 id="幻觉hallucination及其应对">幻觉（Hallucination）及其应对</h3>
+<p>所谓“幻觉”是指模型会制造一些看似真的内容，但其实全是瞎编，比如捏造不存在的人名、文献引用等。它为什么会胡编？本质原因在于：在“互联网文本”或“SFT 标注”里，大量问答示例都是“问了就答”，<strong>很少有示例教它“坦白说我不知道”</strong>。于是它就倾向于无论什么问题都编出一个答案。另外模型也只是根据 token 概率在生成，并不真正拥有检验事实的能力</p>
+<p>比如你问一个模型是谁训练的, 如果他的训练数据或者系统提示词里没有明确告诉它这些信息的话, 就可能出现类似 Gemini 说它是百度训练的文心一言之类的模型这样符合统计学的回答</p>
+<h3 id="基于不知道就说不知道的改进">基于“不知道就说不知道”的改进</h3>
+<p>最简单的一种思路：我们在数据集中加一些示例，专门教模型：如果它内部其实不知道，就要回答“我不确定”之类。做法一般是：</p>
+<ol>
+<li>首先用一些自动方式探测“模型确实不具备某知识点”时，给出一个“标准拒绝”示例。</li>
+<li>加入到微调数据里，让模型学会：当它“内在激活”判断自己不确定时，就拒绝编造。</li>
+</ol>
+<p>这只能部分减少幻觉，因为模型内在仍是概率分布，而且它随时可能胡编。实际效果有明显改善，却无法根除。</p>
+<p>自动化的方式: 比如,可以拿到一段知识,AI 生成问题和答案,然后再拿问题多次去询问 AI,如果 AI 回答和答案多次不符合,那么就把这个作为问题配上”我不知道的”作为示例加入训练数据里</p>
+<h3 id="借助外部工具搜索引擎-数据库等">借助外部工具（搜索引擎、数据库等）</h3>
+<p>面对模型不知道的问题时, 另一个更有效的思路是：<strong>让模型可以调用工具</strong>（tool use），比如调用搜索引擎、调用代码解释器，让它在需要时去查资料或算数，从而减少错误。</p>
+<ul>
+<li>当模型决定要查询网络，它在输出里先写一段特殊格式例如 <code>[Search start: query … Search end]</code>，然后由触发搜索，系统再把搜索结果再塞回上下文给模型</li>
+<li>这样一来，模型就可以基于“新鲜、准确的信息”来回答，而不是纯凭内部记忆</li>
+</ul>
+<p>同理，对于算数或拼写等“模型内在机制不稳”的任务，可以让它调用 Python 等编程环境来计算，减少幻觉或低级错误</p>
+<p>大模型在面对需要多步推理的问题时，如果它一口气就给出答案，它往往容易出错，因为“每个 token 生成”只有<strong>有限的计算量</strong>。一个 token <strong>不能包含太多逻辑跳跃</strong>。它是按照 token 一个一个生成的,因此如果直接给出比如一些数学问题的答案就可能会错误</p>
+<p>因此最好教模型“分步写下中间推理”。示例里，如果中间步骤能写得详细，让模型在生成时多花一些 token 来推理，一步步得出正确结果，那正确率会明显提升。比如解数学题时，让模型先写出方程再一步步解，而不是一下子直接给答案。如果要求直接“只用一个 token 就给答案”，那对模型来说就太难了</p>
+<p>同样地，在计数、字符串索引、字符操作方面，模型也常常出错。这是因为它看的是 token，不是逐字符处理。若让模型调用代码来做真正的“按字符处理”，准确率会高很多</p>
+<p>这样的技巧被称为 Cot (Chain-of-Thought), 后续根据这种思维链的想法, 就出现了类似 OpenAI o1, DeepSeek R1 这种推理/深度思考的模型</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[No.2 预训练：让神经网络预测“下一个 token”]]></title>
+        <id>https://nhuji.github.io/post/2op5GxNWKO/</id>
+        <link href="https://nhuji.github.io/post/2op5GxNWKO/">
+        </link>
+        <updated>2025-05-10T08:37:24.000Z</updated>
+        <summary type="html"><![CDATA[<h3 id="什么是预训练">什么是预训练</h3>
+<p>GPT 中的 Generative Pre-trained Transformer 的 Pre-trained 就是指的这一步</p>
+]]></summary>
+        <content type="html"><![CDATA[<h3 id="什么是预训练">什么是预训练</h3>
+<p>GPT 中的 Generative Pre-trained Transformer 的 Pre-trained 就是指的这一步</p>
+<!-- more -->
+<p>在我们收集到了各种互联网和各种数据后并把它们都转换为 tokens 后，就到了 LLM 训练最核心的 <strong>预训练</strong> 步骤：我们要训练神经网络去 “预测下一个 token”。具体做法是在数据里<strong>随机抽取一段文本</strong>然后让模型去预测下一个 token：</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753864707719.png" alt="" loading="lazy"></figure>
+<p>如果截取的 context window 是 ”I went to the park” , 那么模型可能给出不同几率的 store, park, school, 那么就会调整模型参数/权重以让 park 被预测的<strong>概率提升</strong>,  过程中会这样并行的对整个数据集进行这样的训练⬇️</p>
+<ol>
+<li>从超大文本里随机取一段长度不定的 token 序列（称作 context window）</li>
+<li>给模型输入这段序列（比如 context window 前面四五千个 token）</li>
+<li>模型输出一个在词表大小范围内的概率分布，表示“下一个 token 会是哪个”</li>
+<li>我们知道真实的“下一个 token”是哪个，<strong>因此可以计算误差</strong>。然后我们通过反向传播来<strong>微调模型参数</strong>，使模型逐渐把正确 token 的概率调高</li>
+<li>不断重复在海量的数据上迭代更新，直到模型对“<strong>预测下一个 token</strong>”这件事上做得越来越好</li>
+</ol>
+<p>从一开始模型的参数是随机的，预测也是乱猜 甚至不能生成完整的单词；但经过足够多轮训练后，模型就逐渐能捕捉到“文本序列中各种语言模式与统计规律”。比如它会学到语法结构、语义关联、常识知识等——只要这些信息对预测下一个 token 有帮助，都可能被学会。</p>
+<h3 id="神经网络内部transformer">神经网络内部：Transformer</h3>
+<p>本质上，Transformer 是一个巨大但确定的函数，它接收一段 token 序列（最多可到上万甚至十几万 token），内部做一堆矩阵运算、自注意力机制、MLP 层等，最终输出对每个位置接下来可能 token 的概率分布。训练的目标就是不断修改这些“网络参数”，让它越来越善于预测</p>
+<p>内部原理虽然数学上可以展平成“无数个加减乘除、激活函数等运算”，但从高层看，你可以把它想象成一张超大计算图，每一层都有若干注意力头、多层感知机等，向后一直堆几十层甚至上百层，最后输出所有 token 的下一个 token 概率</p>
+<h3 id="推理inference">推理（Inference）</h3>
+<p>训练完成后，就可以用这个模型进行“推理”了。(注意和o1,R1 之类的推理模型的推理不是一个意思)，其实就是在给定一段“上下文（context）”后，模型不断抽样生成下一个 token；再把这个 token 拼回上下文，继续让模型生成下一个……周而复始，最后得到一大串文本输出</p>
+<p>因为每次都会根据概率分布进行抽样，所以输出是 <strong>随机</strong> 的，可能每次生成的内容略有不同。一般我们会对这个概率分布做一些**采样或温度调控，让文本更有创造性或更贴近事实。**模型训练完成后,模型的参数就不会改变了, 所以推理过程不会改变它的参数</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1753864735977.png" alt="" loading="lazy"></figure>
+<p>采样就是从这个概率分布中选择一个具体token的过程。有几种常见的采样方法：</p>
+<ol>
+<li>贪婪采样：总是选择概率最高的token</li>
+<li>温度采样：通过调整&quot;温度&quot;参数控制随机性的程度 (我们经常能在调用 API 时看到温度值这个选项就是说的它)</li>
+<li>Top-K采样：只从概率最高的K个选项中随机选择一个</li>
+<li>Top-p采样：选择概率总和达到阈值p的最小集合中随机选择一个</li>
+</ol>
+<p>如果好奇过程是怎么样的可以看看这个可视化网站 <a href="https://bbycroft.net/llm">LLM Visualization</a></p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/1753864748154.gif" alt="" loading="lazy"></figure>
+<p>文本被 LLM 一个一个 token 按照概率生成</p>
+<h3 id="基座模型base-model">基座模型（Base Model）</h3>
+<p>如果我们把上面的预训练流程跑到最后，就可以得到一个所谓 <strong>基座模型（Base Model）</strong>。这个模型只做了“预测下一个 token”这件事，并没有经过任务定制，也没有特别针对对话进行调教。</p>
+<ul>
+<li>它读了海量互联网文本，所以<strong>知识面很广</strong>，但也只是以概率方式学到常见的语言模式。</li>
+<li>它<strong>不会自然地根据人类提问来回答</strong>，更可能是“自动补全文本”的风格，相当于一个“互联网页面片段模拟器”。给它任何提示，它就朝着“最像什么互联网文本”那个方向去续写。</li>
+</ul>
+<p>这种基座模型有时也能做简单对话，但往往不稳定，而且没有对话中那种“有礼貌、有上下文”的特性。举例来说，如果你直接问“2+2 等于多少？”，预训练模型可能并不一定回答“4”，也可能乱扯到别的地方, 比如给你 3+3 4+4 这样的续写。因为它只是根据统计学发散生成。</p>
+<p>另外基座模型一般不会开放使用,它更像是&quot;互联网文本模拟器”, 你给出一段文本它接着续写这段文本在互联网上接着是什么</p>
+<p>这个阶段是训练一个模型<strong>成本最大</strong>的时候,并且这是模型知识的来源</p>
+<p>在实践中，厂商通常会在预训练后进行一个或多个后续步骤，把这“基座模型”打磨成一个更好用的“对话助手（assistant）”。这就需要我们之后介绍的第二大阶段——后训练（post-training）</p>
+<p><strong>Base Model 训练成本占比</strong>：大约 <strong>70%-85%</strong>，主要由计算资源驱动。 <strong>Post-training 成本占比</strong>：大约 <strong>15%-30%</strong>，包括计算成本和数据/人力成本</p>
+<p>我们可以将 Base Model 当成成一个受过良好通识教育的人，具备广泛的知识储备和沟通能力，但在特定行业（例如医疗、金融、编程）可能缺乏专业知识。当你需要一个在特定领域表现优异的模型时，就需要在 Base Model 基础上进行特定任务的微调, 比如最开始的 Github Copilot 就是基座模型加上额外的代码训练然后做到了代码补全的</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[ChatGPT 终于能原生画图了，我们能用它做点什么？(GPT-4o 原生图片输出能力介绍)]]></title>
+        <id>https://nhuji.github.io/post/tJhrug2j0d/</id>
+        <link href="https://nhuji.github.io/post/tJhrug2j0d/">
+        </link>
+        <updated>2025-04-02T14:44:28.000Z</updated>
+        <summary type="html"><![CDATA[<p>4o 的生图工终于在公布差不多1 年后,终于开放使用了,看看我们能利用这个模型实际做一些什么 (因为这篇主要是为了向同事介绍这个模型,因此不少图用了公司 logo,所以这里的分享会对 logo打码)</p>
+<p>不过从简单的说就是和 SD 这样的扩散生图的模型不同, 4o 的生图采用了自回归的方式也是和生成对话一样有顺序的生成的,因此能获得比较精确的效果</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>4o 的生图工终于在公布差不多1 年后,终于开放使用了,看看我们能利用这个模型实际做一些什么 (因为这篇主要是为了向同事介绍这个模型,因此不少图用了公司 logo,所以这里的分享会对 logo打码)</p>
+<p>不过从简单的说就是和 SD 这样的扩散生图的模型不同, 4o 的生图采用了自回归的方式也是和生成对话一样有顺序的生成的,因此能获得比较精确的效果</p>
+<!-- more -->
+<p>首先 4o 的图片输出能力真的大幅的超出我的预期,相信看完后你也会惊讶!</p>
+<p>另外免费用户现在每天也可以生成 3 次哦,所以你也可以亲自上手体验看看!</p>
+<p>接下来我们会从简单到复杂的实际使用的例子来介绍它, 主要介绍一些以前的难以做到的东西和它还有什么有意思的甚至可以用于实际工作的方法</p>
+<p>隐喻:掌握不同风格的绘画王者</p>
+<h3 id="1-一句话生图-简单的生成一张数量准确图">🌱 1. 「一句话生图」 简单的生成一张数量准确图</h3>
+<p>首先我们可以要求它生成一些有意思的图</p>
+<p>比如&quot;一个办公室里,只有六只打扮不同的熊猫在讨论软件开发的工作&quot;</p>
+<p>以前的 AI很容易搞不清楚数量,比如 DALLE 就画了不只是 6 只熊猫. 另外我们也能感觉到不管是画面还是细节上 4o 的表现都要好很多<br>
+<img src="https://nhuji.github.io/post-images/1753858058461.png" alt="" loading="lazy"></p>
+<h3 id="2-图片一致性对图片修改且保持风格">👥 2. 「图片一致性」：对图片修改且保持风格</h3>
+<p>另外在文字上的提升也非常巨大,比如在刚刚这张熊猫图的基础上</p>
+<p>我可以进一步的要求它进行修改,加入一段对话的笑话</p>
+<p>传统的的 AI可能可以做到修改但画风完全不一样</p>
+<p>比如我给出上面生成的图片并要求</p>
+<p>&quot;熊猫1： “It works!” 熊猫2： “…on your machine.” 画面上随便选择两只熊猫, 添加以上对话气泡 保持原图的一致性 不要改变其他部分&quot;</p>
+<p>就得到这样的结果,可以看到文字被成功添加了,画面也没有说明大的改变(仔细看能看到一点细微差别,但整体都保持了)</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753858076952.png" alt="" loading="lazy"></figure>
+<p>当然你可能还好奇它<strong>是否支持中文</strong></p>
+<p>整体上是支持的,但文字比较小和字数多的话可能有一些错误例如下面这张图 可能需要多生成几次来搞定文字的缺陷</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1753858140966.png" alt="" loading="lazy"></figure>
+<p>对于英语来说的话可以参考 OpenAI 这种官方的示例,多试几次后 黑板上这么一大段的手写英语也呈现得很好, 就像真实的照片的感觉,连拍摄者的倒影都呈现了</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/1753858155979.png" alt="" loading="lazy"></figure>
+<h3 id="3-连续修改多张图片合并">🎨 3. 「连续修改,多张图片合并」</h3>
+<p>接下来我还是提供这张图,但是我给出了公司的 logo ,并让他加到了图片里</p>
+<p>值得注意的是我们经过了<strong>多轮</strong>的更改,图片还是保持了大体的相同</p>
+<p>另外在这几天的使用中发现,他生成图片时发散思维不够,你需要给他<strong>越直接的描述越好</strong>, 所以可以看到对话中第二次的修改我让他自己想了一下怎么改比较好,然后再生成的,这时候的图片就让人满意多了<br>
+<img src="https://nhuji.github.io/post-images/1753858248834.png" alt="" loading="lazy"><br>
+(打码掉了公司的 logo)</p>
+<h3 id="4-艺术风格切换">🧩 4. 「艺术风格切换」</h3>
+<p>另外他支持各种各样的画风且能再这样的画风下保持一致</p>
+<p>例如将刚刚这幅画变成像素,剪纸,手绘,洛可可,赛博朋克等风格</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/1753858324135.png" alt="" loading="lazy"></figure>
+<p>甚至中国风也不在话下 ⬇️</p>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/1753858350716.png" alt="" loading="lazy"></figure>
+<p>所有图片都经过了一定的修改提示,不是直接说换画风,比如印章的样式 背景的字等</p>
+<h3 id="5-漫画创作">📚 5. 「漫画创作」</h3>
+<p>当然漫画创作也不在话下,比如《减肥失败记》一只发誓减肥的熊猫 忍不住把每周三根的目标换成每日三根,最终失败了的故事</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/1753858365323.png" alt="" loading="lazy"></figure>
+<p>当然也可以拿其他先有的图片来制作一个漫画(可以看到第四格形象没有成功保持,当然也说明它不是完美的)</p>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/1753858377804.png" alt="" loading="lazy"></figure>
+<h3 id="其他示例">其他示例</h3>
+<p>当然大概的例子介绍完后我们也来看看官方和来自网络上的大家发现的用例吧,比如你可能觉得他只是卡通画风表现比较好,或者不太会修改你给出的图片</p>
+<p>例如我随意拍一张台历(之前也介绍过的我制作的台历的实物!!) 甚至没有刻意对齐 或者充足打光, 让它给我制作一个简单的但风格统一的宣传海报</p>
+<figure data-type="image" tabindex="8"><img src="https://nhuji.github.io/post-images/1753858415475.png" alt="" loading="lazy"></figure>
+<p>把同事的企业微信头像变成不同的表情漫画格子⬇️(他答应了)</p>
+<figure data-type="image" tabindex="9"><img src="https://nhuji.github.io/post-images/1753858530904.png" alt="" loading="lazy"></figure>
+<p>例如在现实照片添加涂鸦装饰 (用蓝色画笔画一些可爱的涂鸦与画面主体产生互动，可以是人物也可以是动物或者其他东西，生成 2:3 图片，笔触的质感强一些)</p>
+<p><a href="https://lexiangla.com/assets/c7140f040f8811f0972f7ed64a6f2f12"></a></p>
+<p>或者对一个照片的吐槽涂鸦 (打印出这个并添加不受控制的红色墨水手写注释、涂鸦、潦草的字迹，如果你愿意的话还可以加一些小剪贴。)<br>
+生成游戏使用的无缝的材质贴图</p>
+<p>给照片换上不同的衣服或者发型<br>
+把你和你的宠物制作成拓麻歌子 (将这个人画成一个复古视频游戏角色，放在一个真实的玩具数码宠物里，前景是一只手拿着这个数码宠物)<br>
+<img src="https://nhuji.github.io/post-images/1753858581199.png" alt="" loading="lazy"></p>
+<p>将不同的家具商品图组合到一个场景里<br>
+<img src="https://nhuji.github.io/post-images/1753858601017.jpeg" alt="" loading="lazy"><br>
+制作夸张复古的宣传海报<br>
+风格迁移生成新的 logo<br>
+<img src="https://nhuji.github.io/post-images/1753858613518.jpeg" alt="" loading="lazy"></p>
+<p>官方的例子推荐去 https://openai.com/index/introducing-4o-image-generation/  查看</p>
+<p>最后4o 的图片生成只是一个开始, 远没有达到完美,但 LLM 现在已经从单纯的文字处理转向了多模态,在图像识别和输出和音频识别和输出都有了长足的进步,也会越来越多的改变我们的生活和工作, 但实际使用除了惊喜也有很多限制和不完美的地方,和就像最开始 GPT-3.5 到现在的 GPT-4.5 对文字处理的提升, 相信多模态方面也会不断的提升也会越来越强大,帮助我们做到更多难以完成的事情,当然也会带来比如 deepfake 之类的安全问题,让你眼见和耳听都不一定为实了</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[No.1 ChatGPT 的训练数据来源]]></title>
+        <id>https://nhuji.github.io/post/SFWDWHmM8K/</id>
+        <link href="https://nhuji.github.io/post/SFWDWHmM8K/">
+        </link>
+        <updated>2025-03-16T06:36:13.000Z</updated>
+        <summary type="html"><![CDATA[<p>LLM 究竟是什么呢? 一方面，它确实有一些非常神奇、令人惊叹的能力；另一方面，它在某些方面也并不擅长。所以, 在这个对话框背后究竟是什么？我们输入任何东西，按下回车，会出现一段文字——产生这些文字的原理是什么？我们到底在和什么“对话”？ 相信如果我们能大概了解它的能力,也对我们更好地使用它有很大的帮助(而不是说我们真的要去训练模型)</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>LLM 究竟是什么呢? 一方面，它确实有一些非常神奇、令人惊叹的能力；另一方面，它在某些方面也并不擅长。所以, 在这个对话框背后究竟是什么？我们输入任何东西，按下回车，会出现一段文字——产生这些文字的原理是什么？我们到底在和什么“对话”？ 相信如果我们能大概了解它的能力,也对我们更好地使用它有很大的帮助(而不是说我们真的要去训练模型)</p>
+<!-- more -->
+<p>接下来的几篇文档里, 将会介绍一个典型的 LLM 的训练过程 (主要参考了 Andrej Karpathy 的介绍)</p>
+<h3 id="数据集">数据集</h3>
+<p>所以类似 ChatGPT, Claude 这样的东西，是怎么“造”出来的？</p>
+<p>要构造 ChatGPT 这类模型，一般会经历多个阶段，依次串行处理。第一个阶段叫做“预训练”（pre-training）。在预训练阶段开始时，第一个步骤就是：<strong>下载并处理互联网数据</strong>。直观地说，模型背后的公司需要把互联网的文本内容抓取下来，进行整理过滤，让模型进行“海量阅读”。</p>
+<p>比如 Hugging Face 公司的 “<a href="https://huggingface.co/spaces/HuggingFaceFW/blogpost-fineweb-v1">Fine Web</a>” 数据集, 就会把互联网内容精简到最终 44TB 左右的文本数据</p>
+<p><img src="https://nhuji.github.io/post-images/1753857553676.png" alt="" loading="lazy"><br>
+像是 OpenAI、Anthropic、Google 等在训练时也会有类似的做法——从互联网上收集大规模、高质量且多样化的文本，并对其进行层层过滤。例如要保证文本足够多元化，又要保证文本质量，还要剔除大量无意义的垃圾内容。</p>
+<h3 id="常见的互联网数据来源common-crawl">常见的互联网数据来源：Common Crawl</h3>
+<p>很多公司会从 Common Crawl 拿数据。Common Crawl 是一个公益组织，从 2007 年开始就在全网爬取网页，截止 2024 年已经爬取了 27 亿个网页。它们会不断遍历互联网的超链接，获取各种网站的数据存档，并保存这些网页（主要是 HTML 页面）。但这些数据是非常原始的，所以在拿来使用前会有很多后续加工。比如下面这些步骤：</p>
+<p><img src="https://nhuji.github.io/post-images/1753857567584.png" alt="" loading="lazy"><br>
+(Claude 帮忙画的图,还不错吧)</p>
+<ul>
+<li><strong>URL 过滤</strong>：一些恶意网站或不良内容的网站（比如恶意软件、垃圾营销、极端内容、成人站点等）会在这一环节直接排除。(使用比如 https://dsi.ut-capitole.fr/blacklists/  这样的列表)</li>
+<li><strong>文本抽取</strong>：HTML 网页有各种标签、CSS、JS，我们只想要其中的正文文本，所以要用一些算法/启发式方法尽量把网页上的“正文”文本提取出来，导航栏、广告之类都要过滤。</li>
+<li><strong>语言过滤</strong>：比如 Fine Web 只保留主要为英文（超过 65% 都是英文）的网页。其他语言就排除。这带来了模型语言能力差异：只学英文文本，模型可能只擅长英文，不太擅长比如中文等其他语言。但大模型也有一定的迁移能力,一种语言里学到的知识也能用另一种语言表达出来</li>
+<li><strong>去重</strong>：如果相同或类似的网页重复出现，需进行去重。</li>
+<li><strong>敏感信息剔除</strong>：比如检测到社保号、信用卡号、电话等隐私信息，就过滤掉。</li>
+</ul>
+<p>总之，会有很多这样的清洗工作。最终拿到的，就是一个规模可能几十 TB、基本都是可读文本的<a href="https://huggingface.co/datasets/HuggingFaceFW/fineweb/viewer/default/train">大型语料库</a>。然后才能进一步进行“喂给模型”的下一步。</p>
+<p>比如我们拿 OpenAI 在训练 GPT-3 时公开的<a href="https://github.com/openai/gpt-3/blob/master/dataset_statistics/languages_by_character_count.csv">数据</a>就能看到,按字符算, 中文资料就只有 0.2% 不到的样子</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753857618141.png" alt="" loading="lazy"></figure>
+<p>然后占比的和权重的话, 我们可以从 GPT-3 的<a href="https://arxiv.org/pdf/2005.14165">论文</a>看到, 我们上面提到的 Common Crawl 是占比最多的</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1753857636743.png" alt="" loading="lazy"></figure>
+<p>按数量和比例, 排名的话权重最高的是 OpenAI 自己专门筛选出来的高质量数据集 WebText , 像维基百科这种知识可信度很高的来源权重也比较大</p>
+<h3 id="将文本表示成-token-序列">将文本表示成 token 序列</h3>
+<p>接下来是个关键问题：我们如何把这么多文本，喂给一个神经网络？神经网络擅长处理向量形式或有限离散符号序列。文本本身是字符串，对应到计算机内部一般是 UTF-8 字节序列，但直接用单个 bit 或单个 byte 做输入会过于低效。</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/1753857652397.png" alt="" loading="lazy"></figure>
+<p>字符在 UTF-8 时的对应就和文本和 token 的对应类似</p>
+<p>就像是UTF-8 文字编码的对应, LLM 里会使用一种 “分词” 技术，也叫 <strong>tokenization</strong>，也是将文本对应成一个个 token 。每个 token 代表一个文本单元，以减少序列长度。这些 tokens 可以是单个字符、单词的一部分，甚至是整个单词或句子片段</p>
+<p>比较常见的一种方法是 <strong>Byte Pair Encoding (BPE)</strong> 或衍生的方法。它会根据文本统计，自动将常见的子词或字符串组合成一个 token，从而减少序列长度。</p>
+<p>现代大模型通常用 5 万到几十万规模的 token 词表（vocabulary）。例如 GPT-4 使用了 100,277 个 token 的词表。然后，给定任意文本，就能被分割成一串 token，每个 token 其实就是一个 ID（数字），模型会把它们作为输入。</p>
+<p>例如 “Hello world” 可能会被切分成 2 个 token: <code>[Hello]</code> 和 <code>[ world]</code>；如果加了大写或符号，分词可能会不同。同样一句话在不同模型上也可能产生不同数量的 token, 因为用的分词表可能有差异, 当无法将一个字符作为完整 token 处理时，分词器会将其分解为字节级别的组成部分</p>
+<h3 id="文本怎么被分词">文本怎么被分词</h3>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/1753857675431.png" alt="" loading="lazy"></figure>
+<p>比如我们乱写一句中文, 可以看到它被分成多个 tokens 来对应词</p>
+<p>那么聊天时的整个上下文,怎么被分成 tokens 可以在 <a href="https://tiktokenizer.vercel.app/">Tiktokenizer</a>  上看到 ⬇️</p>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/1753857704478.png" alt="" loading="lazy"></figure>
+<p>比如 1️⃣ 那里那样的简单的对话, 在处理时约等于 2️⃣ 的文字序列,其中&lt;|im_start|&gt;这样的标签和里面的文字用于区分用户和 AI 的回答和内容</p>
+<p>经过分词后,就像 3️⃣ 那里将整个文本序列分成多块,对应 4️⃣ 的数字 tokens 序列, LLM 就会在这个基础上接着预测来处理,然后返回的内容就是 AI 对你的回答了, 也可以看看官方的分词器来看看一句话大概有多少 token <a href="https://platform.openai.com/tokenizer">OpenAI Platform</a></p>
+<p>如果好奇数字和文本是怎么对应的,也可以看看下面这个 GPT-4 里 token 和文字的对应的分词表</p>
+<p><a href="https://gist.github.com/s-macke/ae83f6afb89794350f8d9a1ad8a09193#file-gpt-4-tokens-txt-L2013">All 100k GPT-4 Tokens</a></p>
+<p>简单的总结一下之所以不用文本而是要 token 化 是这样计算效率更高,也能支持更多的语言,加快训练速度,而且不光是文本, 图像和音频也能被 tokenization</p>
+<p>这也解释了,为什么 LLM 的数学不太好,数不清楚 9.11 和 9.9 谁大, 或者 Strawberry 里有多少个 R</p>
+<p>比如, &quot;9.11&quot;被分词为[&quot;9.&quot;, &quot;11&quot;]，而&quot;9.9&quot;被分词为[&quot;9.&quot;, &quot;9&quot;],</p>
+<p>在比较时，这样模型在比较时，容易将其视为字符或字符串的比较，而不是数值大小的比较，</p>
+<p>由于11 &gt; 9，它错误地得出9.11 &gt; 9.9的结论,</p>
+<p>所以这也是为什么 LLM 不擅长数学计算,</p>
+<p>但如果明确要求模型进行逐步推理（chain-of-thought）或调用外部计算工具就能解决</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Whisk: 不用写提示词的有趣生图工具]]></title>
+        <id>https://nhuji.github.io/post/PbbB545riV/</id>
+        <link href="https://nhuji.github.io/post/PbbB545riV/">
+        </link>
+        <updated>2025-02-14T12:30:34.000Z</updated>
+        <content type="html"><![CDATA[<p>情人节到了, 也许大家想要向喜欢的人准备贺卡和祝福?</p>
+<p>今天来介绍一下由 Google 推出的生图工具 Whisk (刚好也有情人节特别版) 也许可以帮到你</p>
+<p>我们在使用生图工具时,可能经常要面临写提示词很麻烦,不知道怎么写的问题, 而Google Labs推出的这个实验项目Whisk 就能让我们不输入一个字来生图, 相比使用冗长详细的文字提示来生成图像, Whisk让你可以用图像来提示。只需拖入参考图片, 就可以开始创作。Whisk允许你输入图像作为主体、场景和风格。然后,你可以重新组合它们来创造独特的图像作品, 比如生成从毛绒玩具到珐琅徽章或贴纸的图片等 它的目的是以新的创造性方式探索想法, 也就是说以好玩为主,不是太严肃的生产力工具</p>
+<h1 id="使用介绍">使用介绍</h1>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753857080956.png" alt="" loading="lazy"></figure>
+<p>https://labs.google/fx/zh/tools/whisk  (可能有地区限制)</p>
+<p>进入网站后我们就能看到这个简约的设计,第一部分就是你想要的图片的样式,第二部分就是你作为提示的图片 就像简单的算数一样,两者结合就有生成结果</p>
+<p>比如为你喜欢的人制作一个他/她的毛绒玩具<br>
+<img src="https://nhuji.github.io/post-images/1753857150905.png" alt="" loading="lazy"></p>
+<h1 id="进阶">进阶</h1>
+<p>当然,我们还能进行进一步的编辑,比如上一张生成的毛绒玩具并不是中分的发型,所以我们可以选择&quot;在工具中打开&quot;来进一步手动的编辑它,点击后会来到这样的一个页面, 上面两张是之前自动生成的图片,然后我们输入发型要求后,它会再次进行生成,就得到了下面两张符合我们要求的图片了</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1753857235644.png" alt="" loading="lazy"></figure>
+<p>除了让它自动根据我们要求修改外,我们还可以点开图片详细的用于模型生成图片的提示词,进行更细致的修改</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/1753857241738.png" alt="" loading="lazy"></figure>
+<p>接下来我们可以看到左边其实还有更多的可以让我们拖动图片参考的地方</p>
+<p>例如加入更多人物和指定场景 (不一定需要图片输入,你也可以只提供文字来生成图片作为参考)</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/1753857252814.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/1753857260735.png" alt="" loading="lazy"></figure>
+<p>提供狗作为主角,咖啡馆作为场景,以及使用漫画风格的三种图片的生成结果</p>
+<h1 id="实现介绍">实现介绍</h1>
+<p>介绍它其实还有一个原因,就是目前很多AI 工具的形态都是基于文字, 比如 ChatGPT 这样聊天的,或者 SD,MJ 这样要你输入复杂的提示词的, 但将现有的 AI 技术结合在一起 也许就能做出更适合普通用户, 容易上手的工具</p>
+<p>比如 Whisk 的底层其实就是 Google 新推出的高质量的图形生成模型 Imagen 3 , 再加上 Google 的 Gemini 模型生成提示词实现的</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/1753857280749.png" alt="" loading="lazy"></figure>
+<p>所以 Whisk 其实是通过 Gemini 将你提供的主题,场景,风格的图片结合,生成一段准确的英语提示词, 然后再给 Imagen 3 这个模型生成图片, 虽然原理很简单, 但可能让我们开拓一下想法, 也就是 AI 产品并不是一定要给你一个文字输入框然后再进行各种编辑, 而是做到润物无声的用 AI 驱动一个有趣的应用</p>
+<p>如果你想要直接使用 Imagen 3 模型的话, 也可以直接在https://labs.google/fx/zh/tools/image-fx 上写提示词进行生成</p>
+<p>例如&quot;鸭绒毛公仔走在埃菲尔铁塔下，一位专业摄影师拍摄，模糊的背景柔和的阳光。&quot;<br>
+<img src="https://nhuji.github.io/post-images/1753857290778.png" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[聊聊 Emoji]]></title>
+        <id>https://nhuji.github.io/post/HaZsvj7z62/</id>
+        <link href="https://nhuji.github.io/post/HaZsvj7z62/">
+        </link>
+        <updated>2025-01-04T13:10:47.000Z</updated>
+        <summary type="html"><![CDATA[<p>&quot;收到！👌&quot; &quot;好的呢～😊&quot; &quot;谢谢 🙏&quot;</p>
+<p>每天聊天的时候,无论是工作还是生活， 你是不是也像我一样， 总是习惯性地加上这些可爱的小表情来让话语显得不那么严肃? 有时候甚至觉得光发文字好像缺了点什么...不过你有没有想过，它们是从哪来的呢?</p>
+<p>今天想和介绍一下 <strong>Emoji</strong> ，这个我们每天都在用的小表情的历史和发展</p>
+<p>它不仅可爱,能丰富我们使用纯文字聊天时的表达,可以说是数字时代诞生的第一门通用语言, 那它是怎么出现和风靡全球的呢</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>&quot;收到！👌&quot; &quot;好的呢～😊&quot; &quot;谢谢 🙏&quot;</p>
+<p>每天聊天的时候,无论是工作还是生活， 你是不是也像我一样， 总是习惯性地加上这些可爱的小表情来让话语显得不那么严肃? 有时候甚至觉得光发文字好像缺了点什么...不过你有没有想过，它们是从哪来的呢?</p>
+<p>今天想和介绍一下 <strong>Emoji</strong> ，这个我们每天都在用的小表情的历史和发展</p>
+<p>它不仅可爱,能丰富我们使用纯文字聊天时的表达,可以说是数字时代诞生的第一门通用语言, 那它是怎么出现和风靡全球的呢</p>
+<!-- more -->
+<h2 id="使用符号组合代表表情">使用符号组合代表表情</h2>
+<p>在上世纪 80 年代 就有人提出在 BBS 讨论中很难区分语气和情感， 所以可以利用 -)  和 😦  这样的符号组合来表示开心、不开心，随着互联网的普及 电子邮件、论坛、聊天工具的兴起 也让这样的符号组合越来越广泛传播 , 甚至后来的 Windows 的蓝屏界面也向这种风潮致敬过 ¯(ツ)/¯</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753842814053.png" alt="" loading="lazy"></figure>
+<h2 id="初代表情符号集的出现-90-年代">初代表情符号集的出现 (90 年代)</h2>
+<p>到了 90 年代,电子设备的发展越来越成熟, 人们开始使用它进行交流，那 emoji 是啥时候诞生的呢， 很多人认为Emoji 的起源是日本运营商 DoCoMo在 1999 年发布的i-mode 服务里提供的 176 个表情集 (最初为黑白版)<br>
+![Shigetaka Kurita, NTT DOCOMO. Emoji] (https://nhuji.github.io/post-images/1753842857487.png)</p>
+<p>但其实在最近的数字挖掘后， 有人发现其实在更早的 1988 年夏普发布的 PDA PA-8500 上还能找到更早的表情符号集， 这是目前人们能找到的最早的表情符号集 (但有没有更早的呢?? 也许只有当时的人们知道了)<br>
+<img src="https://nhuji.github.io/post-images/1753842921388.png" alt="" loading="lazy"></p>
+<p>所以我们现在能整理出的时间线是:</p>
+<p>1988年10月：夏普发布了 Sharp PA-8500 PDA 设备，其中包含超过 100 个表情符号。这是目前已知最早的表情符号集。当时，Sharp 是 PDA 设备市场的领导者，其次是 Casio。</p>
+<p>1990年8月：日本 NEC 发布了 PI-ET1 PDA，其中包含超过 130 个表情符号， 但这款设备的市场表现有限。</p>
+<p>1990年至1994年：Sharp 推出了更多的 PDA 和文字处理设备，包括 WD-A521 和 Zaurus PI-4000，这些设备使用了在 1988 年 PA-8500 基础上扩展的表情符号集。</p>
+<p>1995年：Docomo 凭借可以发送简单像素心形设计（❤）的 Pocket Bell 寻呼机在日本市场占据主导地位。</p>
+<p>1997年11月：Softbank 发布了 SkyWalker DP-211SW 手机。这款设备包含 90 个表情符号设计，是第一款具有表情符号集的手机设备。然而，这款手机销量不佳，而且这些表情符号在其他 Softbank 设备上也不支持。</p>
+<p>1999年1月：Docomo 推出了由<a href="https://en.wikipedia.org/wiki/Shigetaka_Kurita">栗田 穣崇</a>设计的表情符号集及其 i-mode 移动互联网服务。这些表情符号大受欢迎，因此人们通常将其视为第一个表情符号集。</p>
+<p>总之这一时期，由于日本电子产业的发达和激烈的竞争，不少公司都推出过自己的 Emoji 集, Emoji 这个词本身也是来自日语的 絵文字 ,但 Emoji 还没开始在世界上流行起来 而且也不包含如今常见的 😀 黄脸 Emoji, 但一句简单”我知道了” 加上 ❤️  给人的感觉就完全不一样了</p>
+<h2 id="表情符号集的发展-20002010">表情符号集的发展 (2000–2010)</h2>
+<p>这段时间日本的表情符号在各种平台越来越受欢迎， 不过还没有一个统一的表情符号集， 随着 emoji 的继续火爆,， 2007 Google 的一个软件国际化团队成员 Kat Momoi, Mark Davis, and Markus Scherer 带头向 Unicode 提出申请(简单的说Unicode就是把各种文字对应到编号上，让各种平台都能使用同一个标准), 希望把 Emoji 也加入字符集中,认为 Emoji 也应该遵循文字一样的标准， 2009 年苹果的工程师 Yasuo Kida 和 Peter Edberg 也加入了其中，正式向 Unicode 提案将625个 emoji 加入 Unicode， 最终在 2010 年 Unicode 正式接受了该提案</p>
+<p>也就意味着,Emoji 真正可以在全世界各地可以使用并有一个共同的标准了</p>
+<p>而我们熟知黄色的笑脸诞生于1963年的美国，当时一家保险公司聘请平面设计师哈维·鲍尔（Harvey Ball）设计一个图标，以帮助平息员工的焦虑情绪。因此经典的微笑表情符号诞生了。这在之后也影响了 Emoji 的发展</p>
+<p><img src="https://nhuji.github.io/post-images/1753842985344.jpeg" alt="" loading="lazy"><br>
+<img src="https://nhuji.github.io/post-images/1753842994803.jpeg" alt="" loading="lazy"><br>
+莫名的让人想起杀老师了。。。</p>
+<p>在加入Unicode 后，Emoji 就像是汉字或者某个小众语言的符号一样， 拥有了基本的编号，但具体实现还是看各个厂商自己的想法</p>
+<p>Unicode 联盟只会决定每个表情符号的基本形状和描述，并给出其黑白原型，但无法决定这个表情符号在各个厂商的最终设计，这就是为什么同一个Emoji 在不同平台上看起来会不一样的原因。比如😊，在Apple、Google、Microsoft等平台上的具体样式都是不同的，就像是不同的字体一样，但它们都对应同一个Unicode编码点， 不过大多数厂商决定把它做成黄色的脸，不仅仅因为上面提到的黄色笑脸的流行，同时黄色也是一个中性的色彩，没有人真的长这个样子 足够种族中性<br>
+<img src="https://nhuji.github.io/post-images/1753843024023.png" alt="" loading="lazy"><br>
+不同厂商的 Emoji 都有点区别，比如Facebook和Skype的</p>
+<h2 id="全球普及-2011~2014">全球普及 （2011~2014）</h2>
+<p>2008 年，苹果在日本推出了只限日本使用的 Emoji键盘（兼容软银的标准，因此风格相似）， 2011 年苹果为 iOS 5  正式推出了全球可用的原生表情符号键盘， 两年后，安卓系统也效仿。这让我们可以直接从手机键盘访问表情符号——就像切换到韩语或日语键盘来访问特定语言的字符一样—— 让Emoji 随着智能手机的普及全球流行, 随着表情符号越来越受欢迎，它们的种类也越来越多。Unicode 联盟每年都会将其批准的表情符号列表中加入新的表情符号</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1753843040081.jpeg" alt="" loading="lazy"></figure>
+<h2 id="emoji-的进一步发展和多元化-2014~现在">Emoji 的进一步发展和多元化 （2014～现在）</h2>
+<p>随着Emoji 数量的增长，有些人想知道为什么有六七个图标来描述寿司，却没有一个用来表示玉米卷、墨西哥卷饼或辣椒卷？为什么职业的 Emoji ——医生、厨师、警察——的数量越来越多，**但他们似乎都是男性？**而且，在众多代表人类的表情包中为什么只有一种肤色？ 到 2014 年，表情包政治化的大潮已经兴起。这体现在食物表情包（没有描绘传统非洲菜肴），国旗（有以色列国旗，但没有巴勒斯坦国旗），家庭（关于描绘同性父母或单身父母的家庭单位的争论），等等。Emoji 已经成为数字时代的重要语言，<strong>但它却缺少“有工作的女性”或“有色人种”这样的表情。难以让世界各地的人们平等的表达自己。</strong><br>
+<img src="https://nhuji.github.io/post-images/1753843069952.jpeg" alt="" loading="lazy"></p>
+<p>2015 年，Unicode 通过引入更改人物表情符号肤色选项以及增加更多类型的人进行更多类型活动的表情符号，迈出了向表情符号多样化迈出的第一步。从那时起，每次更新都包括朝着使表情键盘上代表的人和文化类型多样化的渐进步骤：女性冲浪者和骑自行车者、戴安全帽和听诊器的女性、戴头巾人。Unicode 采取了朝着创建性别中性的表情符号、代表有残疾的人的表情符号以及其他代表表情符号用户全谱系的符号的进步。</p>
+<p>2016 年在iOS 10中，苹果将手枪表情符号的渲染将从左轮手枪改为水枪，苹果此前曾向统一码联盟施压，要求其不要批准步枪表情符号<br>
+<img src="https://nhuji.github.io/post-images/1753843079387.jpeg" alt="" loading="lazy"></p>
+<p>但这也造成了一些问题，比如通过改变表情符号来打击枪支暴力的计划导致了 Emoji 在不同的平台上被误解怎么办？ 比如“我马上来找你”搭配一个水枪的图标，在其他平台用户眼里却是一个左轮手枪** 这样的和 Unicode 所设定含义不同的 Emoji 很可能造成严重的误解**<br>
+<img src="https://nhuji.github.io/post-images/1753843091316.jpeg" alt="" loading="lazy"></p>
+<p>18 年后各个厂商的手枪 Emoji都统一成水枪了,但 24 年由于马斯克的反对,X 平台的水枪再次变回了真正的手枪</p>
+<p>总之越来越普及也意味着需要承担更多的社会责任，而且也难以摆脱政治的影响 （比如你使用国行iPhone 看不到某个地区的旗帜一样）</p>
+<p>每年新增的 Emoji 也总是会在互联网上让人们讨论，比如 2018 年的新加入的月饼和红包等也让我们过节时更容易交流了<br>
+<img src="https://nhuji.github.io/post-images/1753843105559.jpeg" alt="" loading="lazy"></p>
+<p>表情符号的未来</p>
+<p>近年， Emoji 开始呈现出新的形态——比如苹果公司的 Animoji，通过人的面部表情来动画化表情符号。 2016 年苹果公司表情符号的重大改变和 2017 年安卓系统表情符号的更新, 他们尝试制作更加统一 Emoji ，使得你发送到安卓设备上的字符在 iPhone 上看起来大致相同。<br>
+<img src="https://nhuji.github.io/post-images/1753843113698.jpeg" alt="" loading="lazy"></p>
+<p>Genmoji 的推出让我们可以开始自己创造 AI 生成的 Emoji (虽然本质只是图片)<br>
+<img src="https://nhuji.github.io/post-images/1753843127758.png" alt="" loading="lazy"></p>
+<p>Emoji 的数量持续增加和个性化的趋势，让我们越来越能用它表达自己了</p>
+<h2 id="bonus-关于-emoji-更多的有趣的事情">Bonus: 关于 Emoji 更多的有趣的事情</h2>
+<ul>
+<li>
+<p>Emoji 中的多样性不仅仅是找到一个小图标，看起来像你。表情符号的存在与否影响着文化的可见性和消失：谁能在未来的数字语言中得到代表？这些代表又如何考虑到像国家、民族、宗教和战争这样的微妙的地缘政治问题？</p>
+</li>
+<li>
+<p>Google 搜索“Emoji kitchen“可以找到 Google 制作的将两个 Emoji 合在一起的有趣效果<br>
+<img src="https://nhuji.github.io/post-images/1753843167577.png" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>不同国家可能对同一个 Emoji 的解读不一样，可能有隐含的意思，比如[微笑]表情现在代表呵呵</p>
+</li>
+<li>
+<p>每年的7 月 17 日是世界表情符号日 ，各大平台近年都把 Emoji 里日历的表情更改为了 17 日<br>
+<img src="https://nhuji.github.io/post-images/1753843183890.jpeg" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>至于为什么是 17 日，是因为这是苹果在 2002 年首次推出 Mac应用 iCal日历的日子，之后作为彩蛋放置作为苹果表情集里<br>
+每年为庆祝世界表情日到来，苹果每年都会在7月17日这一天对外展示一系列新Emoji表情符号预览</p>
+</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[使用 MidJourney 制作 "2025 年台历" 素材经验分享!]]></title>
+        <id>https://nhuji.github.io/post/VU2crnTXQx/</id>
+        <link href="https://nhuji.github.io/post/VU2crnTXQx/">
+        </link>
+        <updated>2024-12-29T06:00:41.000Z</updated>
+        <summary type="html"><![CDATA[<p>今年图片和视频领域的发展比 LLM 有趣不少, 感觉很多文档都是在介绍这方面, 而这就是又一篇 😂  最近对图片生成的兴趣比较大</p>
+<p>而公司有制作年度台历的活动,于是参加了一下~ 最后在同事们投票下获得了第一名 挺让人高兴 于是想分享一下制作过程中素材的生成 另外涉及公司信息的部分就打码了 (比如我其实在每张图里都 p 入了不同风格的 logo 融合进画面作为彩蛋)</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>今年图片和视频领域的发展比 LLM 有趣不少, 感觉很多文档都是在介绍这方面, 而这就是又一篇 😂  最近对图片生成的兴趣比较大</p>
+<p>而公司有制作年度台历的活动,于是参加了一下~ 最后在同事们投票下获得了第一名 挺让人高兴 于是想分享一下制作过程中素材的生成 另外涉及公司信息的部分就打码了 (比如我其实在每张图里都 p 入了不同风格的 logo 融合进画面作为彩蛋)</p>
+<!-- more -->
+<p>--- 正文 ⬇️</p>
+<h2 id="midjourney-介绍">Midjourney 介绍</h2>
+<p>MJ (Midjourney) 和 DALL-E 以及 Stable Diffusion 一样, 都是非常流行的图像生成的 AI ,  MJ 不是开源的, 而是通过不同价格的<strong>订阅计划</strong> 提供在线的图像生成服务, 来获得收入和迭代产品的</p>
+<p>DALL-E → Midjourney → Stable Diffusion 上手难度逐渐增大, 但上手难度增加也提供了更多复杂的掌控能力</p>
+<p>如果说 ChatGPT 的 DALL-E 是最容易上手的图片生成方式的话, 那么 Midjourney 会稍微复杂一点, 但给予了我们更多控制生成图片结果的手段, MJ 相比 Stable Diffusion 这样的开源方案, 没有一堆复杂的插件要寻找和需要自己部署等门槛</p>
+<p>之所以要介绍它, 是因为这次 2025 年的台历就想尝试用 AI 来生成不同季节的图片作为素材 这样可能比在网上找图片更能统一主题, 于是首先尝试了 DALL-E , 虽然很方便 但分辨率和各种定制程度都还不够好,难以满足需求,  图片质量本身比起不断迭代的 Midjourney 也有些差距, 所以最终选择了<strong>使用 Midjourney 来生成全部台历素材</strong></p>
+<p>下面是我尝试分别使用 DALL-E (上) 和 Midjourney (下) 生成的多个四个季节的图片素材然后挑选后拼接后的草稿,  DALL-E 的虽然还不错 但画面空白的地方不够纯净 也缺少图片扩大等功能 难以满足质感,只使用图片的一部分时的分辨率等要求</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753855520606.png" alt="" loading="lazy"></figure>
+<p>DALL-E (上)  虽然像素风格还不错,但仔细看海边的云朵和雪山上就能看到这种本应该比较纯净的地方也有很多噪点,这也是放弃使用它的最大原因</p>
+<h2 id="价格">价格</h2>
+<p>既然是付费的订阅服务,那么也大概介绍一下价格</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1753855561679.png" alt="" loading="lazy"></figure>
+<p>从最便宜的 10 刀到120 刀不等,最大的区别就是提供了不同的 GPU 时间</p>
+<p>我们购买的本质上生图所需要的GPU的时间, Fast 模式下基础计划3.3小时/月，标准计划15小时/月，Pro会计划30小时/月，Relax 模式下标准和Pro会员则是无限时间(无限生成), 生成的图片<strong>都是可以商用的</strong></p>
+<p><strong>所以比较推荐的是购买 30 刀一月的标准计划,因为可以在 GPU 时间用完后Relax 模式排队生成图片</strong></p>
+<p>Fast 模式就是优先生成图片的模式,会很快就拿到结果</p>
+<p>Relax 模式可以无限制地生成图像 不消耗额度，但需要等待一段时间后拿到结果(相当于排队了), 但<strong>基础计划不支持这个模式</strong>, 但如果只是想尝试的话, 可以先订阅最便宜的基础计划, 随时可以升级到更贵的计划 (会折算剩余的生成额度)</p>
+<p>基础的是一个月 70 人民币 (10 刀) 左右的基础计划, 可以生成 200 次图片(一次四张), 然后因为接入的 stripe ,通过支付宝就可以轻松付款 (建议随便选个美国免税州地址) , <strong>记得不需要后取消订阅!</strong> 建议只是随便尝试的话订阅这个, 但做台历来说的话一张素材要生成很多次, 所以最后发现实际 200 次是远远不够用的!</p>
+<p>订阅后就可以在官网开始生图了, 它最开始是在 Disrocd 频道提供机器人上来生成的, 现在有官网后操作更加直观和方便了, 所以本文介绍也使用<strong>官网</strong>而不是 Disrocd 来说明 (如果需要的话网络上应该有一堆 Disrocd 上使用 MJ 的视频教程)</p>
+<p>不过不想升级计划的话 在 GPU 时间用完后也可以购买 <strong>Fast Hours</strong>, 1 hour 的额度大概可以生成 60 次图片</p>
+<h2 id="提示词">提示词</h2>
+<p>Midjourney的提示词风格介于 DALL·E 的自然语言描述和 Stable Diffusion 的参数化指令之间. <strong>我们可以使用自然语言描述图像内容, 同时通过添加特定参数来控制生成结果</strong></p>
+<p>所以如果不想自己写提示词的话,让 ChatGPT 代劳也是一样可以的</p>
+<p>提示词需要遵循的基本规则, 可以参考官方的说明, 另外它也<strong>只支持英语提示词</strong></p>
+<p><strong>提示技巧！</strong> Midjourney 最适合简短的描述性短语。避免冗长的要求和指令列表</p>
+<p>比如不要这样写:&quot;给我画很多盛开的玫瑰花,让它们明亮鲜艳的红色,用彩铅的插画风格来画&quot; (<em>Show me a picture of lots of blooming roses, make them bright, vibrant red, and draw them in an illustrated style with colored pencils</em>)</p>
+<p>而应该这样写:&quot;明亮红色的玫瑰,彩铅画风&quot; (<em>Bright red roses drawn with colored pencils</em>)</p>
+<p><strong>提示说明用词选择</strong> 提示词都是英语,所以用词很重要, 在许多情况下, 更具体的同义词效果更好。比如与其用&quot;大的(big)&quot;,不如用&quot;巨大的&quot;、&quot;庞大的&quot;、&quot;宏伟的&quot;或&quot;浩瀚的&quot; (huge, gigantic, enormous, or immense)</p>
+<p><strong>复数词和集合名词</strong> 复数词会带来很多不确定性。试着使用具体的数字。&quot;三只猫(Three cats)&quot;比&quot;猫(Cats)&quot;更具体。集合名词也很有用,比如用&quot;一群鸟(flock of birds)&quot;而不是&quot;鸟(birds)&quot;</p>
+<p><strong>专注于你想要的</strong> 描述你想要什么比描述你不想要什么更好。**如果你要求一个&quot;没有蛋糕&quot;的派对,你的图片可能反而会包含蛋糕。**要确保某个物体不出现在最终图像中,请尝试使用 <code>--no</code> 参数的高级提示</p>
+<p><strong>提示长度和细节</strong> 提示可以很简单。单个词或表情符号就够了。但是,简单的提示会依赖 Midjourney 的默认风格,让它发挥创意填充未指定的细节。在提示中包含对你来说重要的任何元素。<strong>细节越少意味着变化越多但控制越少</strong></p>
+<p><strong>请明确说明对你重要的任何背景或细节。考虑以下方面:</strong></p>
+<ul>
+<li><strong>主体:</strong> <em>人物、动物、角色、地点、物体 (person, animal, character, location, object)</em></li>
+<li><strong>媒介:</strong> <em>照片、绘画、插画、雕塑、涂鸦、挂毯 (photo, painting, illustration, sculpture, doodle, tapestry)</em></li>
+<li><strong>环境:</strong> <em>室内、室外、月球上、水下、城市中 (indoors, outdoors, on the moon, underwater, in the city)</em></li>
+<li><strong>光线:</strong> <em>柔和、环境光、阴天、霓虹、摄影棚灯光 (soft, ambient, overcast, neon, studio lights)</em></li>
+<li><strong>颜色:</strong> <em>鲜艳、柔和、明亮、单色、多彩、黑白、粉彩 (vibrant, muted, bright, monochromatic, colorful, black and white, pastel)</em></li>
+<li><strong>情绪:</strong> <em>平静、安宁、喧闹、充满活力 (sedate, calm, raucous, energetic)</em></li>
+<li><strong>构图:</strong> <em>肖像、头像、特写、鸟瞰图 (portrait, headshot, closeup, birds-eye view)</em></li>
+</ul>
+<p>Midjourney同样支持广泛的艺术风格,所以在提示词加入这些风格的要求也更容易达到你想要的效果</p>
+<p>更多请参考: https://docs.midjourney.com/docs/explore-prompting</p>
+<p>总之它支持非常广泛的艺术效果 (所以选择像素风 只是因为我比较喜欢这种)<br>
+<img src="https://nhuji.github.io/post-images/1753855593829.png" alt="" loading="lazy"></p>
+<h2 id="素材生成尝试"><strong>素材生成尝试</strong></h2>
+<p>先尝试生成了一些樱花的场景, 画风总感觉有些古早</p>
+<p>pixel art spring scene, cherry blossom trees, falling pink petals, soft pastel colors, clear light blue sky, gentle clouds, pixel style, 16-bit aesthetic, peaceful atmosphere --ar 16:9 --style raw --v 6.1</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/1753855609021.png" alt="" loading="lazy"></figure>
+<p>然后当然是调整提示词, 不过最重要的是 MJ 提供两类模型,一种是标准的Midjourney Model 另一种是在动漫方面表现比较好的 Niji Model, 简单的说就是更二次元, 对于我们想要的像素风来说肯定是比较好的选择</p>
+<p>在调整了提示词和模型为 Niji 后</p>
+<p><em>A pixel art scene representing spring, with soft pastel colors. The foreground features several cherry blossom trees with pink petals falling gently from the branches. The background shows a clear sky with a light blue hue, and some soft clouds drifting by. Scattered petals cover the ground, adding to the tranquil atmosphere. A few green hills are visible in the distance, and the overall setting is peaceful, evoking the fresh and gentle feeling of spring. --ar 16:9 --niji 6</em></p>
+<p>后终于得到了比较理想的效果</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/1753855641413.png" alt="" loading="lazy"></figure>
+<p>当然做台历肯定不能使用这样的大图,于是调整图片比例和进一步更改提示词得到了最终的理想图片</p>
+<p>比较成功的表现出了对应月份的氛围感 🩷</p>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/1753855662255.png" alt="" loading="lazy"></figure>
+<p>建议就是多尝试和修改, 可能需要相当多的尝试之后才能得到满意的图片</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/1753855671386.png" alt="" loading="lazy"></figure>
+<p>(一小部分的尝试⬆️)</p>
+<p>如果风格合适的话,就可以在对应的基础上细微地修改提示词,以及通过 MJ提供的变体功能来生成更多相似的图片,变体分为强和弱,强的变体会提供更大的变化的图片结果</p>
+<p>例如这样一张图,我比较满意,但细节不太对 可以通过变体功能得到相似的图片</p>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/1753855691903.png" alt="" loading="lazy"></figure>
+<p>然后在得到喜欢的图后,如果分辨率要求比较高也可以使用他的放大功能来得到更高分辨率的图片</p>
+<p>他还支持你对局部进行修改</p>
+<p>涂抹月亮后输入提示词,就得到了一张中秋🥮 和 万圣节🎃结合的图像 是不是挺有意思呢 (虽然最后没用)</p>
+<figure data-type="image" tabindex="8"><img src="https://nhuji.github.io/post-images/1753855702049.jpeg" alt="" loading="lazy"></figure>
+<h2 id="结语">结语</h2>
+<p>总之 MJ 能尝试的东西还蛮多, 也不是很难上手, 主要是想介绍一下现在的 AI 大概能做些什么/能做到什么程度, 另外 AI 更像是一个副驾驶, 需要有明确的想法 然后它才能帮你实现, 使用 AI 并不代表可以直接就出现结果, 依然需要构思想要的效果后多次的抽卡和调整提示词等才能得到满意的结果, 当然它的出现大大降低了我们做很多东西的门槛 让原本不可能或者难以做到的事情变成了可能</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[视频生成模型 Sora 初次上手体验, 做了一个白噪音视频]]></title>
+        <id>https://nhuji.github.io/post/xxsr8tCiCh/</id>
+        <link href="https://nhuji.github.io/post/xxsr8tCiCh/">
+        </link>
+        <updated>2024-12-13T12:55:50.000Z</updated>
+        <content type="html"><![CDATA[<p>今年 2 月中旬就宣布的 Sora 终于在前两天正式向公众开放了, 虽然今年以来各家都在视频生成上进展迅速, 让 Sora 看起来也没那么惊艳了, 总之 终于有资格可以探索一下它的效果了</p>
+<p>首先它有一个独立于 ChatGPT 的网站 https://sora.com/ , 在用你的 OpenAI 账号登录后会让你填写生日,账号名之类的完成账号创建, 但必须要有 ChatGPT Plus 和 Pro 的资格才能使用,  20 刀一个月的ChatGPT Plus 有 1000 积分, 可以生成 480p 5s 的视频50 次, 如果更高的分辨率和时长的话就会花费更多积分了, 而 200 刀一个月的ChatGPT Pro 用户的话有 10000 积分可以最多生成 500 次....不得不说都有点少</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753855013102.png" alt="" loading="lazy"></figure>
+<p>这次我们能用到的 Sora 模型和年初展示的已经不一样了,是Sora Turbo版, 成本更低 生成速度更快, 另外公众使用的版本也增加了不少安全限制, 比如现在你还不能上传带有人物的图片来生成视频 如果上传了不符合规则的图片的话还可能被封号等</p>
+<p>整个网站做得还是比较好的, 比如拥有探索页面 查看比较火的别人生成的视频 以及大家最近生成的视频</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1753855033227.png" alt="" loading="lazy"></figure>
+<p>点开后还能看到别人具体是怎么生成的,他的提示词是什么, 以及在别人的视频的基础上可以自己做进一步的更改</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/1753855041556.png" alt="" loading="lazy"></figure>
+<p>对于自己生成的视频也有管理页面, 还有分享,下载, 进一步处理等操作</p>
+<p>总之整个网站做得蛮不错的, 现在很多内容生成网站该有的功能都有了</p>
+<p>下方的视频生成栏也提供了各种选项比如分辨率,风格, 时长等 以及生成这样的内容需要的积分估计</p>
+<p>我也尝试生成了一段视频,用到的提示词是</p>
+<p>&quot;A person opens their kitchen refrigerator door, revealing a magical portal to a vast Arctic wonderland. As they step through, the scene expands into a breathtaking winter landscape with the Northern Lights dancing across the dark sky. Snow-covered plains stretch endlessly, ice crystals sparkle, and the Aurora Borealis casts ethereal colors across the snow. Seamless transition from domestic kitchen to epic arctic expanse.&quot;</p>
+<p>可以说生成的结果和提示词差别还是有点大的</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/1753855057778.jpg" alt="" loading="lazy"></figure>
+<p>正如发布会上所说, 目前的 Sora 可能还处在GPT 1,2的时代,  更像是是辅助创作的工具, 而非完全自动化点一下就帮你生成一部电影制作工具</p>
+<p>但抛开模型来说, 产品本身也蛮有意思的, 比如拥有下面这些功能</p>
+<ul>
+<li>Remix功能:可以修改现有视频的内容</li>
+<li>Loop功能:制作无缝循环视频</li>
+<li>Blend功能:将两个视频场景融合<br>
+Loop 功能就很适合制作电脑的视频屏保或者用来配上什么白噪音的视频, 比如我先用 DALLE 生成了想要的壁炉火焰的图片, 再上传到 Sora 里并添加了一点关于火焰的描述</li>
+</ul>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/1753855088568.png" alt="" loading="lazy"></figure>
+<p>视频生成出来后我们可以看到,下方有我上传的图片和提示词的信息, 还有各种按钮, 另外视频开头和结尾现在并不能直接接在一起, 制作无限循环的视频<br>
+所以接下来对生成的视频选择 loop功能</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/1753855107778.gif" alt="" loading="lazy"></figure>
+<p>选择我想要的 loop 的时长, 还有视频开始和结束的位置的时间轴</p>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/1753855115426.png" alt="" loading="lazy"></figure>
+<p>最后我们只需要在视频编辑软件里重复这个视频并配上白噪音,就能得到一个不错的放松视频了</p>
+<p>Sora 用下来感觉生成的效果确实差强人意, 对提示词的遵守, 已经构建出来的视频只能算是勉强可用的阶段 , 有时候也会出现比较好的效果, 而且积分比较少 玩得不太过瘾</p>
+<p>总之算是个不错的开始吧, 模型能力不断提升后 我们可能也会迎来视频生成的 ChatGPT 时刻,说不定几年后我们就可以在自己生成的异世界里冒险呢? Sora 还提供了更多的功能和可以尝试的东西 比如很有意思的故事板功能和视频融合等</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[GPT-4o 模型介绍: 图片输出]]></title>
+        <id>https://nhuji.github.io/post/a5a7FHKlb5/</id>
+        <link href="https://nhuji.github.io/post/a5a7FHKlb5/">
+        </link>
+        <updated>2024-11-18T15:05:04.000Z</updated>
+        <summary type="html"><![CDATA[<p>之前和别人介绍 ChatGPT 的 DALLE 3 画图时, 似乎很多人对生成的图片里的文字很在意, 比如错误的拼写, 没办法放入一段长文字之类的问题, 但也许很快就不会再是问题了</p>
+<p>本篇将介绍 GPT-4o 的图片生成能力! 为什么会有个 o 在后面呢~ 其实“o”代表“omni”，源自拉丁语“omnis”，意为“全能”或“全部”。代表了 4o 的多模态能力，能够处理文本、音频和视觉等多种输入和输出形式，也就是说他可以真正接受你对他语音说的话, 能看懂你给他发的图片等, 不仅如此 他还能输出音频和图片, 是非常巨大的进步,目前还没有其他模型能做到这一点</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>之前和别人介绍 ChatGPT 的 DALLE 3 画图时, 似乎很多人对生成的图片里的文字很在意, 比如错误的拼写, 没办法放入一段长文字之类的问题, 但也许很快就不会再是问题了</p>
+<p>本篇将介绍 GPT-4o 的图片生成能力! 为什么会有个 o 在后面呢~ 其实“o”代表“omni”，源自拉丁语“omnis”，意为“全能”或“全部”。代表了 4o 的多模态能力，能够处理文本、音频和视觉等多种输入和输出形式，也就是说他可以真正接受你对他语音说的话, 能看懂你给他发的图片等, 不仅如此 他还能输出音频和图片, 是非常巨大的进步,目前还没有其他模型能做到这一点</p>
+<!-- more -->
+<p>顺便简单整理一下 GPT-4 系列模型的发展:</p>
+<p><strong>GPT-4</strong>：2023 年 3 月 14 日发布 相比 ChatGPT 公布时的 GPT-3.5 大幅提升了智能程度</p>
+<p><strong>GPT-4V</strong>：2023 年 9 月发布，首次支持图像输入, 也就是可以理解你发送的图片</p>
+<p><strong>GPT-4o</strong>：2024 年 5 月 13 日发布，也就是我们今天要介绍的模型,支持多种输入和输出的多模态模型,图片理解能力相比 4V 也进步了很多, 发布后逐步放出该模型的各种能力 (比如已经推出的音频输入输出能力, 和下面介绍的还未推出的图片输出能力)</p>
+<p>(还有类似GPT-4-Turbo这样能力没有太多变化, 但是速度/上下文窗口提升, 成本降低的版本)</p>
+<h2 id="图形输出能力">图形输出能力</h2>
+<p><strong>需要注意, 以下是已经公布 但是还未开放给用户使用的功能 现在我们还不能使用, 仅作为对未来发展的预览来介绍, 相信它正式开放使用后能对目前 AI 生成图片带来很大改变</strong></p>
+<p>简单的说, 你可以把文字,图片,音频都一起给 4o, 它能直接理解 而不是依靠其他工具转换成文字再处理, 而输出同样也是, 它也支持文字, 图片,音频的输出. 就像它是原本只会通过盲文阅读文章和写字来和你沟通的聋哑盲人, 突然获得了视力和听觉, 并且掌握了出色的喉咙(模仿各种声音)和绘画技能. 4o 的音频输入输出能力, 我们现在已经能在 ChatGPT 体验到了, 被称为<strong>高级语音模式</strong>, 和传统的语音转文字再给 GPT 不一样, 所以也能做到很多以前做不到的事情, 不过这个就留给以后的文章介绍了</p>
+<p>今天要介绍的功能, 实际上在今年五月 4o 发布时已经公布了, 不过只是很低调地在官网给了几个例子, 所以当时并没有引起太大的关注, 而且直到现在依然没有消息告诉我们多久能用上, 不过就当是抢先剧透了解一下未来吧, 让我们一起来看看</p>
+<p>上次我们说过 ChatGPT 目前生成图片是靠它根据我们的要求写了一段英语提示词再交给 Dalle 3 生成的, 这就有很多坏处, 比如它并不能真正的控制生成的图片, 也无法查看生成的图片, 更没办法按照我们的指令由它自己连续地修改同一张图片等, 而且还有上面提到的文字老是写不对的问题</p>
+<p>但这一切问题在 4o 自己可以输出图片后都大幅度的减轻了, 并且能做到很多原本非常难以做到的事情</p>
+<p>让我们通过从官方公布的示例中选取一些比较特别的例子来说明吧</p>
+<h3 id="示例-1-强大的图片加入文字的能力">示例 1 强大的图片加入文字的能力</h3>
+<p>图片故事:”机器人遇到写作瓶颈”</p>
+<p>示例中橙色代表我们的输入,而蓝色是 GPT-4o 的输出</p>
+<p>用户要求以下面的特定视角画出机器人打一段话, 右边是它给出的图片输出(依靠它模型本身,而非现在的调用其他模型)</p>
+<p>我们可以看到图片上准确而清晰的在纸上写出了用户要求的文字, 这种图片上大段的准确文字在现有的任何图片生成模型上都难以完成</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753854710606.png" alt="" loading="lazy"></figure>
+<p>接下来的聊天中,用户追加了更多文字的要求,也完美的显示在了图片上, 并且 4o 还给了特写, 我们可以看到图片的画风 比如打字机的外观保持了和上一张图一样的特征, 这也是现在其他文生图模型中需要花费额外的努力才能做到的一致性</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1753854717705.png" alt="" loading="lazy"></figure>
+<p>最后用户要求一张机器人撕掉这篇文字的提示,可以看到即便断成两半文字依然清晰和连贯,并且有一些纸的曲面的效果 这里机器人的手的外观也和第一张图一样</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/1753854721823.png" alt="" loading="lazy"></figure>
+<p>上面这个示例中 4o 能像处理文字一样处理图片时, 因此它可以很精细的按照你的要求和它的理解来生成准确的 、系列的图片</p>
+<p>当然，是否支持中文或英语以外的文字 还需要等正式公开使用才知道了, 不过我想既然已经支持了英语，那么未来对中文的支持也不会太远了</p>
+<h3 id="示例-2-人像处理">示例 2 人像处理</h3>
+<p>现在我们直接给 ChatGPT 图片要求它生成和你给的图片类似的图片的话, 流程是这样的:</p>
+<p><em>你给出图片 → GPT 模型理解 → GPT 写出文字提示给其他模型生成 →得到你要的图片</em></p>
+<p>这个流程中,虽然 GPT 已经能理解你给出的图片了,但又于没法直接输出图片, 所以会有转换成文字的过程, 而就会大量的失去图片的信息， 并且这对调用的图片生成模型的还原文字提示词的要求也很高 总之....结果就是 生成的图片和你给的图片南辕北辙</p>
+<p>比如我给出一张图片，要求 ChatGPT 帮我生成类似的图片，可以看到他虽然理解了这是一张像素艺术的圣诞火车穿过夜晚覆盖着雪的村庄的图片，但因为必须转文字后给 Dalle 3 来生成，所以像镜头角度，画风细节等都丢失了，和我们想要的“类似的”图片，不能说没关系...只能说关系很小 😂</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/1753854752258.png" alt="" loading="lazy"></figure>
+<p>但像 4o 这样模型本身支持图片输入输出的话, 那能想到的很简单的一个用法, 就是你可以给它一张你的照片然后要求他给你某种风格的图 就像下面这样给他一个照片让4o画出一个漫画版, 因为能理解和输出图片, 所以细节还原得很到位 而不是描述你的长相再让其他人画出来 （这就类似于坐着一排人 从头到尾传话的游戏，传到最后已经完全不对了）</p>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/1753854782107.png" alt="" loading="lazy"></figure>
+<p>更进一步的是,你甚至能提供两个人的照片,来让它为你制作一副电影海报, 可以看到最后的海报人脸的角度和提供的照片并不完全一样, 不是直接把两个人去掉背景 p 在一起, 而是它记住了人物的特征再输出的（就像 GPT 可以处理你给出的文字来改变文字风格 比如更专业 更轻松一样，它也能把图片也当成类似文字这样来处理）</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/1753854797093.png" alt="" loading="lazy"></figure>
+<h3 id="示例-3-设计">示例 3： 设计</h3>
+<p>4o 的这种多模态能力甚至能让它为你设计专属的字体:</p>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/1753854812140.png" alt="" loading="lazy"></figure>
+<p>或者给出 logo 和杯垫图片,让它把 logo “印”到上面</p>
+<figure data-type="image" tabindex="8"><img src="https://nhuji.github.io/post-images/1753854827850.png" alt="" loading="lazy"></figure>
+<h3 id="示例-4-空间感">示例 4： 空间感</h3>
+<p>因为有良好的一致性和智能， 就像拥有空间想象能力一样, 你甚至可以要求它生成几张图片, 然后就可以拼接成一张动图</p>
+<figure data-type="image" tabindex="9"><img src="https://nhuji.github.io/post-images/1753854849628.png" alt="" loading="lazy"></figure>
+<p>（依次生成了 6 张不同角度的 OpenAI 的3D logo图）</p>
+<p>拼接这些结果就可以得到下面这样看上去是 3D 渲染出来的动图</p>
+<p><img src="https://nhuji.github.io/post-images/1753854859506.gif" alt="" loading="lazy"><br>
+<img src="https://nhuji.github.io/post-images/1753854864068.gif" alt="" loading="lazy"></p>
+<p>基于 GPT 自己输出的图形也许精致程度没有现在各类图片生成模型的惊艳, 但技术路线差别很大, 能做到许多现在难以做到的事情, 就像GPT 以前人们需要对待各个任务都做出不同的 AI，但现在一个 GPT 已经能完成各种各样不同的任务了一样</p>
+<p><img src="https://nhuji.github.io/post-images/1753854872840.jpeg" alt="" loading="lazy"><br>
+（⬆️ 4o 生成的一张图）</p>
+<p>上面这些都是OpenAI 官方放出的例子, 也就是现在 4o 这个模型真的能够做到的, 不过由于安全和计算资源等限制,我们还不能体验到 而且可以预见是为了防止滥用，最终推出的版本可能会有很多限制</p>
+]]></content>
+    </entry>
+</feed>

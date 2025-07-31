@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>视频生成模型 Sora 初次上手体验, 做了一个白噪音视频 | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="今年 2 月中旬就宣布的 Sora 终于在前两天正式向公众开放了, 虽然今年以来各家都在视频生成上进展迅速, 让 Sora 看起来也没那么惊艳了, 总之 终于有资格可以探索一下它的效果了
+首先它有一个独立于 ChatGPT 的网站 http..." />
+    <meta name="keywords" content="" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">视频生成模型 Sora 初次上手体验, 做了一个白噪音视频</h2>
+            <div class="post-date">2024-12-13</div>
+            
+            <div class="post-content" v-pre>
+              <p>今年 2 月中旬就宣布的 Sora 终于在前两天正式向公众开放了, 虽然今年以来各家都在视频生成上进展迅速, 让 Sora 看起来也没那么惊艳了, 总之 终于有资格可以探索一下它的效果了</p>
+<p>首先它有一个独立于 ChatGPT 的网站 https://sora.com/ , 在用你的 OpenAI 账号登录后会让你填写生日,账号名之类的完成账号创建, 但必须要有 ChatGPT Plus 和 Pro 的资格才能使用,  20 刀一个月的ChatGPT Plus 有 1000 积分, 可以生成 480p 5s 的视频50 次, 如果更高的分辨率和时长的话就会花费更多积分了, 而 200 刀一个月的ChatGPT Pro 用户的话有 10000 积分可以最多生成 500 次....不得不说都有点少</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753855013102.png" alt="" loading="lazy"></figure>
+<p>这次我们能用到的 Sora 模型和年初展示的已经不一样了,是Sora Turbo版, 成本更低 生成速度更快, 另外公众使用的版本也增加了不少安全限制, 比如现在你还不能上传带有人物的图片来生成视频 如果上传了不符合规则的图片的话还可能被封号等</p>
+<p>整个网站做得还是比较好的, 比如拥有探索页面 查看比较火的别人生成的视频 以及大家最近生成的视频</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1753855033227.png" alt="" loading="lazy"></figure>
+<p>点开后还能看到别人具体是怎么生成的,他的提示词是什么, 以及在别人的视频的基础上可以自己做进一步的更改</p>
+<figure data-type="image" tabindex="3"><img src="https://nhuji.github.io/post-images/1753855041556.png" alt="" loading="lazy"></figure>
+<p>对于自己生成的视频也有管理页面, 还有分享,下载, 进一步处理等操作</p>
+<p>总之整个网站做得蛮不错的, 现在很多内容生成网站该有的功能都有了</p>
+<p>下方的视频生成栏也提供了各种选项比如分辨率,风格, 时长等 以及生成这样的内容需要的积分估计</p>
+<p>我也尝试生成了一段视频,用到的提示词是</p>
+<p>&quot;A person opens their kitchen refrigerator door, revealing a magical portal to a vast Arctic wonderland. As they step through, the scene expands into a breathtaking winter landscape with the Northern Lights dancing across the dark sky. Snow-covered plains stretch endlessly, ice crystals sparkle, and the Aurora Borealis casts ethereal colors across the snow. Seamless transition from domestic kitchen to epic arctic expanse.&quot;</p>
+<p>可以说生成的结果和提示词差别还是有点大的</p>
+<figure data-type="image" tabindex="4"><img src="https://nhuji.github.io/post-images/1753855057778.jpg" alt="" loading="lazy"></figure>
+<p>正如发布会上所说, 目前的 Sora 可能还处在GPT 1,2的时代,  更像是是辅助创作的工具, 而非完全自动化点一下就帮你生成一部电影制作工具</p>
+<p>但抛开模型来说, 产品本身也蛮有意思的, 比如拥有下面这些功能</p>
+<ul>
+<li>Remix功能:可以修改现有视频的内容</li>
+<li>Loop功能:制作无缝循环视频</li>
+<li>Blend功能:将两个视频场景融合<br>
+Loop 功能就很适合制作电脑的视频屏保或者用来配上什么白噪音的视频, 比如我先用 DALLE 生成了想要的壁炉火焰的图片, 再上传到 Sora 里并添加了一点关于火焰的描述</li>
+</ul>
+<figure data-type="image" tabindex="5"><img src="https://nhuji.github.io/post-images/1753855088568.png" alt="" loading="lazy"></figure>
+<p>视频生成出来后我们可以看到,下方有我上传的图片和提示词的信息, 还有各种按钮, 另外视频开头和结尾现在并不能直接接在一起, 制作无限循环的视频<br>
+所以接下来对生成的视频选择 loop功能</p>
+<figure data-type="image" tabindex="6"><img src="https://nhuji.github.io/post-images/1753855107778.gif" alt="" loading="lazy"></figure>
+<p>选择我想要的 loop 的时长, 还有视频开始和结束的位置的时间轴</p>
+<figure data-type="image" tabindex="7"><img src="https://nhuji.github.io/post-images/1753855115426.png" alt="" loading="lazy"></figure>
+<p>最后我们只需要在视频编辑软件里重复这个视频并配上白噪音,就能得到一个不错的放松视频了</p>
+<p>Sora 用下来感觉生成的效果确实差强人意, 对提示词的遵守, 已经构建出来的视频只能算是勉强可用的阶段 , 有时候也会出现比较好的效果, 而且积分比较少 玩得不太过瘾</p>
+<p>总之算是个不错的开始吧, 模型能力不断提升后 我们可能也会迎来视频生成的 ChatGPT 时刻,说不定几年后我们就可以在自己生成的异世界里冒险呢? Sora 还提供了更多的功能和可以尝试的东西 比如很有意思的故事板功能和视频融合等</p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/a5a7FHKlb5/">
+                  <h3 class="post-title">
+                    GPT-4o 模型介绍: 图片输出
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>

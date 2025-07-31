@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" type="text/css" href="https://nhuji.github.io/highlight/styles/github-dark.css">
+    <script src="https://nhuji.github.io/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+    <meta charset="utf-8" >
+<meta name="msvalidate.01" content="A81BF2369C00030213C4032E982E497F" />
+
+<title>聊聊 Emoji | Huhu&#39;s blog</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DW92LC8QYB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DW92LC8QYB');
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<script src="https://kit.fontawesome.com/e8bf4d3f65.js" crossorigin="anonymous"></script>
+<link rel="shortcut icon" href="https://nhuji.github.io/favicon.ico?v=1753943723267">
+<link rel="stylesheet" href="https://nhuji.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="&quot;收到！👌&quot; &quot;好的呢～😊&quot; &quot;谢谢 🙏&quot;
+每天聊天的时候,无论是工作还是生活， 你是不是也像我一样， 总是习惯性地加上这些可爱的小表情来让话语显得不那么严肃? 有时候甚至觉..." />
+    <meta name="keywords" content="随想" />
+    
+<!-- doodle彩蛋按钮 -->
+    <style>
+      button,
+      button::after {
+       padding: 16px 20px;
+       font-size: 18px;
+       background: linear-gradient(45deg, transparent 5%, #ff013c 5%);
+       border: 0;
+       color: #fff;
+       letter-spacing: 3px;
+       line-height: 1;
+       box-shadow: 6px 0px 0px #00e6f6;
+       outline: transparent;
+       position: relative;
+       /*display: flex;
+       justify-content: center;
+       align-items: center;*/
+      }
+
+      button::after {
+       --slice-0: inset(50% 50% 50% 50%);
+       --slice-1: inset(80% -6px 0 0);
+       --slice-2: inset(50% -6px 30% 0);
+       --slice-3: inset(10% -6px 85% 0);
+       --slice-4: inset(40% -6px 43% 0);
+       --slice-5: inset(80% -6px 5% 0);
+       content: "HOVER ME";
+       display: block;
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: linear-gradient(45deg, transparent 3%, #00e6f6 3%, #00e6f6 5%, #ff013c 5%);
+       text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
+       clip-path: var(--slice-0);
+      }
+
+      button:hover::after {
+       animation: 1s glitch;
+       animation-timing-function: steps(2, end);
+      }
+
+      @keyframes glitch {
+       0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+       }
+
+       10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+       }
+
+       20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+       }
+
+       30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+       }
+
+       40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+       }
+
+       50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+       }
+
+       60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+       }
+
+       70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+       }
+
+       80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+       }
+
+       90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+       }
+
+       100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+       }
+      }
+
+    </style>
+
+
+  </head>
+
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://nhuji.github.io">
+      <!-- 头像 
+        <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo">
+      -->
+        <div class="site-logo">
+          <img src="https://nhuji.github.io/images/avatar2.png?v=1753943723267" class="site-logo-image-back">
+          <img src="https://nhuji.github.io/images/avatar.png?v=1753943723267" class="site-logo-image">
+        </div>
+        <h1 class="site-title">Huhu&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            目录
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/NHUJI" target="_blank">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+
+      <a class="social-link" href="mailto:hujinfinite@gmail.com" target="_blank">
+      <i class="fa-regular fa-envelope"></i>
+      </a>
+
+    </div>
+    <div class="site-description">
+      It's me, huhu
+    </div>
+    <div class="site-footer">
+      <a href="https://github.com/NHUJI" target="_blank">© 2021~2025 Nhuji</a> | <a class="rss" href="https://nhuji.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">聊聊 Emoji</h2>
+            <div class="post-date">2025-01-04</div>
+            
+            <div class="post-content" v-pre>
+              <p>&quot;收到！👌&quot; &quot;好的呢～😊&quot; &quot;谢谢 🙏&quot;</p>
+<p>每天聊天的时候,无论是工作还是生活， 你是不是也像我一样， 总是习惯性地加上这些可爱的小表情来让话语显得不那么严肃? 有时候甚至觉得光发文字好像缺了点什么...不过你有没有想过，它们是从哪来的呢?</p>
+<p>今天想和介绍一下 <strong>Emoji</strong> ，这个我们每天都在用的小表情的历史和发展</p>
+<p>它不仅可爱,能丰富我们使用纯文字聊天时的表达,可以说是数字时代诞生的第一门通用语言, 那它是怎么出现和风靡全球的呢</p>
+<!-- more -->
+<h2 id="使用符号组合代表表情">使用符号组合代表表情</h2>
+<p>在上世纪 80 年代 就有人提出在 BBS 讨论中很难区分语气和情感， 所以可以利用 -)  和 😦  这样的符号组合来表示开心、不开心，随着互联网的普及 电子邮件、论坛、聊天工具的兴起 也让这样的符号组合越来越广泛传播 , 甚至后来的 Windows 的蓝屏界面也向这种风潮致敬过 ¯(ツ)/¯</p>
+<figure data-type="image" tabindex="1"><img src="https://nhuji.github.io/post-images/1753842814053.png" alt="" loading="lazy"></figure>
+<h2 id="初代表情符号集的出现-90-年代">初代表情符号集的出现 (90 年代)</h2>
+<p>到了 90 年代,电子设备的发展越来越成熟, 人们开始使用它进行交流，那 emoji 是啥时候诞生的呢， 很多人认为Emoji 的起源是日本运营商 DoCoMo在 1999 年发布的i-mode 服务里提供的 176 个表情集 (最初为黑白版)<br>
+![Shigetaka Kurita, NTT DOCOMO. Emoji] (https://nhuji.github.io/post-images/1753842857487.png)</p>
+<p>但其实在最近的数字挖掘后， 有人发现其实在更早的 1988 年夏普发布的 PDA PA-8500 上还能找到更早的表情符号集， 这是目前人们能找到的最早的表情符号集 (但有没有更早的呢?? 也许只有当时的人们知道了)<br>
+<img src="https://nhuji.github.io/post-images/1753842921388.png" alt="" loading="lazy"></p>
+<p>所以我们现在能整理出的时间线是:</p>
+<p>1988年10月：夏普发布了 Sharp PA-8500 PDA 设备，其中包含超过 100 个表情符号。这是目前已知最早的表情符号集。当时，Sharp 是 PDA 设备市场的领导者，其次是 Casio。</p>
+<p>1990年8月：日本 NEC 发布了 PI-ET1 PDA，其中包含超过 130 个表情符号， 但这款设备的市场表现有限。</p>
+<p>1990年至1994年：Sharp 推出了更多的 PDA 和文字处理设备，包括 WD-A521 和 Zaurus PI-4000，这些设备使用了在 1988 年 PA-8500 基础上扩展的表情符号集。</p>
+<p>1995年：Docomo 凭借可以发送简单像素心形设计（❤）的 Pocket Bell 寻呼机在日本市场占据主导地位。</p>
+<p>1997年11月：Softbank 发布了 SkyWalker DP-211SW 手机。这款设备包含 90 个表情符号设计，是第一款具有表情符号集的手机设备。然而，这款手机销量不佳，而且这些表情符号在其他 Softbank 设备上也不支持。</p>
+<p>1999年1月：Docomo 推出了由<a href="https://en.wikipedia.org/wiki/Shigetaka_Kurita">栗田 穣崇</a>设计的表情符号集及其 i-mode 移动互联网服务。这些表情符号大受欢迎，因此人们通常将其视为第一个表情符号集。</p>
+<p>总之这一时期，由于日本电子产业的发达和激烈的竞争，不少公司都推出过自己的 Emoji 集, Emoji 这个词本身也是来自日语的 絵文字 ,但 Emoji 还没开始在世界上流行起来 而且也不包含如今常见的 😀 黄脸 Emoji, 但一句简单”我知道了” 加上 ❤️  给人的感觉就完全不一样了</p>
+<h2 id="表情符号集的发展-20002010">表情符号集的发展 (2000–2010)</h2>
+<p>这段时间日本的表情符号在各种平台越来越受欢迎， 不过还没有一个统一的表情符号集， 随着 emoji 的继续火爆,， 2007 Google 的一个软件国际化团队成员 Kat Momoi, Mark Davis, and Markus Scherer 带头向 Unicode 提出申请(简单的说Unicode就是把各种文字对应到编号上，让各种平台都能使用同一个标准), 希望把 Emoji 也加入字符集中,认为 Emoji 也应该遵循文字一样的标准， 2009 年苹果的工程师 Yasuo Kida 和 Peter Edberg 也加入了其中，正式向 Unicode 提案将625个 emoji 加入 Unicode， 最终在 2010 年 Unicode 正式接受了该提案</p>
+<p>也就意味着,Emoji 真正可以在全世界各地可以使用并有一个共同的标准了</p>
+<p>而我们熟知黄色的笑脸诞生于1963年的美国，当时一家保险公司聘请平面设计师哈维·鲍尔（Harvey Ball）设计一个图标，以帮助平息员工的焦虑情绪。因此经典的微笑表情符号诞生了。这在之后也影响了 Emoji 的发展</p>
+<p><img src="https://nhuji.github.io/post-images/1753842985344.jpeg" alt="" loading="lazy"><br>
+<img src="https://nhuji.github.io/post-images/1753842994803.jpeg" alt="" loading="lazy"><br>
+莫名的让人想起杀老师了。。。</p>
+<p>在加入Unicode 后，Emoji 就像是汉字或者某个小众语言的符号一样， 拥有了基本的编号，但具体实现还是看各个厂商自己的想法</p>
+<p>Unicode 联盟只会决定每个表情符号的基本形状和描述，并给出其黑白原型，但无法决定这个表情符号在各个厂商的最终设计，这就是为什么同一个Emoji 在不同平台上看起来会不一样的原因。比如😊，在Apple、Google、Microsoft等平台上的具体样式都是不同的，就像是不同的字体一样，但它们都对应同一个Unicode编码点， 不过大多数厂商决定把它做成黄色的脸，不仅仅因为上面提到的黄色笑脸的流行，同时黄色也是一个中性的色彩，没有人真的长这个样子 足够种族中性<br>
+<img src="https://nhuji.github.io/post-images/1753843024023.png" alt="" loading="lazy"><br>
+不同厂商的 Emoji 都有点区别，比如Facebook和Skype的</p>
+<h2 id="全球普及-2011~2014">全球普及 （2011~2014）</h2>
+<p>2008 年，苹果在日本推出了只限日本使用的 Emoji键盘（兼容软银的标准，因此风格相似）， 2011 年苹果为 iOS 5  正式推出了全球可用的原生表情符号键盘， 两年后，安卓系统也效仿。这让我们可以直接从手机键盘访问表情符号——就像切换到韩语或日语键盘来访问特定语言的字符一样—— 让Emoji 随着智能手机的普及全球流行, 随着表情符号越来越受欢迎，它们的种类也越来越多。Unicode 联盟每年都会将其批准的表情符号列表中加入新的表情符号</p>
+<figure data-type="image" tabindex="2"><img src="https://nhuji.github.io/post-images/1753843040081.jpeg" alt="" loading="lazy"></figure>
+<h2 id="emoji-的进一步发展和多元化-2014~现在">Emoji 的进一步发展和多元化 （2014～现在）</h2>
+<p>随着Emoji 数量的增长，有些人想知道为什么有六七个图标来描述寿司，却没有一个用来表示玉米卷、墨西哥卷饼或辣椒卷？为什么职业的 Emoji ——医生、厨师、警察——的数量越来越多，**但他们似乎都是男性？**而且，在众多代表人类的表情包中为什么只有一种肤色？ 到 2014 年，表情包政治化的大潮已经兴起。这体现在食物表情包（没有描绘传统非洲菜肴），国旗（有以色列国旗，但没有巴勒斯坦国旗），家庭（关于描绘同性父母或单身父母的家庭单位的争论），等等。Emoji 已经成为数字时代的重要语言，<strong>但它却缺少“有工作的女性”或“有色人种”这样的表情。难以让世界各地的人们平等的表达自己。</strong><br>
+<img src="https://nhuji.github.io/post-images/1753843069952.jpeg" alt="" loading="lazy"></p>
+<p>2015 年，Unicode 通过引入更改人物表情符号肤色选项以及增加更多类型的人进行更多类型活动的表情符号，迈出了向表情符号多样化迈出的第一步。从那时起，每次更新都包括朝着使表情键盘上代表的人和文化类型多样化的渐进步骤：女性冲浪者和骑自行车者、戴安全帽和听诊器的女性、戴头巾人。Unicode 采取了朝着创建性别中性的表情符号、代表有残疾的人的表情符号以及其他代表表情符号用户全谱系的符号的进步。</p>
+<p>2016 年在iOS 10中，苹果将手枪表情符号的渲染将从左轮手枪改为水枪，苹果此前曾向统一码联盟施压，要求其不要批准步枪表情符号<br>
+<img src="https://nhuji.github.io/post-images/1753843079387.jpeg" alt="" loading="lazy"></p>
+<p>但这也造成了一些问题，比如通过改变表情符号来打击枪支暴力的计划导致了 Emoji 在不同的平台上被误解怎么办？ 比如“我马上来找你”搭配一个水枪的图标，在其他平台用户眼里却是一个左轮手枪** 这样的和 Unicode 所设定含义不同的 Emoji 很可能造成严重的误解**<br>
+<img src="https://nhuji.github.io/post-images/1753843091316.jpeg" alt="" loading="lazy"></p>
+<p>18 年后各个厂商的手枪 Emoji都统一成水枪了,但 24 年由于马斯克的反对,X 平台的水枪再次变回了真正的手枪</p>
+<p>总之越来越普及也意味着需要承担更多的社会责任，而且也难以摆脱政治的影响 （比如你使用国行iPhone 看不到某个地区的旗帜一样）</p>
+<p>每年新增的 Emoji 也总是会在互联网上让人们讨论，比如 2018 年的新加入的月饼和红包等也让我们过节时更容易交流了<br>
+<img src="https://nhuji.github.io/post-images/1753843105559.jpeg" alt="" loading="lazy"></p>
+<p>表情符号的未来</p>
+<p>近年， Emoji 开始呈现出新的形态——比如苹果公司的 Animoji，通过人的面部表情来动画化表情符号。 2016 年苹果公司表情符号的重大改变和 2017 年安卓系统表情符号的更新, 他们尝试制作更加统一 Emoji ，使得你发送到安卓设备上的字符在 iPhone 上看起来大致相同。<br>
+<img src="https://nhuji.github.io/post-images/1753843113698.jpeg" alt="" loading="lazy"></p>
+<p>Genmoji 的推出让我们可以开始自己创造 AI 生成的 Emoji (虽然本质只是图片)<br>
+<img src="https://nhuji.github.io/post-images/1753843127758.png" alt="" loading="lazy"></p>
+<p>Emoji 的数量持续增加和个性化的趋势，让我们越来越能用它表达自己了</p>
+<h2 id="bonus-关于-emoji-更多的有趣的事情">Bonus: 关于 Emoji 更多的有趣的事情</h2>
+<ul>
+<li>
+<p>Emoji 中的多样性不仅仅是找到一个小图标，看起来像你。表情符号的存在与否影响着文化的可见性和消失：谁能在未来的数字语言中得到代表？这些代表又如何考虑到像国家、民族、宗教和战争这样的微妙的地缘政治问题？</p>
+</li>
+<li>
+<p>Google 搜索“Emoji kitchen“可以找到 Google 制作的将两个 Emoji 合在一起的有趣效果<br>
+<img src="https://nhuji.github.io/post-images/1753843167577.png" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>不同国家可能对同一个 Emoji 的解读不一样，可能有隐含的意思，比如[微笑]表情现在代表呵呵</p>
+</li>
+<li>
+<p>每年的7 月 17 日是世界表情符号日 ，各大平台近年都把 Emoji 里日历的表情更改为了 17 日<br>
+<img src="https://nhuji.github.io/post-images/1753843183890.jpeg" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>至于为什么是 17 日，是因为这是苹果在 2002 年首次推出 Mac应用 iCal日历的日子，之后作为彩蛋放置作为苹果表情集里<br>
+每年为庆祝世界表情日到来，苹果每年都会在7月17日这一天对外展示一系列新Emoji表情符号预览</p>
+</li>
+</ul>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://nhuji.github.io/tag/m37wjQEDe/" class="tag">
+                    随想
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://nhuji.github.io/post/VU2crnTXQx/">
+                  <h3 class="post-title">
+                    使用 MidJourney 制作 &#34;2025 年台历&#34; 素材经验分享!
+                  </h3>
+                </a>
+              </div>
+            
+            <!-- 像素图 -->
+            
+            <div id="doodle">
+              <css-doodle  click-to-update >
+                 @grid: 16x12 / 800px auto;
+                  @size: 6px;
+                  box-shadow: @m3x5(
+                    calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @p(@m3(#000), @m2(transparent)),
+                    calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+                      0 @lp
+                  );
+              </css-doodle>
+           
+              <button onclick="startAnimation()">点击这里变得狂野</button>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+
+   
+    <script src="https://unpkg.com/css-doodle@0.34.1/css-doodle.min.js"></script>
+     <!-- 用于判断css doodle的显示 -->
+    <script>
+      var doodle = document.getElementById("doodle");
+      var pageTitle = document.title;
+      if (pageTitle === "关于 | Huhu's blog") {
+        doodle.style.display = 'block';
+      } else {
+        doodle.style.display = 'none';
+      }
+    </script>
+
+
+
+    <!-- doodle更新 -->
+    <script>
+      const cssDoodle = document.querySelector('css-doodle');
+
+      // 定义时间间隔变量，以毫秒为单位
+      let interval = 2000;
+
+      // 自动更新(播放)CSS-Doodle样式
+      function animateDoodle() {
+        cssDoodle.update();
+        // 在10毫秒后再次调用此函数
+        setTimeout(animateDoodle, interval);
+      }
+      
+      function startAnimation() {
+        interval /= 1.5;
+        cssDoodle.update(`
+         @grid: 16x12 / 800px auto;
+         @size: 6px;
+         color: hsl(@r240, 30%, 50%);
+         box-shadow: @m3x5(
+          calc(18px - @nx(-1) * 6px) calc(@ny * 6px)
+            0 @p(@m3(currentColor), @m2(transparent)),
+          calc(18px + @nx(-1) * 6px) calc(@ny * 6px)
+            0 @lp
+          );  
+      `);
+        // 开始快速更新动画
+        animateDoodle();
+      }
+
+
+     
+    </script>
+  
+  </body>
+</html>
